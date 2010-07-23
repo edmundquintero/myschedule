@@ -1,0 +1,5 @@
+include Makefile appmanage.py
+recursive-include docs *
+recursive-include myschedule/fixtures *
+recursive-include myschedule/static *
+recursive-include myschedule/templates *
