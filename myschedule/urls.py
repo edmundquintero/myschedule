@@ -2,12 +2,13 @@
 from django.conf.urls.defaults import include, patterns, url
 # from django.contrib import admin
 
-from myschedule import views
+from myschedule import views, cart
 
 # admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
+    url(r'^display_cart/', cart.display_cart, name='display_cart'),
     # url(r'^admin/', include(admin.site.urls)),
 )
 
