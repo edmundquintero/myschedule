@@ -6,7 +6,7 @@
 <p>Here's what's in the cart:
 <ul>
 {% for item in cartitems %}
-<li>{{ item.section }}</li>
+<li>{{ item.section }} {{item.section_data.instructor_last_name}}</li>
 {% endfor %}
 </ul></p>
 {% endblock %}

@@ -2,8 +2,9 @@
 # from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic.simple import direct_to_template
+from django.conf import settings
 
-# from cpsite import ods
+from cpsite import ods
 # from cpsite.decorators import groups_required
 
 from myschedule import models, forms
@@ -58,6 +59,17 @@ def get_cartitems(request):
         if not request.user.is_anonymous():
             user = get_object_or_404(models.User, username=request.user)
             cart_items = models.CartItem.objects.filter(cart__owner=user)
+    # Get additional section and meeting data via cpapi
+    for item in cart_items:
+        try:
+            ods_spec_dict = {"key": settings.CPAPI_KEY,
+                             "data": "sections",
+                             "id": item.section}
+            section_data = ods.get_data(ods_spec_dict)
+            item.section_data = section_data
+        except:
+            # TODO: Do something besides pass
+            pass
     return cart_items
 
 def display_cart(request):
@@ -66,6 +78,8 @@ def display_cart(request):
     """
     # TODO: get all the other information regarding a course section that
     # needs to be displayed
+    # TODO: remove setting of cartID - for testing only
+    request.session['cartID']=1
     cart_items = get_cartitems(request)
     return direct_to_template(request,
                               'myschedule/display_cart.html',
