@@ -8,6 +8,7 @@ from cpsite import ods
 # from cpsite.decorators import groups_required
 
 from myschedule import models, forms
+from myschedule.views import compose_booklink
 
 def add_cartitem(request, section):
     """
@@ -67,6 +68,17 @@ def get_cartitems(request):
                              "id": item.section}
             section_data = ods.get_data(ods_spec_dict)
             item.section_data = section_data
+            ods_spec_dict = {"key": settings.CPAPI_KEY,
+                             "data": "course",
+                             "prefix": section_data['prefix'],
+                             "number": section_data['number']}
+            # Returns a list TODO: handle more than one item?
+            course_data = ods.get_data(ods_spec_dict)[0]
+            item.course_data = course_data
+            # Get the link to the book information TODO: replace hard-coded campus code with proper field when cpapi is updated to return location
+            item.booklink = compose_booklink('1013', section_data['term'],
+                              section_data['year'], section_data['prefix'],
+                              section_data['number'], section_data['section'])
         except:
             # TODO: Do something besides pass
             pass

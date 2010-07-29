@@ -4,9 +4,15 @@
 
 {% block content %}
 <p>Here's what's in the cart:
-<ul>
+<table>
+<tbody>
 {% for item in cartitems %}
-<li>{{ item.section }} {{item.section_data.instructor_last_name}}</li>
+  <tr class="{% cycle 'odd' 'even' %}">
+    <td>{{ item.course_data.prefix }} - {{ item.course_data.number }} {{ item.course_data.title }} <br/> {{ item.section_data.section }} {{ item.section_data.instructor_last_name }}
+    {% if item.booklink %} <a href= "{{ item.booklink }}">View Book Information</a>{% endif %}</td>
+  </tr>
 {% endfor %}
-</ul></p>
+</tbody>
+</table>
+</p>
 {% endblock %}
