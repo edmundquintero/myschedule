@@ -9,6 +9,7 @@ from myschedule import views, cart
 urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
     url(r'^display_cart/', cart.display_cart, name='display_cart'),
+    url(r'^delete_cartitem/(\d+)/$', cart.delete_cartitem, name='delete_cartitem'),
     # url(r'^admin/', include(admin.site.urls)),
 )
 

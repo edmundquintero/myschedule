@@ -10,6 +10,7 @@
   <tr class="{% cycle 'odd' 'even' %}">
     <td>{{ item.course_data.prefix }} - {{ item.course_data.number }} {{ item.course_data.title }} <br/> {{ item.section_data.section }} {{ item.section_data.instructor_last_name }}
     {% if item.booklink %} <a href= "{{ item.booklink }}">View Book Information</a>{% endif %}</td>
+    <td><a class="ui-button" href="{% url delete_cartitem item.id %}">Remove</a></td>
   </tr>
 {% endfor %}
 </tbody>

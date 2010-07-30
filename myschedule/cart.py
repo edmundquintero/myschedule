@@ -32,10 +32,12 @@ def add_cartitem(request, section):
     cart_item.save()
     return cart_item
 
-def delete_cartitem(itemID):
+def delete_cartitem(request, itemID):
     """
         Deletes the specified course section from the shopping cart.
     """
+    #TODO: Eventually want to call this from javascript
+    #TODO: Re-run validation when they remove a section
     cart_item = []
     try:
         cart_item = models.CartItem.objects.get(id=itemID)
@@ -43,7 +45,7 @@ def delete_cartitem(itemID):
     except models.CartItem.DoesNotExist:
         # Should mean it was already deleted so don't raise a 404.
         pass
-    return cart_item
+    return redirect('display_cart')
 
 def get_cartitems(request):
     """
