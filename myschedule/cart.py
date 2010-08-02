@@ -10,13 +10,35 @@ from cpsite import ods
 from myschedule import models, forms
 from myschedule.views import compose_booklink
 
+define validate_section(request, section_to_add):
+    """
+        Specialized validation checking for conflicts between the section
+        the user is attempting to add to the cart and the sections already
+        in the cart.
+    """
+    # TODO: Need to call this via javascript
+    conflicts = []
+    if 'cartID' in request.session and not request.session['cartID'] == None:
+        cart_items = models.CartItem.objects.filter(
+                                cart_id=request.session['cartID'])
+        # check to see if the section is already in the cart
+        section_query = cart_items.filter(section=section_to_add)
+        if section_query != []:
+            conflicts.append('Course section ' +
+                              section_to_add +
+                             ' is already in your cart.')
+        # TODO:check for conflicts with class times of items already in cart
+
+    # TODO:check for available seats
+
+    return conflicts
+
 def add_cartitem(request, section):
     """
         Adds the specified course section to the user's shopping cart.
         If this is the first item added, create the cart record before
         adding the cartitem.
     """
-    #TODO: Perform validations (check to see if already in cart, etc).
     if 'cartID' not in request.session or request.session['cartID'] == None:
         # Cart does not exist for this user or session so create it first.
         # Cart only has an owner if the user logged in.
@@ -27,6 +49,7 @@ def add_cartitem(request, section):
         cart = models.Cart(owner=user)
         cart.save()
         request.session['cartID'] = cart.id
+
     cart_item = models.CartItem(cart_id=request.session['cartID'],
                                section=section)
     cart_item.save()
