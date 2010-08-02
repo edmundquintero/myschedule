@@ -10,7 +10,7 @@ from cpsite import ods
 from myschedule import models, forms
 from myschedule.views import compose_booklink
 
-define validate_section(request, section_to_add):
+def validate_section(request, section_to_add):
     """
         Specialized validation checking for conflicts between the section
         the user is attempting to add to the cart and the sections already
