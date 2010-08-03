@@ -3,12 +3,13 @@
 {% block page_title %}{{ block.super }} | Display Cart{% endblock %}
 
 {% block content %}
-<p>Here's what's in the cart:
+<p>
 <table>
 <tbody>
 {% for item in cartitems %}
   <tr class="{% cycle 'odd' 'even' %}">
-    <td>{{ item.course_data.prefix }} - {{ item.course_data.number }} {{ item.course_data.title }} <br/> {{ item.section_data.section }} {{ item.section_data.instructor_last_name }}
+    <td>{{ item.course_data.prefix }} - {{ item.course_data.number }} <i>{{ item.course_data.title }}</i><br/> {{ item.section_data.section }}</td>
+    <td>{{ item.section_data.instructor_first_name }} {{ item.section_data.instructor_last_name }}<br/>
     {% if item.booklink %} <a href= "{{ item.booklink }}">View Book Information</a>{% endif %}</td>
     <td><a class="ui-button" href="{% url delete_cartitem item.id %}">Remove</a></td>
   </tr>
