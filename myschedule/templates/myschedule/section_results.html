@@ -1,0 +1,10 @@
+{% extends "myschedule/base.html" %}
+
+{% block page_title %}{{ block.super }} | Search Results{% endblock %}
+
+{% block content %}
+  {% include "myschedule/search.html" %}
+    <p>
+    Eventually the sections for {{ prefix }}{{ number }} will be listed here - but not today.
+    </p>
+{% endblock %}

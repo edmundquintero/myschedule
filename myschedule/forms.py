@@ -1,3 +1,4 @@
 from django import forms
 
-# Create forms.Form subclasses here.
+class search_form(forms.Form):
+    search_text = forms.CharField()

@@ -4,7 +4,7 @@
 from django.views.generic.simple import direct_to_template
 from django.conf import settings
 
-# from cpsite import ods
+from cpsite import ods
 # from cpsite.decorators import groups_required
 
 from myschedule import models, forms
@@ -38,3 +38,31 @@ def compose_booklink(campus=None, term=None, year=None, course_prefix=None,
                     '&course-1=' + course_number +
                     '&term_id-1=' + term + ' ' + year)
     return booklink
+
+def show_course_results(request):
+    """
+        Displays course search results template.
+    """
+    # TODO: For now we'll just grab all mat courses via cpapi so we'll have
+    # some courses to display.
+    ods_spec_dict = {"key": settings.CPAPI_KEY,
+                     "data": "course",
+                     "prefix": 'MAT'}
+    course_data = ods.get_data(ods_spec_dict)
+    search = forms.search_form()
+    return direct_to_template(request,
+            'myschedule/course_results.html',
+            {'courses':course_data,
+             'search':search}
+    )
+
+def show_section_results(request, prefix, number):
+    """
+        Display section results template for specified course.
+    """
+    # TODO: Get the section data
+    search = forms.search_form()
+    return direct_to_template(request,
+            'myschedule/section_results.html',
+            {'prefix':prefix, 'number':number, 'search':search}
+    )

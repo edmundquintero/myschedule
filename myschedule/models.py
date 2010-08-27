@@ -9,7 +9,8 @@ class Cart(models.Model):
     # TODO: consider using email address instead of foreignkey relationship for
     # owner if want to tie a cart to someone without a cpcc account.
     owner = models.ForeignKey(User, blank=True, null=True)
-
+    description = models.CharField(max_length=50, blank=True, null=True,
+                help_text='Brief description that identifies this schedule.')
     def __unicode__(self):
         return self.id
 

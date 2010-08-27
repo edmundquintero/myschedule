@@ -1,0 +1,13 @@
+{% extends "myschedule/base.html" %}
+
+{% block page_title %}{{ block.super }} | Search Results{% endblock %}
+
+{% block content %}
+  {% include "myschedule/search.html" %}
+  {% for course in courses %}
+    <p>
+    <a href="{% url show_section_results course.prefix course.number %}">{{ course.prefix }}{{ course.number }} ({{ course.academic_level }} {{ course.credit_hours }}) - {{course.title }}</a><br/>
+    The description would go here if we had one. 
+    </p>
+  {% endfor %}
+{% endblock %}
