@@ -67,3 +67,10 @@ def show_sections(request, prefix, number):
             'myschedule/section_results.html',
             {'prefix':prefix, 'number':number, 'search':search}
     )
+
+def query(request, querystring):
+    print querystring
+    print querystring.split("/")
+    search = forms.search_form()
+    return direct_to_template(request, 'myschedule/index.html', {'search':search})
+
