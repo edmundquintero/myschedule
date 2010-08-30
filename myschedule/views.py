@@ -39,7 +39,7 @@ def compose_booklink(campus=None, term=None, year=None, course_prefix=None,
                     '&term_id-1=' + term + ' ' + year)
     return booklink
 
-def show_course_results(request):
+def show_courses(request):
     """
         Displays course search results template.
     """
@@ -56,7 +56,7 @@ def show_course_results(request):
              'search':search}
     )
 
-def show_section_results(request, prefix, number):
+def show_sections(request, prefix, number):
     """
         Display section results template for specified course.
     """

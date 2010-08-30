@@ -6,7 +6,7 @@
   {% include "myschedule/search.html" %}
   {% for course in courses %}
     <p>
-    <a href="{% url show_section_results course.prefix course.number %}">{{ course.prefix }}{{ course.number }} ({{ course.academic_level }} {{ course.credit_hours }}) - {{course.title }}</a><br/>
+    <a href="{% url show_sections course.prefix course.number %}">{{ course.prefix }}{{ course.number }} ({{ course.academic_level }} {{ course.credit_hours }}) - {{course.title }}</a><br/>
     The description would go here if we had one. 
     </p>
   {% endfor %}

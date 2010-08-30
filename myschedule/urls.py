@@ -10,8 +10,8 @@ urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
     url(r'^display_cart/', cart.display_cart, name='display_cart'),
     url(r'^delete_cartitem/(\d+)/$', cart.delete_cartitem, name='delete_cartitem'),
-    url(r'^show_course_results/', views.show_course_results, name='show_course_results'),
-    url(r'^show_section_results/(\w{3})/([\d\w]+)/$', views.show_section_results, name='show_section_results'),
+    url(r'^show_courses/', views.show_courses, name='show_courses'),
+    url(r'^show_sections/(\w{3})/([\d\w]+)/$', views.show_sections, name='show_sections'),
     # url(r'^admin/', include(admin.site.urls)),
 )
 
