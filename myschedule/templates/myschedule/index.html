@@ -1,8 +1,7 @@
 {% extends "myschedule/base.html" %}
 
 {% block page_title %}{{ block.super }} | Home{% endblock %}
-{% block title %}myschedule{% endblock %}
 
 {% block content %}
-<p>Welcome to myschedule.</p>
+  {% include "myschedule/search.html" %}
 {% endblock %}

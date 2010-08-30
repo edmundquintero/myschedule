@@ -10,7 +10,8 @@ from cpsite import ods
 from myschedule import models, forms
 
 def index(request):
-    return direct_to_template(request, 'myschedule/index.html', dict())
+    search = forms.search_form()
+    return direct_to_template(request, 'myschedule/index.html', {'search':search})
 
 def compose_booklink(campus=None, term=None, year=None, course_prefix=None,
                      course_number=None, section=None):
