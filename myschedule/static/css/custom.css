@@ -4,3 +4,8 @@ div.search {
     margin-right: auto;
     margin-bottom: 2em;
 }
+
+span.information {
+    color: red;
+    margin-left: 5px;
+}

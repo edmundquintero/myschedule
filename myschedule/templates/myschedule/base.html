@@ -1,7 +1,15 @@
 {% extends "base.html" %}
 
+{% load tabbing %}
+
 {% block page_title %}myschedule{% endblock %}
 
 {% block app_header %}
 <a href="{% url index %}">myschedule</a>
+{% endblock %}
+
+{% block sections %}
+<li class="{% selected ^$ %}"><a href="{% url index %}">Search</a></li>
+<li class="{% selected ^show_courses/ %}"><a href="{% url show_courses %}">Browse</a></li>
+<li class="{% selected ^display_cart/ %}"><a href="{% url display_cart %}">Schedule</a></li>
 {% endblock %}

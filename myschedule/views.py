@@ -1,6 +1,8 @@
 # from django.contrib.auth.decorators import login_required
 # from django.http import HttpResponse
 # from django.shortcuts import get_object_or_404, redirect
+import string
+
 from django.views.generic.simple import direct_to_template
 from django.conf import settings
 
@@ -49,23 +51,62 @@ def show_courses(request):
     ods_spec_dict = {"key": settings.CPAPI_KEY,
                      "data": "course",
                      "prefix": 'MAT'}
-    course_data = ods.get_data(ods_spec_dict)
+    courses = ods.get_data(ods_spec_dict)
+    active_courses = []
+    for course in courses:
+        if course.has_key('status') and string.upper(course['status'])=='AB':
+            # TODO: Update this with actual seat availability.
+            course['information']='Sections with seats remaining'
+            active_courses.append(course)
+    active_courses.sort(key=lambda c: (c['prefix'], c['number']))
     search = forms.search_form()
     return direct_to_template(request,
             'myschedule/course_results.html',
-            {'courses':course_data,
+            {'courses':active_courses,
              'search':search}
     )
 
-def show_sections(request, prefix, number):
+def show_sections(request, prefix, number, course_id):
     """
         Display section results template for specified course.
     """
+    if request.method == 'POST':
+        print request.POST
+        section_url = ''
+        for key in request.POST:
+            temp = key
+            if 'section_' in temp:
+                section_url = section_url + temp.replace('section_','') + '/'
+        print section_url
+
+    # TODO: Can't retrieve a course or section records using course_id via
+    # cpapi, so until this whole data thing gets figured out will have to
+    # filter the lists to get the items for a particular course_id. Actually
+    # can only filter the course - sections doesn't include the course ID.
+    ods_spec_dict = {"key": settings.CPAPI_KEY,
+                     "data": "course",
+                     "prefix": prefix,
+                     "number": number}
+    courses = ods.get_data(ods_spec_dict)
+    active_course = {}
+    for course in courses:
+        if course.has_key('id') and course['id'] == course_id:
+            active_course = course
     # TODO: Get the section data
+    ods_spec_dict = {"key": settings.CPAPI_KEY,
+                     "data": "sections",
+                     "prefix": prefix,
+                     "number": number}
+    sections = ods.get_data(ods_spec_dict)
+    active_sections = []
+    for section in sections:
+        if string.upper(section['term'])=='FA' and section['year']=='2010':
+            active_sections.append(section)
+
     search = forms.search_form()
     return direct_to_template(request,
             'myschedule/section_results.html',
-            {'prefix':prefix, 'number':number, 'search':search}
+            {'course':active_course, 'sections':active_sections, 'search':search}
     )
 
 def query(request, querystring):

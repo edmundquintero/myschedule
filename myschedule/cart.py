@@ -1,4 +1,4 @@
-# from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
 # from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic.simple import direct_to_template
@@ -33,6 +33,7 @@ def validate_section(request, section_to_add):
 
     return conflicts
 
+@login_required
 def add_cartitem(request, section):
     """
         Adds the specified course section to the user's shopping cart.

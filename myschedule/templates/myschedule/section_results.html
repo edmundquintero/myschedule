@@ -4,7 +4,23 @@
 
 {% block content %}
   {% include "myschedule/search.html" %}
+  <form action="" method="POST" id="section-form">
     <p>
-    Eventually the sections for {{ prefix }}{{ number }} will be listed here - but not today.
+      {{ course.prefix }} {{ course.number }} <b>{{ course.title }}</b><br/>
+      Course description goes here.
+      <table>
+      <tbody>
+      {% for section in sections %}
+        <tr class="{% cycle 'odd' 'even' %}">
+          <td><input type="checkbox" name="section_{{ section.id }}" id="id_section_{{ section.id }}"/></td>
+          <td>{{ section.section }}</td>
+          <td>{{ section.instructor_first_name }} {{ section.instructor_last_name }}<br/>
+          {% if section.booklink %} <a href= "{{ section.booklink }}">View Book Information</a>{% endif %}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+      </table>
     </p>
+    <input type="submit" name="add" value="Add to Schedule"/>
+  </form>
 {% endblock %}
