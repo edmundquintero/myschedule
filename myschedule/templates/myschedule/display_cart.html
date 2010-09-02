@@ -1,8 +1,13 @@
 {% extends "myschedule/base.html" %}
 
+{% block scripts %}{{ block.super }}
+  <script type="text/javascript" src="{% url appstatic "js/schedule.js" %}"></script>
+{% endblock %}
+
 {% block page_title %}{{ block.super }} | Display Cart{% endblock %}
 
 {% block content %}
+
 <p>
 <table>
 <tbody>
@@ -17,4 +22,7 @@
 </tbody>
 </table>
 </p>
+<a class="ui-button open-window" href="#email" ref="email" dialog-title="Email Schedule">Email Schedule</a>
+{% include "myschedule/dialogs/email.html" %}
+
 {% endblock %}
