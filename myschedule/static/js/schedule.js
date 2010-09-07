@@ -47,22 +47,33 @@ closeDialog = function()
 sendEmail = function()
 {
     // Separate email addresses and validate they are properly formatted.
-    var emails = $('#id_email').val().replace(/ /g,'');
+    var emails = $('#id_email').val().replace(/ /g,''); // removes spaces
     var email_list = emails.split(',');
     var invalid_emails = '';
+    var valid_emails = '';
     var email_pattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i;
     for (var i=0; i < email_list.length; i++){
         var test_email = email_list[i];
-        if (test_email != '' && !(email_pattern.test(test_email))){
+        if (test_email != '' && !(email_pattern.test(test_email))) {
             invalid_emails = invalid_emails + '\n' + test_email;
         }
+        else {
+            if (test_email != '') {
+                valid_emails = valid_emails + ',' + test_email;
+            }
+        }
     }
-    if (invalid_emails == '') {
+    if (invalid_emails == '' && valid_emails != '') {
         // Submit ajax request to send email.
         // Close dialog.
         $(this).dialog('close');
     }
     else {
-        alert('There is a problem with the following email address(es):' + invalid_emails);
+        if (invalid_emails != '') {
+            alert('There is a problem with the following email address(es):' + invalid_emails);
+        }
+        else {
+            alert('You must enter at least one email address or cancel this request.')
+        }
     }
 };

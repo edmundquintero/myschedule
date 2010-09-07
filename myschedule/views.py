@@ -1,5 +1,6 @@
-# from django.contrib.auth.decorators import login_required
-# from django.http import HttpResponse
+#from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 # from django.shortcuts import get_object_or_404, redirect
 import string
 
@@ -70,14 +71,17 @@ def show_sections(request, prefix, number, course_id):
     """
         Display section results template for specified course.
     """
+    from myschedule.cart import save_cartitems, add_cartitem
     if request.method == 'POST':
-        print request.POST
-        section_url = ''
+        sections = ''
         for key in request.POST:
-            temp = key
-            if 'section_' in temp:
-                section_url = section_url + temp.replace('section_','') + '/'
-        print section_url
+            temp_key = key
+            if 'section_' in temp_key:
+                section = temp_key.replace('section_','')
+                cart_item = add_cartitem(request, section)
+                #sections = sections + section +'/'
+        #if sections != '':
+            #return HttpResponseRedirect(reverse(save_cartitems, args=[sections]))
 
     # TODO: Can't retrieve a course or section records using course_id via
     # cpapi, so until this whole data thing gets figured out will have to
@@ -97,21 +101,26 @@ def show_sections(request, prefix, number, course_id):
                      "data": "sections",
                      "prefix": prefix,
                      "number": number}
+
     sections = ods.get_data(ods_spec_dict)
     active_sections = []
     for section in sections:
         if string.upper(section['term'])=='FA' and section['year']=='2010':
             active_sections.append(section)
-
+            # Get the link to the book information TODO: replace hard-coded campus code with proper field when cpapi is updated to return location
+            section["booklink"] = compose_booklink('1013', section['term'],
+                              section['year'], section['prefix'],
+                              section['number'], section['section'])
     search = forms.search_form()
+
+    print request.user.is_anonymous()
+
     return direct_to_template(request,
             'myschedule/section_results.html',
-            {'course':active_course, 'sections':active_sections, 'search':search}
+            {'course':active_course,
+             'sections':active_sections,
+             'search':search,
+             'anonymous': request.user.is_anonymous}
     )
 
-def query(request, querystring):
-    print querystring
-    print querystring.split("/")
-    search = forms.search_form()
-    return direct_to_template(request, 'myschedule/index.html', {'search':search})
 

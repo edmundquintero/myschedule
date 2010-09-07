@@ -11,5 +11,5 @@
 {% block sections %}
 <li class="{% selected ^$ %}"><a href="{% url index %}">Search</a></li>
 <li class="{% selected ^show_courses/ %}"><a href="{% url show_courses %}">Browse</a></li>
-<li class="{% selected ^display_cart/ %}"><a href="{% url display_cart %}">Schedule</a></li>
+<li class="{% selected ^show_schedule/ %}"><a href="{% url show_schedule %}">Schedule</a></li>
 {% endblock %}

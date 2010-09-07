@@ -10,13 +10,24 @@
 
 <p>
 <table>
+<thead>
+  <tr>
+    <th>Course</th>
+    <th>Status</th>
+    <th>Meeting Location & Times</th>
+    <th>Instructor / Book</th>
+    <th></th>
+  </tr>
+</thead>
 <tbody>
 {% for item in cartitems %}
   <tr class="{% cycle 'odd' 'even' %}">
     <td>{{ item.course_data.prefix }} - {{ item.course_data.number }} <i>{{ item.course_data.title }}</i><br/> {{ item.section_data.section }}</td>
+    <td></td>
+    <td>From {{ item.section_data.start_date }} to {{ item.section_data.end_date }}</td>
     <td>{{ item.section_data.instructor_first_name }} {{ item.section_data.instructor_last_name }}<br/>
     {% if item.booklink %} <a href= "{{ item.booklink }}">View Book Information</a>{% endif %}</td>
-    <td><a class="ui-button" href="{% url delete_cartitem item.id %}">Remove</a></td>
+    <td><a class="ui-button" href="#delete">Remove</a></td>
   </tr>
 {% endfor %}
 </tbody>
@@ -24,5 +35,4 @@
 </p>
 <a class="ui-button open-window" href="#email" ref="email" dialog-title="Email Schedule">Email Schedule</a>
 {% include "myschedule/dialogs/email.html" %}
-
 {% endblock %}

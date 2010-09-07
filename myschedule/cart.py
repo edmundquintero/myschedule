@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
-# from django.http import HttpResponse
+from django.core.urlresolvers import reverse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic.simple import direct_to_template
 from django.conf import settings
@@ -33,7 +34,7 @@ def validate_section(request, section_to_add):
 
     return conflicts
 
-@login_required
+#@login_required
 def add_cartitem(request, section):
     """
         Adds the specified course section to the user's shopping cart.
@@ -56,6 +57,14 @@ def add_cartitem(request, section):
     cart_item.save()
     return cart_item
 
+#@login_required
+def save_cartitems(request, sections):
+    sections = sections.split("/")
+    sections.remove('')
+    for section in sections:
+        cart_item = add_cartitem(request, section)
+    return HttpResponseRedirect(reverse('show_sections'))
+
 def delete_cartitem(request, itemID):
     """
         Deletes the specified course section from the shopping cart.
@@ -74,6 +83,7 @@ def delete_cartitem(request, itemID):
 def get_cartitems(request):
     """
         Returns items in the cart for a specific cart ID or user.
+        TODO: Remove if don't need after switching to passing sections via url.
     """
     cart_items = []
     # Use cartID if we have one to get items for a specific cart.
@@ -110,7 +120,56 @@ def get_cartitems(request):
             pass
     return cart_items
 
-def display_cart(request):
+def get_section_data(sections):
+    """
+        Get the section and course data for a list of sections.
+    """
+    cart_items=[]
+    for section in sections:
+        item={}
+        try:
+            ods_spec_dict = {"key": settings.CPAPI_KEY,
+                             "data": "sections",
+                             "id": section}
+            section_data = ods.get_data(ods_spec_dict)
+            ods_spec_dict = {"key": settings.CPAPI_KEY,
+                             "data": "course",
+                             "prefix": section_data['prefix'],
+                             "number": section_data['number']}
+            # Returns a list TODO: Need to query this with course ID not prefix & number.
+            course_data = ods.get_data(ods_spec_dict)[0]
+            # Get the link to the book information TODO: replace hard-coded campus code with proper field when cpapi is updated to return location
+            booklink = compose_booklink('1013', section_data['term'],
+                              section_data['year'], section_data['prefix'],
+                              section_data['number'], section_data['section'])
+
+            item = dict({"section_data":section_data, "course_data":course_data, "booklink":booklink})
+            cart_items.append(item)
+        except:
+            # TODO: Do something besides pass
+            pass
+    return cart_items
+
+#@login_required
+def show_schedule(request):
+    # TODO: remove setting of cartID - for testing only
+    request.session['cartID']=1
+    cart_items = get_cartitems(request)
+    if 'cartID' in request.session and request.session['cartID'] is not None:
+        cart_items = models.CartItem.objects.filter(
+                        cart=request.session['cartID'])
+    else:
+        # If there was no cart ID get cart via user ID if user logged in.
+        # Currently assumes user can only have one cart.
+        if not request.user.is_anonymous():
+            user = get_object_or_404(models.User, username=request.user)
+            cart_items = models.CartItem.objects.filter(cart__owner=user)
+    sections=''
+    for item in cart_items:
+        sections = sections + item.section + '/'
+    return HttpResponseRedirect(reverse('display_cart', args=[sections]))
+
+def display_cart(request, sections):
     """
         Displays shopping cart template.
     """
@@ -118,7 +177,10 @@ def display_cart(request):
     # needs to be displayed
     # TODO: remove setting of cartID - for testing only
     request.session['cartID']=1
-    cart_items = get_cartitems(request)
+    sections = sections.split("/")
+    sections.remove('')
+    #cart_items = get_cartitems(request)
+    cart_items = get_section_data(sections)
     return direct_to_template(request,
                               'myschedule/display_cart.html',
                               {'cartitems':cart_items}
