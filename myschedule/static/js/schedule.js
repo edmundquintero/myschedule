@@ -13,6 +13,10 @@ $(function() {
             buttons = { "Cancel": closeDialog,
                         "Send": sendEmail }
         }
+        if($(this).attr('ref') == 'save') {
+            buttons = { "Cancel": closeDialog,
+                        "Save schedule": saveSchedule }
+        }
         $('#' + $(this).attr('ref')).dialog('option','buttons', buttons);
         $('#' + $(this).attr('ref')).dialog('open');
     });
@@ -76,4 +80,12 @@ sendEmail = function()
             alert('You must enter at least one email address or cancel this request.')
         }
     }
+};
+
+// Process save schedule button on save dialog.
+saveSchedule = function()
+{
+    // Submit ajax request to save schedule.
+    // Close dialog.
+    $(this).dialog('close');
 };

@@ -75,7 +75,7 @@ def add_item(request):
     # return JSON object to browser
     return HttpResponse(json_data)
 
-#@login_required
+@login_required
 def save_cartitems(request, sections):
     sections = sections.split("/")
     sections.remove('')
@@ -83,20 +83,15 @@ def save_cartitems(request, sections):
         cart_item = add_cartitem(request, section)
     return HttpResponseRedirect(reverse('show_sections'))
 
-def delete_cartitem(request, itemID):
+def delete_cartitem(request, section):
     """
         Deletes the specified course section from the shopping cart.
     """
-    #TODO: Eventually want to call this from javascript
     #TODO: Re-run validation when they remove a section
-    cart_item = []
-    try:
-        cart_item = models.CartItem.objects.get(id=itemID)
-        cart_item.delete()
-    except models.CartItem.DoesNotExist:
-        # Should mean it was already deleted so don't raise a 404.
-        pass
-    return redirect('display_cart')
+    # TODO: Check for missing session variable
+    sections = request.session['WorkingCart']
+    request.session['WorkingCart'] = sections.replace(section+'/',"")
+    return redirect('show_schedule')
 
 def get_cartitems(request):
     """
@@ -168,23 +163,12 @@ def get_section_data(sections):
             pass
     return cart_items
 
-#@login_required
 def show_schedule(request):
-    # TODO: remove setting of cartID - for testing only
-    request.session['cartID']=1
-    cart_items = get_cartitems(request)
-    if 'cartID' in request.session and request.session['cartID'] is not None:
-        cart_items = models.CartItem.objects.filter(
-                        cart=request.session['cartID'])
-    else:
-        # If there was no cart ID get cart via user ID if user logged in.
-        # Currently assumes user can only have one cart.
-        if not request.user.is_anonymous():
-            user = get_object_or_404(models.User, username=request.user)
-            cart_items = models.CartItem.objects.filter(cart__owner=user)
-    sections=''
-    for item in cart_items:
-        sections = sections + item.section + '/'
+    """
+        Processes selection of schedule tab.
+    """
+    # TODO: Check for missing session variable
+    sections=request.session['WorkingCart']
     return HttpResponseRedirect(reverse('display_cart', args=[sections]))
 
 def display_cart(request, sections):
@@ -193,14 +177,12 @@ def display_cart(request, sections):
     """
     # TODO: get all the other information regarding a course section that
     # needs to be displayed
-    # TODO: remove setting of cartID - for testing only
-    request.session['cartID']=1
     sections = sections.split("/")
     sections.remove('')
-    #cart_items = get_cartitems(request)
     cart_items = get_section_data(sections)
     return direct_to_template(request,
                               'myschedule/display_cart.html',
-                              {'cartitems':cart_items}
+                              {'cartitems':cart_items,
+                               'is_display_cart':True}
                              )
 

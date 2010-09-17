@@ -1,9 +1,5 @@
 {% extends "myschedule/base.html" %}
 
-{% block scripts %}{{ block.super }}
-  <script type="text/javascript" src="{% url appstatic "js/schedule.js" %}"></script>
-{% endblock %}
-
 {% block page_title %}{{ block.super }} | Display Cart{% endblock %}
 
 {% block content %}
@@ -27,12 +23,13 @@
     <td>From {{ item.section_data.start_date }} to {{ item.section_data.end_date }}</td>
     <td>{{ item.section_data.instructor_first_name }} {{ item.section_data.instructor_last_name }}<br/>
     {% if item.booklink %} <a href= "{{ item.booklink }}">View Book Information</a>{% endif %}</td>
-    <td><a class="ui-button" href="#delete">Remove</a></td>
+    <td><a class="ui-button" href="{% url delete_cartitem item.section_data.id %}">Remove</a></td>
   </tr>
 {% endfor %}
 </tbody>
 </table>
 </p>
-<a class="ui-button open-window" href="#email" ref="email" dialog-title="Email Schedule">Email Schedule</a>
 {% include "myschedule/dialogs/email.html" %}
+{% include "myschedule/dialogs/save.html" %}
+
 {% endblock %}

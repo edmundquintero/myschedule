@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block scripts %}{{ block.super }}
+  <script type="text/javascript" src="{% url appstatic "js/schedule.js" %}"></script>
+{% endblock %}
+
 {% load tabbing %}
 
 {% block page_title %}myschedule{% endblock %}
@@ -13,3 +17,25 @@
 <li class="{% selected ^show_courses/ %}"><a href="{% url show_courses %}">Browse</a></li>
 <li class="{% selected ^show_schedule/ %}"><a href="{% url show_schedule %}">Schedule</a></li>
 {% endblock %}
+
+{% block body_class %}sidebar{% endblock %}
+{% block sidebar %}
+    {% if is_display_cart %}
+      <h5>Schedule Actions</h5>
+        <ul class='sidebar'>
+        <li><a class="open-window" href="#save" ref="save" dialog-title="Save Schedule"  title="Save this schedule">Save it!</a></li>
+        <li><a class="open-window" href="#email" ref="email" dialog-title="Email Schedule" title="Email this schedule to yourself or a friend">Share it!</a></li>
+        <li><a href="JavaScript:window.print();" title="Print this page">Print it!</a></li>
+        </ul>
+    {% endif %}
+    <h5>Saved Schedules</h5>
+      <ul class='sidebar'>
+      <li><a href="{% url index %}" title="Go home">Home</a></li>
+      </ul>
+    <h5>Recent Searches</h5>
+      <ul class='sidebar'>
+      <li><a href="{% url index %}" title="Go home">Home</a></li>
+      </ul>
+
+{% endblock %}
+
