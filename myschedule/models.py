@@ -3,17 +3,18 @@ from django.contrib.auth.models import User
 
 class Cart(models.Model):
     """
-        Parent for cart items.  Will only have an owner if the user logs in to
-        the application.
+        Stores the user's saved carts. Sections is a url parameter containing
+        the sections for the cart.
     """
-    # TODO: consider using email address instead of foreignkey relationship for
-    # owner if want to tie a cart to someone without a cpcc account.
+
     owner = models.ForeignKey(User, blank=True, null=True)
-    description = models.CharField(max_length=50, blank=True, null=True,
+    description = models.CharField(max_length=50,
                 help_text='Brief description that identifies this schedule.')
+    sections = models.CharField(max_length=300)
     def __unicode__(self):
         return self.id
 
+#TODO: Get rid of cartitem when we're sure we're going with storing the sections url.
 class CartItem(models.Model):
     """
         Contains the items (course sections) a user adds to their cart.

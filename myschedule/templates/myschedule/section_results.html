@@ -1,5 +1,12 @@
 {% extends "myschedule/base.html" %}
 
+{% block scripts %}{{ block.super }}
+   <script type="text/javascript">
+     var basePath = '{% url index %}';
+   </script>
+  <script type="text/javascript" src="{% url appstatic "js/sections.js" %}"></script>
+{% endblock %}
+
 {% block page_title %}{{ block.super }} | Search Results{% endblock %}
 
 {% block content %}
@@ -16,29 +23,28 @@
       <table>
       <thead>
         <tr>
-          <th>Add</th>
           <th>Synonym</th>
           <th>Section</th>
           <th>Status</th>
           <th>Meeting Location & Times</th>
           <th>Instructor / Book</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
       {% for section in sections %}
         <tr class="{% cycle 'odd' 'even' %}">
-          <td><input type="checkbox" name="section_{{ section.id }}" id="id_section_{{ section.id }}" {% if anonymous %}disabled="disabled"{% endif %}/></td>
           <td>{{ section.synonym}}</td>
           <td>{{ section.section }}</td>
           <td></td>
           <td>From {{ section.start_date }} to {{ section.end_date }}</td>
           <td>{{ section.instructor_first_name }} {{ section.instructor_last_name }}<br/>
           {% if section.booklink %} <a href= "{{ section.booklink }}">View Book Information</a>{% endif %}</td>
+          <td><a class="ui-button add-item" href="#add" ref="section_{{ section.id }}">Add</a></td>
         </tr>
       {% endfor %}
       </tbody>
       </table>
     </p>
-    <input type="submit" name="add" value="Add to Schedule" {% if anonymous %}class=".ui-state-disabled"{% endif %}/>
   </form>
 {% endblock %}

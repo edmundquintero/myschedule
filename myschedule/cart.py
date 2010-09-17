@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic.simple import direct_to_template
 from django.conf import settings
+from django.utils import simplejson as json
 
 from cpsite import ods
 # from cpsite.decorators import groups_required
@@ -56,6 +57,23 @@ def add_cartitem(request, section):
                                section=section)
     cart_item.save()
     return cart_item
+
+def add_item(request):
+    """
+        Adds the selected course section to the cart session variable.
+    """
+    section = request.POST['section']
+    errors = ''
+    sections_url = ''
+    if 'WorkingCart' in request.session:
+        sections_url = request.session['WorkingCart']
+    if section not in sections_url:
+        # TODO: Run validation to check for conflicts.
+        request.session['WorkingCart'] = sections_url + section + '/'
+    json_data = {'errors':errors}
+    json_data = json.dumps(json_data)
+    # return JSON object to browser
+    return HttpResponse(json_data)
 
 #@login_required
 def save_cartitems(request, sections):
