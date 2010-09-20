@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% block scripts %}{{ block.super }}
+   <script type="text/javascript">
+     var basePath = '{% url index %}';
+   </script>
   <script type="text/javascript" src="{% url appstatic "js/schedule.js" %}"></script>
 {% endblock %}
 
@@ -15,7 +18,9 @@
 {% block sections %}
 <li class="{% selected ^$ %}"><a href="{% url index %}">Search</a></li>
 <li class="{% selected ^show_courses/ %}"><a href="{% url show_courses %}">Browse</a></li>
-<li class="{% selected ^show_schedule/ %}"><a href="{% url show_schedule %}">Schedule</a></li>
+{% if request.session.WorkingCart %}
+  <li class="{% selected ^show_schedule/ %}"><a href="{% url show_schedule %}">Schedule</a></li>
+{% endif %}
 {% endblock %}
 
 {% block body_class %}sidebar{% endblock %}

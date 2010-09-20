@@ -11,5 +11,8 @@ function addItem(section)
             if (messages.errors != ''){
                 alert(messages.errors);
             }
+            else{
+                window.location.reload();
+            }
             }, 'json');
 };

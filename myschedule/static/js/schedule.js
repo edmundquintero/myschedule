@@ -85,7 +85,15 @@ sendEmail = function()
 // Process save schedule button on save dialog.
 saveSchedule = function()
 {
-    // Submit ajax request to save schedule.
+    save_name = $('#id_save_name').val();
+    alert(name);
+    // Check to see if the schedule name already exists.
+    // Save schedule.
+    $.post(basePath + 'cart/save/', {description: save_name}, function(messages){
+            if (messages.errors != ''){
+                alert(messages.errors);
+            }
+          }, 'json');
     // Close dialog.
     $(this).dialog('close');
 };

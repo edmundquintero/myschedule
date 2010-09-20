@@ -35,33 +35,11 @@ def validate_section(request, section_to_add):
 
     return conflicts
 
-#@login_required
-def add_cartitem(request, section):
-    """
-        Adds the specified course section to the user's shopping cart.
-        If this is the first item added, create the cart record before
-        adding the cartitem.
-    """
-    if 'cartID' not in request.session or request.session['cartID'] == None:
-        # Cart does not exist for this user or session so create it first.
-        # Cart only has an owner if the user logged in.
-        if not request.user.is_anonymous():
-            user = get_object_or_404(models.User, username=request.user)
-        else:
-            user = None
-        cart = models.Cart(owner=user)
-        cart.save()
-        request.session['cartID'] = cart.id
-
-    cart_item = models.CartItem(cart_id=request.session['cartID'],
-                               section=section)
-    cart_item.save()
-    return cart_item
-
 def add_item(request):
     """
         Adds the selected course section to the cart session variable.
     """
+    # TODO: Reload sections (so schedule tab will appear) and hide the section they just added
     section = request.POST['section']
     errors = ''
     sections_url = ''
@@ -76,12 +54,19 @@ def add_item(request):
     return HttpResponse(json_data)
 
 @login_required
-def save_cartitems(request, sections):
-    sections = sections.split("/")
-    sections.remove('')
-    for section in sections:
-        cart_item = add_cartitem(request, section)
-    return HttpResponseRedirect(reverse('show_sections'))
+def save_schedule(request):
+    errors = ''
+    description = request.POST['description']
+    #if not request.user.is_anonymous():
+    user = get_object_or_404(models.User, username=request.user)
+    cart = models.Cart(owner=user,
+                           description=description,
+                           sections=request.session['WorkingCart'])
+    cart.save()
+    json_data = {'errors':errors}
+    json_data = json.dumps(json_data)
+    # return JSON object to browser
+    return HttpResponse(json_data)
 
 def delete_cartitem(request, section):
     """
@@ -185,4 +170,5 @@ def display_cart(request, sections):
                               {'cartitems':cart_items,
                                'is_display_cart':True}
                              )
+
 
