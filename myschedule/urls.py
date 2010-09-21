@@ -14,8 +14,9 @@ urlpatterns = patterns('',
     url(r'^show_courses/', views.show_courses, name='show_courses'),
     url(r'^show_sections/(\w{3})/([\d\w]+)/([\w]+)/$', views.show_sections, name='show_sections'),
     url(r'^show_schedule/', cart.show_schedule, name='show_schedule'),
+    url(r'^save_schedule/', cart.save_schedule, name='save_schedule'),
     url(r'^cart/add/$', cart.add_item, name='add_item'),
-    url(r'^cart/save/$', cart.save_schedule, name='save_schedule'),
+    #url(r'^cart/save/$', cart.save_schedule, name='save_schedule'),
     # url(r'^admin/', include(admin.site.urls)),
 )
 

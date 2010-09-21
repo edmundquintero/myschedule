@@ -9,3 +9,7 @@ span.information {
     color: red;
     margin-left: 5px;
 }
+
+input.save-button {
+    visibility: hidden;
+}

@@ -28,7 +28,7 @@
     {% if is_display_cart %}
       <h5>Schedule Actions</h5>
         <ul class='sidebar'>
-        <li><a class="open-window" href="#save" ref="save" dialog-title="Save Schedule"  title="Save this schedule">Save it!</a></li>
+        <li><a href="{% url save_schedule %}" title="Save this schedule">Save it!</a></li>
         <li><a class="open-window" href="#email" ref="email" dialog-title="Email Schedule" title="Email this schedule to yourself or a friend">Share it!</a></li>
         <li><a href="JavaScript:window.print();" title="Print this page">Print it!</a></li>
         </ul>

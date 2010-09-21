@@ -21,6 +21,9 @@ $(function() {
         $('#' + $(this).attr('ref')).dialog('open');
     });
 
+    $("#schedule_form")
+       .submit(processSubmit);
+
 });
 
 function createModalWindow(element, title, height, createCallback,
@@ -86,14 +89,27 @@ sendEmail = function()
 saveSchedule = function()
 {
     save_name = $('#id_save_name').val();
-    alert(name);
     // Check to see if the schedule name already exists.
     // Save schedule.
-    $.post(basePath + 'cart/save/', {description: save_name}, function(messages){
-            if (messages.errors != ''){
-                alert(messages.errors);
-            }
-          }, 'json');
+    //$.post(basePath + 'cart/save/', {description: save_name}, function(messages){
+    //        if (messages.errors != ''){
+    //            alert(messages.errors);
+    //        }
+    //      }, 'json');
+    //$.post(basePath + 'cart/save/', {description: save_name});
+
     // Close dialog.
     $(this).dialog('close');
+    $('#schedule_form').submit();
+};
+
+function processSubmit()
+{
+        // Form fields that are displayed in a dialog will not get returned
+        // with the form (dialogs are moved outside of the form
+        // to the end of the body to prevent z-index problems with IE).  
+        // Must explicitly move them back to the form.
+        $('a.open-window').each(function(){
+             $('#'+$(this).attr('ref')).parents('.ui-dialog').appendTo('#schedule_form');
+        });
 };

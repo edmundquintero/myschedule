@@ -1,4 +1,9 @@
-<div id="save">
+{% extends "myschedule/base.html" %}
+
+{% block page_title %}{{ block.super }} | Display Cart{% endblock %}
+
+{% block content %}
+<form method="POST" action="" id="save-cart"
   <p>
   Enter a brief name for this schedule:
     <div class="field">
@@ -8,5 +13,6 @@
         </div>
     </div>
   </p>
-</div>
-
+<input type="submit" value="Save Schedule" id="id_save_button"/>
+</form>
+{% endblock %}

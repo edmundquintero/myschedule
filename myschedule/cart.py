@@ -55,18 +55,16 @@ def add_item(request):
 
 @login_required
 def save_schedule(request):
-    errors = ''
-    description = request.POST['description']
-    #if not request.user.is_anonymous():
-    user = get_object_or_404(models.User, username=request.user)
-    cart = models.Cart(owner=user,
+    if request.method == 'POST':
+        description = request.POST['save_name']
+        user = get_object_or_404(models.User, username=request.user)
+        cart = models.Cart(owner=user,
                            description=description,
                            sections=request.session['WorkingCart'])
-    cart.save()
-    json_data = {'errors':errors}
-    json_data = json.dumps(json_data)
-    # return JSON object to browser
-    return HttpResponse(json_data)
+        cart.save()
+        return redirect('show_schedule')
+    return direct_to_template(request,
+                              'myschedule/save.html',{})
 
 def delete_cartitem(request, section):
     """
