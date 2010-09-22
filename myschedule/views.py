@@ -113,8 +113,7 @@ def show_sections(request, prefix, number, course_id):
             'myschedule/section_results.html',
             {'course':active_course,
              'sections':active_sections,
-             'search':search,
-             'anonymous': request.user.is_anonymous}
+             'search':search}
     )
 
 

@@ -10,11 +10,6 @@
 {% block page_title %}{{ block.super }} | Search Results{% endblock %}
 
 {% block content %}
-  {% if anonymous %}
-    <div class="message message-warning">
-      <p>You must <a href="{% url login %}">sign in</a> to build and save a schedule.</p>
-    </div>
-  {% endif %}
   {% include "myschedule/search.html" %}
   <form action="" method="POST" id="section-form">
     <p>
