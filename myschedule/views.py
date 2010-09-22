@@ -67,10 +67,6 @@ def show_courses(request):
              'search':search}
     )
 
-def sections_as_list(sections):
-    sections = sections.split("/")
-    sections.remove('')
-    return sections
 
 def show_sections(request, prefix, number, course_id):
     """

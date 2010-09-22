@@ -76,46 +76,6 @@ def delete_cartitem(request, section):
     request.session['WorkingCart'] = sections.replace(section+'/',"")
     return redirect('show_schedule')
 
-def get_cartitems(request):
-    """
-        Returns items in the cart for a specific cart ID or user.
-        TODO: Remove if don't need after switching to passing sections via url.
-    """
-    cart_items = []
-    # Use cartID if we have one to get items for a specific cart.
-    if 'cartID' in request.session and request.session['cartID'] is not None:
-        cart_items = models.CartItem.objects.filter(
-                        cart=request.session['cartID'])
-    else:
-        # If there was no cart ID get cart via user ID if user logged in.
-        # Currently assumes user can only have one cart.
-        if not request.user.is_anonymous():
-            user = get_object_or_404(models.User, username=request.user)
-            cart_items = models.CartItem.objects.filter(cart__owner=user)
-    # Get additional section and meeting data via cpapi
-    for item in cart_items:
-        try:
-            ods_spec_dict = {"key": settings.CPAPI_KEY,
-                             "data": "sections",
-                             "id": item.section}
-            section_data = ods.get_data(ods_spec_dict)
-            item.section_data = section_data
-            ods_spec_dict = {"key": settings.CPAPI_KEY,
-                             "data": "course",
-                             "prefix": section_data['prefix'],
-                             "number": section_data['number']}
-            # Returns a list TODO: handle more than one item?
-            course_data = ods.get_data(ods_spec_dict)[0]
-            item.course_data = course_data
-            # Get the link to the book information TODO: replace hard-coded campus code with proper field when cpapi is updated to return location
-            item.booklink = compose_booklink('1013', section_data['term'],
-                              section_data['year'], section_data['prefix'],
-                              section_data['number'], section_data['section'])
-        except:
-            # TODO: Do something besides pass
-            pass
-    return cart_items
-
 def get_section_data(sections):
     """
         Get the section and course data for a list of sections.
