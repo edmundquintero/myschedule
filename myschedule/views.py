@@ -1,7 +1,7 @@
 #from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-# from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect
 import string
 
 from django.views.generic.simple import direct_to_template
@@ -15,6 +15,22 @@ from myschedule import models, forms
 def index(request):
     search = forms.search_form()
     return direct_to_template(request, 'myschedule/index.html', {'search':search})
+
+def search(request, search_text=None):
+    """
+        Handles processing for Search button and saved searches.
+    """
+    if search_text is None:
+        if request.method == 'POST':
+            search_text = request.POST['search_text']
+    searches = []
+    if 'RecentSearches' in request.session:
+        searches = request.session['RecentSearches']
+    if search_text not in searches and search_text != None:
+        searches.append(search_text)
+        request.session['RecentSearches'] = searches
+    # TODO: perform the search!
+    return redirect('show_courses')
 
 def compose_booklink(campus=None, term=None, year=None, course_prefix=None,
                      course_number=None, section=None):

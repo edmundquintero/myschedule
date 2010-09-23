@@ -34,13 +34,28 @@
         </ul>
     {% endif %}
     <h5>Saved Schedules</h5>
-      <ul class='sidebar'>
-      <li><a href="{% url index %}" title="Go home">Home</a></li>
-      </ul>
+      {% if request.session.SavedSchedules %}
+        <ul class='sidebar'>
+          {% for schedule in request.session.SavedSchedules %}
+            <li><a href="{% url display_cart schedule.sections %}" title="Display schedule for {{schedule.description}}">{{ schedule.description }}</a></li>
+          {% endfor %}
+        </ul>
+      {% else %}
+          {% ifequal user.is_authenticated 'True' %}
+            <p><i>You have no saved schedules</i></p>
+          {% else %}
+            <p><i><a href="{% url login %}" title="Sign in with your CPCC Login">Sign in</a> to view saved schedules.</i></p>
+          {% endifequal %}
+      {% endif %}
     <h5>Recent Searches</h5>
-      <ul class='sidebar'>
-      <li><a href="{% url index %}" title="Go home">Home</a></li>
-      </ul>
-
+      {% if request.session.RecentSearches %}
+        <ul class='sidebar'>
+          {% for search_text in request.session.RecentSearches %}
+            <li><a href="{% url search search_text %}" title="Show search results for {{ search_text }}">{{ search_text }}</a></li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p><i>No searches to display.</i></p>
+      {% endif %}
 {% endblock %}
 

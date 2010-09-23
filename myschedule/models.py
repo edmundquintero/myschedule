@@ -12,7 +12,7 @@ class Cart(models.Model):
                 help_text='Brief description that identifies this schedule.')
     sections = models.CharField(max_length=300)
     def __unicode__(self):
-        return self.id
+        return self.description
 
 #TODO: Get rid of cartitem when we're sure we're going with storing the sections url.
 class CartItem(models.Model):

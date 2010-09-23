@@ -12,6 +12,13 @@ from cpsite import ods
 from myschedule import models, forms
 from myschedule.views import compose_booklink
 
+def get_schedules(request):
+    saved_schedules = []
+    if not request.user.is_anonymous():
+        saved_schedules = models.Cart.objects.filter(owner__username = request.user)
+        request.session['SavedSchedules'] = saved_schedules
+    return saved_schedules
+
 def validate_section(request, section_to_add):
     """
         Specialized validation checking for conflicts between the section
@@ -118,6 +125,7 @@ def display_cart(request, sections):
     """
         Displays shopping cart template.
     """
+    saved_schedules = get_schedules(request)
     # TODO: get all the other information regarding a course section that
     # needs to be displayed
     sections = sections.split("/")
