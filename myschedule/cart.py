@@ -13,6 +13,9 @@ from myschedule import models, forms
 from myschedule.views import compose_booklink
 
 def get_schedules(request):
+    """
+        Retrieves a list of the user's saved schedules (if they're logged in).
+    """
     saved_schedules = []
     if not request.user.is_anonymous():
         saved_schedules = models.Cart.objects.filter(owner__username = request.user)
@@ -62,10 +65,20 @@ def add_item(request):
 
 @login_required
 def save_schedule(request):
+    """
+        Saves the user's working schedule.  Will overwrite an existing
+        schedule with the same name.
+    """
     if request.method == 'POST':
         description = request.POST['save_name']
-        user = get_object_or_404(models.User, username=request.user)
-        cart = models.Cart(owner=user,
+        #user = get_object_or_404(models.User, username=request.user)
+        try:
+            # See if a schedule with this name already exists.
+            cart = models.Cart.objects.get(
+                           owner=request.user, description=description)
+            cart.sections = request.session['WorkingCart']
+        except models.Cart.DoesNotExist:
+            cart = models.Cart(owner=request.user,
                            description=description,
                            sections=request.session['WorkingCart'])
         cart.save()
@@ -82,6 +95,18 @@ def delete_cartitem(request, section):
     sections = request.session['WorkingCart']
     request.session['WorkingCart'] = sections.replace(section+'/',"")
     return redirect('show_schedule')
+
+def delete_schedule(request, cart_id):
+    """
+        Deletes a saved schedule from the table.
+    """
+    cart_instance = get_object_or_404(models.Cart,
+                                      id=cart_id,
+                                      owner=request.user)
+    cart_instance.delete()
+    #TODO: Verify which schedule we're going to be showing
+    return redirect('show_schedule')
+
 
 def get_section_data(sections):
     """

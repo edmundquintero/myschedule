@@ -13,3 +13,7 @@ span.information {
 input.save-button {
     visibility: hidden;
 }
+
+a.delete-schedule {
+    color:red;
+}
