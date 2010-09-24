@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     url(r'^search/$', views.search, name='search'),
     url(r'^search/([\w]*)/$', views.search, name='search'),
     url(r'^cart/add/$', cart.add_item, name='add_item'),
+    url(r'^schedule/email/$', cart.email_schedule, name='email_schedule'),
     #url(r'^cart/save/$', cart.save_schedule, name='save_schedule'),
     # url(r'^admin/', include(admin.site.urls)),
 )

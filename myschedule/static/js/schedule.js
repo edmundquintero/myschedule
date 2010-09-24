@@ -69,7 +69,13 @@ sendEmail = function()
         }
     }
     if (invalid_emails == '' && valid_emails != '') {
-        // Submit ajax request to send email.
+        // Submit request to send email.
+        $.post(basePath + 'schedule/email/', {email_addresses: valid_emails}, function(messages){
+            if (messages.errors != ''){
+                alert(messages.errors);
+            }
+            }, 'json');
+       
         // Close dialog.
         $(this).dialog('close');
     }

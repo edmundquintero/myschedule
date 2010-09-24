@@ -28,7 +28,7 @@
 {% for item in cartitems %}
   <tr class="{% cycle 'odd' 'even' %}">
     <td>{{ item.course_data.prefix }} - {{ item.course_data.number }} <i>{{ item.course_data.title }}</i><br/> {{ item.section_data.section }}</td>
-    <td></td>
+    <td>seat(s)available</td>
     <td>From {{ item.section_data.start_date }} to {{ item.section_data.end_date }}</td>
     <td>{{ item.section_data.instructor_first_name }} {{ item.section_data.instructor_last_name }}<br/>
     {% if item.booklink %} <a href= "{{ item.booklink }}">View Book Information</a>{% endif %}</td>

@@ -39,7 +39,6 @@ def add_item(request):
     """
         Adds the selected course section to the cart session variable.
     """
-    # TODO: Reload sections (so schedule tab will appear) and hide the section they just added
     section = request.POST['section']
     errors = ''
     sections_url = ''
@@ -151,4 +150,44 @@ def display_cart(request, sections):
                               {'cartitems':cart_items}
                              )
 
+def email_schedule(request):
+    """
+        Processes javascript request to email schedule.
+    """
+    from django.core.mail import send_mail
+    email_addresses = request.POST['email_addresses']
+    to_addressees = email_addresses.split(",")
+    to_addressees.remove('')
+    errors = ''
+    sections_url = ''
+    if 'WorkingCart' in request.session:
+        sections_url = request.session['WorkingCart']
+    sections = sections_url.split("/")
+    sections.remove('')
+    schedule = get_section_data(sections)
+    email_message = "View this schedule online at %s.\n\n" % sections_url
+    for item in schedule:
+        course_data = item['course_data']
+        section_data = item['section_data']
+        booklink = item['booklink']
+        message = (
+            "Course: %s %s %s \n" % (course_data['prefix'],
+                                  course_data['number'],
+                                  course_data['title']) +
+            "Section: %s \n" % (section_data['section']) +
+            "Instructor: %s %s \n" % (section_data['instructor_first_name'],
+                                      section_data['instructor_last_name'])
+        )
+        email_message = email_message + message + '\n\n'
+    if email_message != "":
+        send_mail('CPCC schedule',
+                  email_message,
+                  "myschedule@cpcc.edu",
+                  to_addressees,
+                  auth_user=None,
+                  auth_password=None)
+    json_data = {'errors':errors}
+    json_data = json.dumps(json_data)
+    # return JSON object to browser
+    return HttpResponse(json_data)
 
