@@ -15,5 +15,9 @@ input.save-button {
 }
 
 a.delete-schedule {
-    color:red;
+    color: red;
+}
+
+li.schedule-li {
+    width: 40%;
 }

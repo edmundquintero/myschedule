@@ -16,6 +16,16 @@ def index(request):
     search = forms.search_form()
     return direct_to_template(request, 'myschedule/index.html', {'search':search})
 
+def get_schedules(request):
+    """
+        Retrieves a list of the user's saved schedules (if they're logged in).
+    """
+    saved_schedules = []
+    if not request.user.is_anonymous():
+        saved_schedules = models.Cart.objects.filter(owner__username = request.user)
+        request.session['SavedSchedules'] = saved_schedules
+    return saved_schedules
+
 def search(request, search_text=None):
     """
         Handles processing for Search button and saved searches.
@@ -63,6 +73,7 @@ def show_courses(request):
     """
         Displays course search results template.
     """
+    saved_schedules = get_schedules(request)
     # TODO: For now we'll just grab all mat courses via cpapi so we'll have
     # some courses to display.
     ods_spec_dict = {"key": settings.CPAPI_KEY,
@@ -88,7 +99,7 @@ def show_sections(request, prefix, number, course_id):
     """
         Display section results template for specified course.
     """
-
+    saved_schedules = get_schedules(request)
     # TODO: Can't retrieve a course or section records using course_id via
     # cpapi, so until this whole data thing gets figured out will have to
     # filter the lists to get the items for a particular course_id. Actually

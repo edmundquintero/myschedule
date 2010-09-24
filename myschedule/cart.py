@@ -10,17 +10,7 @@ from cpsite import ods
 # from cpsite.decorators import groups_required
 
 from myschedule import models, forms
-from myschedule.views import compose_booklink
-
-def get_schedules(request):
-    """
-        Retrieves a list of the user's saved schedules (if they're logged in).
-    """
-    saved_schedules = []
-    if not request.user.is_anonymous():
-        saved_schedules = models.Cart.objects.filter(owner__username = request.user)
-        request.session['SavedSchedules'] = saved_schedules
-    return saved_schedules
+from myschedule.views import compose_booklink, get_schedules
 
 def validate_section(request, section_to_add):
     """

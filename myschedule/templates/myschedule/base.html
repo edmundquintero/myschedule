@@ -16,10 +16,9 @@
 {% endblock %}
 
 {% block sections %}
-<li class="{% selected ^$ %}"><a href="{% url index %}">Search</a></li>
-<li class="{% selected ^show_courses/ %}"><a href="{% url show_courses %}">Browse</a></li>
+<li class="{% selected ^$ %}{% selected ^show_courses/ %}{% selected ^show_sections/ %}"><a href="{% url index %}">Search</a></li>
 {% if request.session.WorkingCart %}
-  <li class="{% selected ^show_schedule/ %}"><a href="{% url show_schedule %}">Schedule</a></li>
+  <li class="{% selected ^show_schedule/ %}{% selected ^display_cart/ %}"><a href="{% url show_schedule %}">Schedule</a></li>
 {% endif %}
 {% endblock %}
 
