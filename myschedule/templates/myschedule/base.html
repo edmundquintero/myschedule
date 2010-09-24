@@ -42,11 +42,11 @@
           {% endfor %}
         </ul>
       {% else %}
-          {% ifequal user.is_authenticated 'True' %}
+          {% if user.is_authenticated %}
             <p><i>You have no saved schedules</i></p>
           {% else %}
             <p><i><a href="{% url login %}" title="Sign in with your CPCC Login">Sign in</a> to view saved schedules.</i></p>
-          {% endifequal %}
+          {% endif %}
       {% endif %}
     <h5>Recent Searches</h5>
       {% if request.session.RecentSearches %}

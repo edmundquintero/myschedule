@@ -1,18 +1,19 @@
 #from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, redirect
-import string
-
 from django.views.generic.simple import direct_to_template
 from django.conf import settings
 
 from cpsite import ods
+
+import string
+
 # from cpsite.decorators import groups_required
 
 from myschedule import models, forms
 
 def index(request):
+    saved_schedules = get_schedules(request)
     search = forms.search_form()
     return direct_to_template(request, 'myschedule/index.html', {'search':search})
 
