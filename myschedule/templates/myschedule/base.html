@@ -24,14 +24,6 @@
 
 {% block body_class %}sidebar{% endblock %}
 {% block sidebar %}
-    {% if is_display_cart %}
-      <h5>Schedule Actions</h5>
-        <ul class='sidebar'>
-        <li><a href="{% url save_schedule %}" title="Save this schedule">Save it!</a></li>
-        <li><a class="open-window" href="#email" ref="email" dialog-title="Email Schedule" title="Email this schedule to yourself or a friend">Share it!</a></li>
-        <li><a href="JavaScript:window.print();" title="Print this page">Print it!</a></li>
-        </ul>
-    {% endif %}
     <h5>Saved Schedules</h5>
       {% if request.session.SavedSchedules %}
         <ul class='sidebar'>

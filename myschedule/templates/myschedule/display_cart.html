@@ -4,6 +4,16 @@
 
 {% block content %}
 <p>
+{% if not user.is_authenticated %}
+  <div class="message message-warning">
+    To save schedules, you must <a href="{% url login %}">sign in</a>.
+    </div>
+{% endif %}
+{% if user.is_authenticated %}
+  <a href="{% url save_schedule %}" title="Save this schedule" class="ui-button">Save it!</a>
+{% endif %}
+<a class="open-window ui-button" href="#email" ref="email" dialog-title="Email Schedule" title="Email this schedule to yourself or a friend">Share it!</a>
+<a href="JavaScript:window.print();" title="Print this page" class="ui-button">Print it!</a>
 <table>
 <thead>
   <tr>

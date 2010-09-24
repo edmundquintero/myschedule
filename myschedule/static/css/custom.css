@@ -1,3 +1,7 @@
+h1 {
+    display: none;
+}
+
 div.search {
     width: 40%;
     margin-left: auto;
@@ -16,6 +20,15 @@ input.save-button {
 
 a.delete-schedule {
     color: red;
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: bold;
+}
+
+td.checkmark {
+    text-align: Center;
+    font-weight: bold;
+    font-size: 2em;
 }
 
 li.schedule-li {

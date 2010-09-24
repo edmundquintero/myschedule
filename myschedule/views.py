@@ -13,6 +13,9 @@ import string
 from myschedule import models, forms
 
 def index(request):
+    """
+        Handles processing for the index template.
+    """
     saved_schedules = get_schedules(request)
     search = forms.search_form()
     return direct_to_template(request, 'myschedule/index.html', {'search':search})
@@ -124,13 +127,18 @@ def show_sections(request, prefix, number, course_id):
     active_sections = []
     for section in sections:
         if string.upper(section['term'])=='FA' and section['year']=='2010':
-            if ((request.session.has_key('WorkingCart') and (section['id'] not in request.session['WorkingCart']))
-                or not request.session.has_key('WorkingCart')):
-                    active_sections.append(section)
-                    # Get the link to the book information TODO: replace hard-coded campus code with proper field when cpapi is updated to return location
-                    section["booklink"] = compose_booklink('1013', section['term'],
-                              section['year'], section['prefix'],
-                              section['number'], section['section'])
+            active_sections.append(section)
+            # Get the link to the book information TODO: replace hard-coded campus code with proper field when cpapi is updated to return location
+            section["booklink"] = compose_booklink('1013', section['term'],
+                      section['year'], section['prefix'],
+                      section['number'], section['section'])
+            # TODO: When upgrade to django 1.2 can remove is_in_cart code and
+            # just check in the template to see if the section is in the cart
+            section['is_in_cart']=False
+            if (request.session.has_key('WorkingCart')):
+                if section['id'] in request.session['WorkingCart']:
+                    section['is_in_cart']=True
+
     search = forms.search_form()
 
     return direct_to_template(request,

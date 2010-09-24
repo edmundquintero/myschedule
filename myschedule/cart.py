@@ -148,8 +148,7 @@ def display_cart(request, sections):
     cart_items = get_section_data(sections)
     return direct_to_template(request,
                               'myschedule/display_cart.html',
-                              {'cartitems':cart_items,
-                               'is_display_cart':True}
+                              {'cartitems':cart_items}
                              )
 
 

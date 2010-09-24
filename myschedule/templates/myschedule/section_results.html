@@ -35,7 +35,12 @@
           <td>From {{ section.start_date }} to {{ section.end_date }}</td>
           <td>{{ section.instructor_first_name }} {{ section.instructor_last_name }}<br/>
           {% if section.booklink %} <a href= "{{ section.booklink }}">View Book Information</a>{% endif %}</td>
-          <td><a class="ui-button add-item" href="#add" ref="section_{{ section.id }}">Add</a></td>
+          {% if section.is_in_cart %}
+            <td class="checkmark">+</td>
+          {% else %}
+            <td><a class="ui-button add-item" href="#add" ref="section_{{ section.id }}">Add</a></td>
+          {% endif %}
+
         </tr>
       {% endfor %}
       </tbody>
