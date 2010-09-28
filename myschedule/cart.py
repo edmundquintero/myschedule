@@ -155,6 +155,7 @@ def email_schedule(request):
         Processes javascript request to email schedule.
     """
     from django.core.mail import send_mail
+    from datetime import date
     email_addresses = request.POST['email_addresses']
     to_addressees = email_addresses.split(",")
     to_addressees.remove('')
@@ -165,7 +166,9 @@ def email_schedule(request):
     sections = sections_url.split("/")
     sections.remove('')
     schedule = get_section_data(sections)
-    email_message = "View this schedule online at %s.\n\n" % sections_url
+    app_host = request.get_host()
+    schedule_url = reverse('display_cart',args=[sections_url])
+    email_message = "View this schedule online at http://%s%s.\n\n" % (app_host, schedule_url)
     for item in schedule:
         course_data = item['course_data']
         section_data = item['section_data']
@@ -176,9 +179,12 @@ def email_schedule(request):
                                   course_data['title']) +
             "Section: %s \n" % (section_data['section']) +
             "Instructor: %s %s \n" % (section_data['instructor_first_name'],
-                                      section_data['instructor_last_name'])
+                                      section_data['instructor_last_name']) +
+            "Campus: \n"  +
+            "Building / Room: \n" +
+            "Meeting Days & Times: \n"
         )
-        email_message = email_message + message + '\n\n'
+        email_message = email_message + message + '\n'
     if email_message != "":
         send_mail('CPCC schedule',
                   email_message,
