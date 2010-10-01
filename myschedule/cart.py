@@ -12,28 +12,12 @@ from cpsite import ods
 from myschedule import models, forms
 from myschedule.views import compose_booklink, get_schedules
 
-def validate_section(request, section_to_add):
-    """
-        Specialized validation checking for conflicts between the section
-        the user is attempting to add to the cart and the sections already
-        in the cart.
-    """
-    # TODO: Need to call this via javascript
-    conflicts = []
-    if 'cartID' in request.session and not request.session['cartID'] == None:
-        cart_items = models.CartItem.objects.filter(
-                                cart_id=request.session['cartID'])
-        # check to see if the section is already in the cart
-        section_query = cart_items.filter(section=section_to_add)
-        if section_query != []:
-            conflicts.append('Course section ' +
-                              section_to_add +
-                             ' is already in your cart.')
-        # TODO:check for conflicts with class times of items already in cart
 
-    # TODO:check for available seats
-
-    return conflicts
+"""
+    What is a cart?
+    The cart represents the schedule that is currently being edited
+    (having courses added and removed).
+"""
 
 def add_item(request):
     """

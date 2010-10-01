@@ -3,12 +3,12 @@ $(function() {
     // dialog in the processing for the click function.
     $('a.open-window').each(function(){
         createModalWindow($(this).attr('ref'), $(this).attr('dialog-title'),
-            'auto', closeDialog, closeDialog);
+            closeDialog, closeDialog);
     });
 
     // Override any dialog specific parameters and open appropriate selected
     // window.
-    $('a.open-window').click(function() {
+    $('a.open-window').click(function(event) {
         if($(this).attr('ref') == 'email') {
             buttons = { "Cancel": closeDialog,
                         "Send": sendEmail }
@@ -17,14 +17,24 @@ $(function() {
             buttons = { "Cancel": closeDialog,
                         "Save schedule": saveSchedule }
         }
+        if($(this).attr('ref') == 'book') {
+            $('a.booklink').attr('href', $(this).attr('booklink'));
+            buttons = {}
+            event.preventDefault();
+            $("#book-frame").attr("src", $(this).attr('booklink'));
+            $('#' + $(this).attr('ref')).dialog('option','width',850);
+            $('#' + $(this).attr('ref')).dialog('option','height','850');
+        }
+
         $('#' + $(this).attr('ref')).dialog('option','buttons', buttons);
         $('#' + $(this).attr('ref')).dialog('open');
+
     });
 
 
 });
 
-function createModalWindow(element, title, height, createCallback,
+function createModalWindow(element, title, createCallback,
                                cancelCallback)
 {
     // Buttons will display in dialog window in reverse to the order in
@@ -36,7 +46,7 @@ function createModalWindow(element, title, height, createCallback,
         bgiframe: true,
         autoOpen: false,
         width: 400,
-        height: height,
+        height: 'auto',
         modal: true,
         buttons: { Cancel: cancelCallback, Create: createCallback }
     });
