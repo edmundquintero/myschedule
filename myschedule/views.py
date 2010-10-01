@@ -26,7 +26,7 @@ def get_schedules(request):
     """
     saved_schedules = []
     if not request.user.is_anonymous():
-        saved_schedules = models.Cart.objects.filter(owner__username = request.user)
+        saved_schedules = models.Schedule.objects.filter(owner__username = request.user)
         request.session['SavedSchedules'] = saved_schedules
     return saved_schedules
 

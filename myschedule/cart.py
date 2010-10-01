@@ -63,11 +63,11 @@ def save_schedule(request):
         #user = get_object_or_404(models.User, username=request.user)
         try:
             # See if a schedule with this name already exists.
-            cart = models.Cart.objects.get(
+            cart = models.Schedule.objects.get(
                            owner=request.user, description=description)
             cart.sections = request.session['WorkingCart']
-        except models.Cart.DoesNotExist:
-            cart = models.Cart(owner=request.user,
+        except models.Schedule.DoesNotExist:
+            cart = models.Schedule(owner=request.user,
                            description=description,
                            sections=request.session['WorkingCart'])
         cart.save()
@@ -89,7 +89,7 @@ def delete_schedule(request, cart_id):
     """
         Deletes a saved schedule from the table.
     """
-    cart_instance = get_object_or_404(models.Cart,
+    cart_instance = get_object_or_404(models.Schedule,
                                       id=cart_id,
                                       owner=request.user)
     cart_instance.delete()
