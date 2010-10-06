@@ -33,13 +33,12 @@
           <td>seat(s) available</td>
           <td>From {{ section.start_date }} to {{ section.end_date }}</td>
           <td>{{ section.instructor_first_name }} {{ section.instructor_last_name }}<br/>
-          {% if section.booklink %} <a class="open-window" ref="book" dialog-title="Follette"  href="#book" booklink="{{ section.booklink }}">View Book Information</a>{% endif %}</td>
+          {% if section.booklink %} <a class="open-window" ref="book" dialog-title="Book Information"  href="#book" booklink="{{ section.booklink }}">View Book Information</a>{% endif %}</td>
           {% if section.is_in_cart %}
             <td class="checkmark">+</td>
           {% else %}
             <td><a class="ui-button add-item" href="#add" ref="section_{{ section.id }}">Add</a></td>
           {% endif %}
-
         </tr>
       {% endfor %}
       </tbody>

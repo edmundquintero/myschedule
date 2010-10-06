@@ -3,7 +3,6 @@
 {% block page_title %}{{ block.super }} | Display Cart{% endblock %}
 
 {% block content %}
-<p>
 {% if not user.is_authenticated %}
   <div class="message message-warning">
     To save schedules, you must <a href="{% url login %}">sign in</a>.
@@ -31,12 +30,12 @@
     <td>seat(s)available</td>
     <td>From {{ item.section_data.start_date }} to {{ item.section_data.end_date }}</td>
     <td>{{ item.section_data.instructor_first_name }} {{ item.section_data.instructor_last_name }}<br/>
-    {% if item.booklink %} <a href= "{{ item.booklink }}">View Book Information</a>{% endif %}</td>
+    {% if item.booklink %} <a class="open-window" ref="book" dialog-title="Book Information" href= "#book" booklink="{{ item.booklink }}">View Book Information</a>{% endif %}</td>
     <td><a class="ui-button" href="{% url delete_cartitem item.section_data.id %}">Remove</a></td>
   </tr>
 {% endfor %}
 </tbody>
 </table>
-</p>
+{% include "myschedule/dialogs/book.html" %}
 {% include "myschedule/dialogs/email.html" %}
 {% endblock %}
