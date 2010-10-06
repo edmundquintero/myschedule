@@ -12,7 +12,6 @@
 {% block content %}
   {% include "myschedule/search.html" %}
   <form action="" method="POST" id="section-form">
-    <p>
       {{ course.prefix }} {{ course.number }} <b>{{ course.title }}</b><br/>
       Course description goes here.
       <table>
@@ -45,8 +44,7 @@
       {% endfor %}
       </tbody>
       </table>
-      {% include "myschedule/dialogs/book.html" %}
-    </p>
+    {% include "myschedule/dialogs/book.html" %}
   </form>
 {% endblock %}
 
