@@ -3,6 +3,7 @@ $(function() {
         section = $(this).attr('ref').replace('section_','');
         addItem(section);
     });
+
 });
 
 function addItem(section)
@@ -14,5 +15,5 @@ function addItem(section)
             else{
                 window.location.reload();
             }
-            }, 'json');
+    }, 'json');
 };

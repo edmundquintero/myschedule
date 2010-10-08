@@ -5,7 +5,8 @@ $(function() {
         createModalWindow($(this).attr('ref'), $(this).attr('dialog-title'),
             closeDialog, closeDialog);
     });
-
+    createModalWindow('save-cart', 'Save current schedule?',
+             closeDialog, closeDialog); 
     // Override any dialog specific parameters and open appropriate selected
     // window.
     $('a.open-window').click(function(event) {
@@ -25,12 +26,37 @@ $(function() {
             $('#' + $(this).attr('ref')).dialog('option','width',850);
             $('#' + $(this).attr('ref')).dialog('option','height',900);
         }
-
         $('#' + $(this).attr('ref')).dialog('option','buttons', buttons);
         $('#' + $(this).attr('ref')).dialog('open');
-
     });
 
+    $('a.open-schedule').click(function() {
+        // TODO: Handle if they choose not to save the working schedule
+        // TODO: Need to search ALL saved scheduled to see if the one in
+        // the cart matches any of them.
+        sections = $(this).attr('sections');
+        $.post(basePath + 'cart/get/', {sections:sections}, function(data){
+                var sections_array = new Array();
+                sections_array = sections.split('/');
+                qty = sections_array.length;
+                matches = 0;
+                cart_sections = data.cart_sections;
+                if (cart_sections != ''){            
+                    // last item in array is empty,so only loop while i<qty-1
+                    for (var i=0; i<qty-1; i++){
+                        if (cart_sections.indexOf(sections_array[i]) != -1){
+                            matches++;
+                        }
+                    }
+                    if (matches != qty){
+                        buttons = { "Don't save": closeDialog,
+                                    "Save now": saveDialog }
+                        $('#save-cart').dialog('option','buttons', buttons);
+                        $('#save-cart').dialog('open');                   
+                    }
+                }              
+        }, 'json');
+    });
 
 });
 
@@ -57,6 +83,25 @@ closeDialog = function()
 {
     $(this).dialog('close');
 };
+
+saveDialog = function()
+{
+
+    $(this).dialog('close');
+    alert(sections);
+    $.post(basePath + 'save_schedule/', {save_name: $('#id_save_name').val()}, function(messages){
+            if (messages.errors != ''){
+                alert(messages.errors);
+            }
+    }, 'json');
+    $.post(basePath + 'cart/set', {new_sections: sections}, function(messages){
+            if (messages.errors != ''){
+                alert(messages.errors);
+            }
+    }, 'json');
+    window.location.pathname = 'myschedule/show_schedule';
+};
+
 
 // Process send button on email dialog.
 sendEmail = function()

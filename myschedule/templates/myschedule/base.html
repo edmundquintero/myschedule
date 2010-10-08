@@ -28,7 +28,7 @@
       {% if request.session.SavedSchedules %}
         <ul class='sidebar'>
           {% for schedule in request.session.SavedSchedules %}
-            <li><a href="{% url display_cart schedule.sections %}" title="Display schedule for {{ schedule.description }}">{{ schedule.description }}</a>
+            <li><a class="open-schedule" href="#show-schedule" sections="{{ schedule.sections }}" title="Display schedule for {{ schedule.description }}">{{ schedule.description }}</a>
                 <a href="{% url delete_schedule schedule.id %}" title="Delete saved schedule {{ schedule.description }}" class="delete-schedule">X</a>
             </li>
           {% endfor %}
@@ -50,5 +50,8 @@
       {% else %}
         <p><i>No searches to display.</i></p>
       {% endif %}
+{% endblock %}
+{% block content %}
+  {% include "myschedule/dialogs/save_cart.html" %}
 {% endblock %}
 

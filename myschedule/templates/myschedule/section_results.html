@@ -9,7 +9,7 @@
 
 {% block page_title %}{{ block.super }} | Search Results{% endblock %}
 
-{% block content %}
+{% block content %}{{ block.super }}
   {% include "myschedule/search.html" %}
   <form action="" method="POST" id="section-form">
       {{ course.prefix }} {{ course.number }} <b>{{ course.title }}</b><br/>
