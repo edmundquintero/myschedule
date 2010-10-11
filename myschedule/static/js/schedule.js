@@ -31,8 +31,7 @@ $(function() {
     });
 
     $('a.open-schedule').click(function() {
-        // TODO: Handle if they choose not to save the working schedule
-        // TODO: Need to search ALL saved scheduled to see if the one in
+        // TODO: Need to search ALL saved schedules to see if the one in
         // the cart matches any of them.
         sections = $(this).attr('sections');
         $.post(basePath + 'cart/get/', {sections:sections}, function(data){
@@ -49,7 +48,7 @@ $(function() {
                         }
                     }
                     if (matches != qty){
-                        buttons = { "Don't save": closeDialog,
+                        buttons = { "Don't save": swapCart,
                                     "Save now": saveDialog }
                         $('#save-cart').dialog('option','buttons', buttons);
                         $('#save-cart').dialog('open');                   
@@ -86,14 +85,17 @@ closeDialog = function()
 
 saveDialog = function()
 {
-
-    $(this).dialog('close');
-    alert(sections);
     $.post(basePath + 'save_schedule/', {save_name: $('#id_save_name').val()}, function(messages){
             if (messages.errors != ''){
                 alert(messages.errors);
             }
     }, 'json');
+    swapCart();
+};
+
+swapCart = function()
+{
+    $(this).dialog('close');
     $.post(basePath + 'cart/set', {new_sections: sections}, function(messages){
             if (messages.errors != ''){
                 alert(messages.errors);
@@ -101,7 +103,6 @@ saveDialog = function()
     }, 'json');
     window.location.pathname = 'myschedule/show_schedule';
 };
-
 
 // Process send button on email dialog.
 sendEmail = function()
