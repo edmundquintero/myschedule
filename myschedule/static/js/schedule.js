@@ -31,29 +31,43 @@ $(function() {
     });
 
     $('a.open-schedule').click(function() {
-        // TODO: Need to search ALL saved schedules to see if the one in
-        // the cart matches any of them.
         sections = $(this).attr('sections');
         $.post(basePath + 'cart/get/', {sections:sections}, function(data){
-                var sections_array = new Array();
-                sections_array = sections.split('/');
-                qty = sections_array.length;
-                matches = 0;
+                var cart_array = new Array();
                 cart_sections = data.cart_sections;
+                saved_schedules = data.saved_schedules;
+                cart_array = cart_sections.split('/');
+                cart_qty = cart_array.length - 1; //allow for last item being empty
+                saved_qty = saved_schedules.length;
+                already_saved = 'False';
                 if (cart_sections != ''){            
-                    // last item in array is empty,so only loop while i<qty-1
-                    for (var i=0; i<qty-1; i++){
-                        if (cart_sections.indexOf(sections_array[i]) != -1){
-                            matches++;
+                    for (var j=0; j<saved_qty; j++){
+                        matches = 0;
+                        sections = saved_schedules[j]
+                        section_count = sections.match(/\//g).length
+                        for (var i=0; i<cart_qty; i++){
+                            if (sections.match(cart_array[i])){
+                                matches++;
+                            }
+                        }
+                        if (matches == cart_qty && matches == section_count){
+                            already_saved = 'True';
+                            break;
                         }
                     }
-                    if (matches != qty){
+                    if (already_saved == 'False'){
                         buttons = { "Don't save": swapCart,
                                     "Save now": saveDialog }
                         $('#save-cart').dialog('option','buttons', buttons);
                         $('#save-cart').dialog('open');                   
                     }
-                }              
+                    else{
+                        swapCart();
+                    }
+                }            
+                else{
+                    swapCart();
+                }
         }, 'json');
     });
 

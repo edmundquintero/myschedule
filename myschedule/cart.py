@@ -113,13 +113,18 @@ def get_section_data(sections):
 
 def get_cart(request):
     """
-        Just retrieves the value in session['WorkingCart'] for javascript.
+        Retrieves the values in the WorkingCart and SavedSchedules session
+        variables and returns them to the javascript function.
     """
     working_cart = ''
+    saved_schedules = []
     if 'WorkingCart' in request.session:
         working_cart = request.session['WorkingCart']
-    json_data = {'cart_sections':working_cart}
-    json_data = json.dumps(json_data)
+    if 'SavedSchedules' in request.session:
+        for schedule in request.session['SavedSchedules']:
+            saved_schedules.append(schedule.sections)
+    json_data = {'cart_sections':working_cart, 'saved_schedules':saved_schedules}
+    json_data = json.dumps(json_data, indent=2)
     # return JSON object to browser
     return HttpResponse(json_data)
 
@@ -131,37 +136,6 @@ def set_cart(request):
     request.session['WorkingCart'] = request.POST['new_sections']
     json_data = {'errors':errors}
     json_data = json.dumps(json_data)
-    # return JSON object to browser
-    return HttpResponse(json_data)
-
-def switch_schedule(request):
-    """
-        User selected a saved schedule to display.
-        If the user had started building a schedule in WorkingCart,
-        Compare the sections in the saved schedule to those in WorkingCart.
-        If they are different, give the user the chance to save what is in
-        WorkingCart before replacing it with the sections in the selected
-        saved schedule.
-    """
-    errors = ''
-    sections = request.POST['sections']
-    qty = 0
-    matches = 0
-    if 'WorkingCart' in request.session:
-        working_cart = request.session['WorkingCart']
-        saved_sections = sections.split("/")
-        saved_sections.remove('')
-        qty = len(sections)
-        for section in saved_sections:
-            if working_cart.find(section) != -1:
-                matches = matches + 1
-    if matches != qty:
-        errors = "save warning"
-    else:
-        request.session['WorkingCart'] = sections
-    
-    json_data = {'errors':errors,'cart_sections':working_cart}
-    json_data = json.dumps(json_data, indent=2)
     # return JSON object to browser
     return HttpResponse(json_data)
 
