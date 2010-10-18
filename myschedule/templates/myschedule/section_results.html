@@ -11,7 +11,8 @@
 
 {% block content %}{{ block.super }}
   {% include "myschedule/search.html" %}
-  <form action="" method="POST" id="section-form">
+  {% if sections %}
+    <form action="" method="POST" id="section-form">
       {{ course.prefix }} {{ course.number }} <b>{{ course.title }}</b><br/>
       Course description goes here.
       <table>
@@ -43,7 +44,10 @@
       {% endfor %}
       </tbody>
       </table>
-    {% include "myschedule/dialogs/book.html" %}
-  </form>
+      {% include "myschedule/dialogs/book.html" %}
+    </form>
+  {% else %}
+    <p>There are no sections currently available for this course.</p>
+  {% endif %}
 {% endblock %}
 
