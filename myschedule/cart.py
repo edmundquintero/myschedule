@@ -42,6 +42,7 @@ def save_schedule(request):
         Saves the user's working schedule.  Will overwrite an existing
         schedule with the same name.
     """
+    errors = ''
     if request.method == 'POST':
         description = request.POST['save_name']
         #user = get_object_or_404(models.User, username=request.user)
@@ -58,6 +59,35 @@ def save_schedule(request):
         return redirect('show_schedule')
     return direct_to_template(request,
                               'myschedule/save.html',{})
+
+def save_cart(request):
+    """
+        Saves the user's working schedule (cart).  Will overwrite an existing
+        schedule with the same name.
+    """
+    errors = ''
+    if request.method == 'POST':
+        description = request.POST['save_name']
+        try:
+            # See if a schedule with this name already exists.
+            # TODO: This is not case sensitive.  To make it case sensitive
+            # will require changing mysql setting.
+            cart = models.Schedule.objects.get(
+                           owner=request.user, description=description)
+            cart.sections = request.session['WorkingCart']
+        except models.Schedule.DoesNotExist:
+            cart = models.Schedule(owner=request.user,
+                           description=description,
+                           sections=request.session['WorkingCart'])
+        cart.save()
+        #return redirect('show_schedule')
+    #return direct_to_template(request,
+    #                          'myschedule/save.html',{})
+    json_data = {'errors':errors}
+    json_data = json.dumps(json_data)
+    # return JSON object to browser
+    return HttpResponse(json_data)
+
 
 def delete_cartitem(request, section):
     """
@@ -134,6 +164,8 @@ def set_cart(request):
     """
     errors = ''
     request.session['WorkingCart'] = request.POST['new_sections']
+    print 'here'
+    print request.session['WorkingCart']
     json_data = {'errors':errors}
     json_data = json.dumps(json_data)
     # return JSON object to browser

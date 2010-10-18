@@ -31,8 +31,8 @@ $(function() {
     });
 
     $('a.open-schedule').click(function() {
-        sections = $(this).attr('sections');
-        $.post(basePath + 'cart/get/', {sections:sections}, function(data){
+        selected_schedule = $(this).attr('sections');
+        $.post(basePath + 'cart/get/', {sections:selected_schedule}, function(data){
                 var cart_array = new Array();
                 cart_sections = data.cart_sections;
                 saved_schedules = data.saved_schedules;
@@ -41,10 +41,12 @@ $(function() {
                 saved_qty = saved_schedules.length;
                 already_saved = 'False';
                 if (cart_sections != ''){            
+                    // loop through each saved schedule
                     for (var j=0; j<saved_qty; j++){
                         matches = 0;
                         sections = saved_schedules[j]
                         section_count = sections.match(/\//g).length
+                        // loop through each section in cart
                         for (var i=0; i<cart_qty; i++){
                             if (sections.match(cart_array[i])){
                                 matches++;
@@ -56,7 +58,7 @@ $(function() {
                         }
                     }
                     if (already_saved == 'False'){
-                        buttons = { "Don't save": swapCart,
+                        buttons = { "Don't save": skipSave,
                                     "Save now": saveDialog }
                         $('#save-cart').dialog('option','buttons', buttons);
                         $('#save-cart').dialog('open');                   
@@ -97,25 +99,36 @@ closeDialog = function()
     $(this).dialog('close');
 };
 
+skipSave = function()
+{
+    $(this).dialog('close');
+    swapCart();
+
+};
 saveDialog = function()
 {
-    $.post(basePath + 'save_schedule/', {save_name: $('#id_save_name').val()}, function(messages){
+    $.post(basePath + 'cart/save/', {save_name: $('#id_save_name').val()}, function(messages){
             if (messages.errors != ''){
                 alert(messages.errors);
             }
+            else{
+                $(this).dialog('close');
+                swapCart();
+            }
     }, 'json');
-    swapCart();
 };
 
 swapCart = function()
 {
-    $(this).dialog('close');
-    $.post(basePath + 'cart/set', {new_sections: sections}, function(messages){
+    $.post(basePath + 'cart/set/', {new_sections: selected_schedule}, function(messages){
             if (messages.errors != ''){
                 alert(messages.errors);
             }
+            else{
+                window.location.pathname = 'myschedule/show_schedule';
+            }
     }, 'json');
-    window.location.pathname = 'myschedule/show_schedule';
+
 };
 
 // Process send button on email dialog.
