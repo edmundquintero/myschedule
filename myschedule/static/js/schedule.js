@@ -23,6 +23,7 @@ $(function() {
         if($(this).attr('ref') == 'save') {
             buttons = { "Cancel": closeDialog,
                         "Save schedule": saveSchedule }
+            $('#' + $(this).attr('ref')).dialog('option','height',225);
         }
         if($(this).attr('ref') == 'book') {
             $('a.booklink').attr('href', $(this).attr('booklink'));
@@ -153,8 +154,12 @@ skipSave = function()
     swapCart();
 
 };
+
 saveDialog = function()
 {
+    // This processes the save dialog that is displayed when the user tries to
+    // navigate to a saved schedule without first saving the one that is in the
+    // cart.
     $.post(basePath + 'cart/save/', {save_name: $('#id_save_name').val()}, function(messages){
             if (messages.errors != ''){
                 alert(messages.errors);
@@ -165,6 +170,22 @@ saveDialog = function()
             }
     }, 'json');
 };
+
+saveSchedule = function()
+{
+    // This processes the save dialog that is displayed when the Save Schedule
+    // button is selected.
+    $.post(basePath + 'cart/save/', {save_name: $('#id_save_schedule_name').val()}, function(messages){
+            if (messages.errors != ''){
+                alert(messages.errors);
+            }
+            else{
+                $(this).dialog('close');
+                window.location.pathname = 'myschedule/show_schedule';
+            }
+    }, 'json');
+};
+
 
 swapCart = function()
 {
