@@ -1,4 +1,10 @@
 $(function() {
+    // Display the appropriate message at the top of the page regarding the
+    // "saved" status of this cart.
+    $('#schedule-name').hide();
+    $('#unsaved-schedule').show();
+    checkCartSavedStatus();
+
     // Create modal dialog windows, overriding parameters for a specific
     // dialog in the processing for the click function.
     $('a.open-window').each(function(){
@@ -32,7 +38,7 @@ $(function() {
 
     $('a.open-schedule').click(function() {
         selected_schedule = $(this).attr('sections');
-        $.post(basePath + 'cart/get/', {sections:selected_schedule}, function(data){
+        $.post(basePath + 'cart/get/', {}, function(data){
                 var cart_array = new Array();
                 cart_sections = data.cart_sections;
                 saved_schedules = data.saved_schedules;
@@ -44,7 +50,8 @@ $(function() {
                     // loop through each saved schedule
                     for (var j=0; j<saved_qty; j++){
                         matches = 0;
-                        sections = saved_schedules[j]
+                        schedule = saved_schedules[j];
+                        sections = schedule.sections;
                         section_count = sections.match(/\//g).length
                         // loop through each section in cart
                         for (var i=0; i<cart_qty; i++){
@@ -72,8 +79,49 @@ $(function() {
                 }
         }, 'json');
     });
-
 });
+
+checkCartSavedStatus = function()
+{
+    // This function gets called when the schedule page is loaded
+    // so it can determine which message regarding the status of
+    // the cart to display at the top of the page.  Yep, this code is very
+    // similar to the code above for the open-schedule event.  Maybe
+    // moving some of this code back into python would eliminate the need
+    // for duplication (but then I moved it out of python for some reason
+    // that I now no longer recall).
+    $.post(basePath + 'cart/get/', {}, function(data){
+            var cart_array = new Array();
+            cart_sections = data.cart_sections;
+            saved_schedules = data.saved_schedules;
+            cart_array = cart_sections.split('/');
+            cart_qty = cart_array.length - 1; //allow for last item being empty
+            saved_qty = saved_schedules.length;
+            if (cart_sections != ''){            
+                // loop through each saved schedule
+                for (var j=0; j<saved_qty; j++){
+                    matches = 0;
+                    schedule = saved_schedules[j];
+                    sections = schedule.sections;
+                    section_count = sections.match(/\//g).length
+                    // loop through each section in cart
+                    for (var i=0; i<cart_qty; i++){
+                        if (sections.match(cart_array[i])){
+                            matches++;
+                        }
+                    }
+                    if (matches == cart_qty && matches == section_count){
+                        if (schedule.description != ''){
+                            $('#unsaved-schedule').hide();
+                            $('#schedule-name').show();
+                            $('.schedule-name').html(schedule.description);
+                        }
+                        break;
+                    }
+                }
+            }
+    }, 'json');
+};
 
 function createModalWindow(element, title, createCallback,
                                cancelCallback)
@@ -171,5 +219,6 @@ sendEmail = function()
         }
     }
 };
+
 
 

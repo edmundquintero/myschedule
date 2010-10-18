@@ -152,7 +152,9 @@ def get_cart(request):
         working_cart = request.session['WorkingCart']
     if 'SavedSchedules' in request.session:
         for schedule in request.session['SavedSchedules']:
-            saved_schedules.append(schedule.sections)
+            temp = {'description': schedule.description,
+                    'sections': schedule.sections}
+            saved_schedules.append(temp)
     json_data = {'cart_sections':working_cart, 'saved_schedules':saved_schedules}
     json_data = json.dumps(json_data, indent=2)
     # return JSON object to browser
@@ -164,8 +166,6 @@ def set_cart(request):
     """
     errors = ''
     request.session['WorkingCart'] = request.POST['new_sections']
-    print 'here'
-    print request.session['WorkingCart']
     json_data = {'errors':errors}
     json_data = json.dumps(json_data)
     # return JSON object to browser
