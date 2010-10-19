@@ -1,4 +1,6 @@
 $(function() {
+    $('#save').hide();
+    
     // Display the appropriate message at the top of the page regarding the
     // "saved" status of this cart.
     $('#schedule-name').hide();
@@ -11,6 +13,7 @@ $(function() {
         createModalWindow($(this).attr('ref'), $(this).attr('dialog-title'),
             closeDialog, closeDialog);
     });
+
     createModalWindow('save-cart', 'Save current schedule?',
              closeDialog, closeDialog); 
     // Override any dialog specific parameters and open appropriate selected
@@ -41,6 +44,8 @@ $(function() {
         selected_schedule = $(this).attr('sections');
         $.post(basePath + 'cart/get/', {}, function(data){
                 var cart_array = new Array();
+                var sections = new Array();
+                var schedule = new Array();
                 cart_sections = data.cart_sections;
                 saved_schedules = data.saved_schedules;
                 cart_array = cart_sections.split('/');
@@ -93,6 +98,8 @@ checkCartSavedStatus = function()
     // that I now no longer recall).
     $.post(basePath + 'cart/get/', {}, function(data){
             var cart_array = new Array();
+            var sections = new Array();
+            var schedule = new Array();
             cart_sections = data.cart_sections;
             saved_schedules = data.saved_schedules;
             cart_array = cart_sections.split('/');
