@@ -9,6 +9,11 @@ div.search {
     margin-bottom: 2em;
 }
 
+div.book {
+    overflow-y: hidden;
+    margin: 0;
+}
+
 span.information {
     color: red;
     margin-left: 5px;

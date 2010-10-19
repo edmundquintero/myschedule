@@ -31,7 +31,7 @@ $(function() {
             event.preventDefault();
             $('#book-frame').attr("src", $(this).attr('booklink'));
             $('#' + $(this).attr('ref')).dialog('option','width',850);
-            $('#' + $(this).attr('ref')).dialog('option','height',900);
+            $('#' + $(this).attr('ref')).dialog('option','minHeight',850);
         }
         $('#' + $(this).attr('ref')).dialog('option','buttons', buttons);
         $('#' + $(this).attr('ref')).dialog('open');
