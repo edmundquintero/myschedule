@@ -84,29 +84,30 @@ def save_cart(request):
                            description=description,
                            sections=request.session['WorkingCart'])
         cart.save()
-        #return redirect('show_schedule')
-    #return direct_to_template(request,
-    #                          'myschedule/save.html',{})
+        # WorkingCart now contains the contents of a saved schedule.  Set the
+        # SelectedScheduleName session variable so the name of the schedule
+        # the user is viewing can be displayed on the page.
+        request.session['SelectedScheduleName'] = request.POST['save_name']
     json_data = {'errors':errors}
     json_data = json.dumps(json_data)
     # return JSON object to browser
     return HttpResponse(json_data)
-
 
 def delete_cartitem(request, section):
     """
         Deletes the specified course section from the shopping cart.
     """
     #TODO: Re-run validation when they remove a section
-    # TODO: Check for missing session variable
-    sections = request.session['WorkingCart']
-    request.session['WorkingCart'] = sections.replace(section+'/',"")
+    if request.session.has_key('WorkingCart'):
+        sections = request.session['WorkingCart']
+        request.session['WorkingCart'] = sections.replace(section+'/',"")
     if request.session.has_key('SelectedScheduleName'):
         # Contents of a saved schedule were changed - remove the schedule name
         # from the session variable so "unsaved schedule" message will display.
         request.session.pop('SelectedScheduleName')
     return redirect('show_schedule')
 
+@login_required
 def delete_schedule(request, cart_id):
     """
         Deletes a saved schedule from the table.
@@ -119,7 +120,6 @@ def delete_schedule(request, cart_id):
         # Contents of a saved schedule were changed - remove the schedule name
         # from the session variable so "unsaved schedule" message will display.
         request.session.pop('SelectedScheduleName')
-    #TODO: Verify which schedule we're going to be showing
     return redirect('show_schedule')
 
 
@@ -193,20 +193,25 @@ def show_schedule(request):
     """
         Processes selection of schedule tab.
     """
-    # TODO: Check for missing session variable
-    sections=request.session['WorkingCart']
+    if request.session.has_key('WorkingCart'):
+        sections=request.session['WorkingCart']
+    else:
+        sections = ""
     return HttpResponseRedirect(reverse('display_cart', args=[sections]))
 
-def display_cart(request, sections):
+def display_cart(request, sections=None):
     """
         Displays shopping cart template.
     """
     saved_schedules = get_schedules(request)
     # TODO: get all the other information regarding a course section that
     # needs to be displayed
-    sections = sections.split("/")
-    sections.remove('')
-    cart_items = get_section_data(sections)
+    if sections != "" and sections != None:
+        sections = sections.split("/")
+        sections.remove('')
+        cart_items = get_section_data(sections)
+    else:
+        cart_items = []
     return direct_to_template(request,
                               'myschedule/display_cart.html',
                               {'cartitems':cart_items}

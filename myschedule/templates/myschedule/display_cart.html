@@ -3,6 +3,11 @@
 {% block page_title %}{{ block.super }} | Display Cart{% endblock %}
 
 {% block content %}{{ block.super }}
+{% if not cartitems %}
+   <div class="message message-warning">
+     All classes have been removed from this schedule.
+  </div> 
+{% else %}
 {% if not user.is_authenticated %}
   <div class="message message-warning">
     To save schedules, you must <a href="{% url login %}">sign in</a>.
@@ -49,4 +54,5 @@
 </table>
 {% include "myschedule/dialogs/book.html" %}
 {% include "myschedule/dialogs/email.html" %}
+{% endif %}
 {% endblock %}

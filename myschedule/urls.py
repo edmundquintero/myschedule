@@ -8,8 +8,7 @@ from myschedule import views, cart
 
 urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
-    url(r'^display_cart/((?:\w{3}-[\d\w]+-[\d\w]+-\w{2}-\d{4}/?)+)', cart.display_cart, name='display_cart'),
-    # url(r'^save_cartitems/((?:\w{3}-[\d\w]+-[\d\w]+-\w{2}-\d{4}/?)+)', cart.save_cartitems, name='save_cartitems'),
+    url(r'^display_cart/((?:\w{3}-[\d\w]+-[\d\w]+-\w{2}-\d{4}/?)+)*$', cart.display_cart, name='display_cart'),
     url(r'^delete_cartitem/(\w{3}-[\d\w]+-[\d\w]+-\w{2}-\d{4})/$', cart.delete_cartitem, name='delete_cartitem'),
     url(r'^show_courses/', views.show_courses, name='show_courses'),
     url(r'^show_sections/(\w{3})/([\d\w]+)/([\w]+)/$', views.show_sections, name='show_sections'),
@@ -23,7 +22,6 @@ urlpatterns = patterns('',
     url(r'^cart/set/$', cart.set_cart, name='set_cart'),
     url(r'^cart/save/$', cart.save_cart, name='save_cart'),
     url(r'^schedule/email/$', cart.email_schedule, name='email_schedule'),
-    #url(r'^cart/save/$', cart.save_schedule, name='save_schedule'),
     # url(r'^admin/', include(admin.site.urls)),
 )
 
