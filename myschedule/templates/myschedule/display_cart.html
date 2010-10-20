@@ -8,12 +8,15 @@
     To save schedules, you must <a href="{% url login %}">sign in</a>.
   </div>
 {% else %}
-  <div id="schedule-name" class="message message-notice">
-    You are currently viewing saved schedule <i><span class="schedule-name"></span></i>.
-  </div>
-  <div id="unsaved-schedule" class="message message-warning">
-    You are viewing an unsaved schedule!
-  </div>
+  {% if request.session.SelectedScheduleName %}
+    <div id="schedule-name" class="message message-notice">
+      You are currently viewing saved schedule <i>{{ request.session.SelectedScheduleName }}</i>.
+    </div>
+  {% else %}
+    <div id="unsaved-schedule" class="message message-warning">
+      You are viewing an unsaved schedule!
+    </div>
+  {% endif %}
 {% endif %}
 {% if user.is_authenticated %}
   {% include "myschedule/dialogs/save.html" %}

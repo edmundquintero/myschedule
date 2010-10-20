@@ -31,6 +31,10 @@ def add_item(request):
     if section not in sections_url:
         # TODO: Run validation to check for conflicts.
         request.session['WorkingCart'] = sections_url + section + '/'
+    if request.session.has_key('SelectedScheduleName'):
+        # Contents of a saved schedule were changed - remove the schedule name
+        # from the session variable so "unsaved schedule" message will display.
+        request.session.pop('SelectedScheduleName')
     json_data = {'errors':errors}
     json_data = json.dumps(json_data)
     # return JSON object to browser
@@ -97,6 +101,10 @@ def delete_cartitem(request, section):
     # TODO: Check for missing session variable
     sections = request.session['WorkingCart']
     request.session['WorkingCart'] = sections.replace(section+'/',"")
+    if request.session.has_key('SelectedScheduleName'):
+        # Contents of a saved schedule were changed - remove the schedule name
+        # from the session variable so "unsaved schedule" message will display.
+        request.session.pop('SelectedScheduleName')
     return redirect('show_schedule')
 
 def delete_schedule(request, cart_id):
@@ -107,6 +115,10 @@ def delete_schedule(request, cart_id):
                                       id=cart_id,
                                       owner=request.user)
     cart_instance.delete()
+    if request.session.has_key('SelectedScheduleName'):
+        # Contents of a saved schedule were changed - remove the schedule name
+        # from the session variable so "unsaved schedule" message will display.
+        request.session.pop('SelectedScheduleName')
     #TODO: Verify which schedule we're going to be showing
     return redirect('show_schedule')
 
@@ -166,6 +178,12 @@ def set_cart(request):
     """
     errors = ''
     request.session['WorkingCart'] = request.POST['new_sections']
+
+    # WorkingCart now contains the contents of a saved schedule.  Set the
+    # SelectedScheduleName session variable so the name of the schedule
+    # the user is viewing can be displayed on the page.
+    request.session['SelectedScheduleName'] = request.POST['selected_schedule_name']
+
     json_data = {'errors':errors}
     json_data = json.dumps(json_data)
     # return JSON object to browser
