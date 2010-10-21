@@ -10,6 +10,7 @@ APP_STATIC_MEDIA = j(app_root, 'static')
 
 LOGIN_URL = '/myschedule/login/'
 CAS_REDIRECT_URL = '/myschedule/'
+CAS_IGNORE_REFERER = False
 
 APP_NAME = 'myschedule'
 BASE_URL = APP_NAME + '/'
