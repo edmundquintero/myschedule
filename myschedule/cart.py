@@ -40,30 +40,6 @@ def add_item(request):
     # return JSON object to browser
     return HttpResponse(json_data)
 
-@login_required
-def save_schedule(request):
-    """
-        Saves the user's working schedule.  Will overwrite an existing
-        schedule with the same name.
-    """
-    errors = ''
-    if request.method == 'POST':
-        description = request.POST['save_name']
-        #user = get_object_or_404(models.User, username=request.user)
-        try:
-            # See if a schedule with this name already exists.
-            cart = models.Schedule.objects.get(
-                           owner=request.user, description=description)
-            cart.sections = request.session['WorkingCart']
-        except models.Schedule.DoesNotExist:
-            cart = models.Schedule(owner=request.user,
-                           description=description,
-                           sections=request.session['WorkingCart'])
-        cart.save()
-        return redirect('show_schedule')
-    return direct_to_template(request,
-                              'myschedule/save.html',{})
-
 def save_cart(request):
     """
         Saves the user's working schedule (cart).  Will overwrite an existing
@@ -87,7 +63,8 @@ def save_cart(request):
         # WorkingCart now contains the contents of a saved schedule.  Set the
         # SelectedScheduleName session variable so the name of the schedule
         # the user is viewing can be displayed on the page.
-        request.session['SelectedScheduleName'] = request.POST['save_name']
+        request.session['SelectedScheduleName'] = cart.description
+
     json_data = {'errors':errors}
     json_data = json.dumps(json_data)
     # return JSON object to browser
@@ -115,11 +92,14 @@ def delete_schedule(request, cart_id):
     cart_instance = get_object_or_404(models.Schedule,
                                       id=cart_id,
                                       owner=request.user)
-    cart_instance.delete()
-    if request.session.has_key('SelectedScheduleName'):
+    if (request.session.has_key('SelectedScheduleName') and
+        request.session.has_key('SelectedScheduleName') == cart_instance.description):
         # Contents of a saved schedule were changed - remove the schedule name
         # from the session variable so "unsaved schedule" message will display.
         request.session.pop('SelectedScheduleName')
+
+    cart_instance.delete()
+
     return redirect('show_schedule')
 
 
@@ -177,13 +157,17 @@ def set_cart(request):
         Sets session['WorkingCart'] to new value.
     """
     errors = ''
-    request.session['WorkingCart'] = request.POST['new_sections']
-
-    # WorkingCart now contains the contents of a saved schedule.  Set the
-    # SelectedScheduleName session variable so the name of the schedule
-    # the user is viewing can be displayed on the page.
-    request.session['SelectedScheduleName'] = request.POST['selected_schedule_name']
-
+    try:
+        selected_schedule_name = request.POST['selected_schedule_name']
+        saved_schedules = request.session['SavedSchedules']
+        selected_schedule = saved_schedules.get(description=selected_schedule_name)
+        request.session['WorkingCart'] = selected_schedule.sections
+        # WorkingCart now contains the contents of a saved schedule.  Set the
+        # SelectedScheduleName session variable so the name of the schedule
+        # the user is viewing can be displayed on the page.
+        request.session['SelectedScheduleName'] = selected_schedule.description
+    except:
+        errors = 'An error occurred while updating the cart.'
     json_data = {'errors':errors}
     json_data = json.dumps(json_data)
     # return JSON object to browser
@@ -204,6 +188,10 @@ def display_cart(request, sections=None):
         Displays shopping cart template.
     """
     saved_schedules = get_schedules(request)
+    if not request.session.has_key('WorkingCart'):
+        # Only way this should happen is if the user logs out from
+        # the display_cart page - in which case we don't want to proceed.
+        return redirect('index')
     # TODO: get all the other information regarding a course section that
     # needs to be displayed
     if sections != "" and sections != None:
