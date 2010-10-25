@@ -2,7 +2,7 @@
 
 {% block page_title %}{{ block.super }} | Home{% endblock %}
 
-{% block content %}
+{% block content %}{{ block.super }}
   <div class="message message-warning">
     <p>Welcome to the CPCC Schedule Builder where you can search for courses and build schedules. Schedules can be saved, printed, or emailed. 
     {% if not user.is_authenticated %}
