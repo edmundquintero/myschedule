@@ -27,7 +27,7 @@ $(function() {
         }
         if($(this).attr('ref') == 'book') {
             $('a.booklink').attr('href', $(this).attr('booklink'));
-            buttons = {}
+            buttons = { "Close": closeDialog }
             $('#' + $(this).attr('ref')).dialog('option','width',850);
             $('#' + $(this).attr('ref')).dialog('option','minHeight',850);
         }
