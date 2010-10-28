@@ -28,13 +28,17 @@ $(function() {
         if($(this).attr('ref') == 'book') {
             $('a.booklink').attr('href', $(this).attr('booklink'));
             buttons = {}
-            //event.preventDefault();
-            $('#book-frame').attr("src", $(this).attr('booklink'));
             $('#' + $(this).attr('ref')).dialog('option','width',850);
             $('#' + $(this).attr('ref')).dialog('option','minHeight',850);
         }
         $('#' + $(this).attr('ref')).dialog('option','buttons', buttons);
         $('#' + $(this).attr('ref')).dialog('open');
+        if($(this).attr('ref') == 'book') {
+            // Have to load iframe containing book info after opening dialog
+            // (to make IE happy).
+            $('.book').empty();
+            $('.book').append('<iframe id="book-frame" frameBorder="1" width="99%" height="850" src="' + $(this).attr('booklink') + '"><p>Your browser does not support iframes. Book information can be viewed <a class="booklink" href="' + $(this).attr('booklink') + '">here</a></p></iframe>');
+        }
     });
 
     // A saved schedule link was selected.  Check to see if there are
