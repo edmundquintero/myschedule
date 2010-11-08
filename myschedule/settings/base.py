@@ -3,6 +3,7 @@ from cpsite.settings.base import *
 INSTALLED_APPS.extend([
     # 'django.contrib.admin',
     'myschedule',
+    'haystack',
 ])
 
 app_root = d(d(__file__))
