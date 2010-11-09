@@ -110,27 +110,13 @@ def get_section_data(sections):
     cart_items=[]
     for section in sections:
         item={}
-        try:
-            ods_spec_dict = {"key": settings.CPAPI_KEY,
-                             "data": "sections",
-                             "id": section}
-            section_data = ods.get_data(ods_spec_dict)
-            ods_spec_dict = {"key": settings.CPAPI_KEY,
-                             "data": "course",
-                             "prefix": section_data['prefix'],
-                             "number": section_data['number']}
-            # Returns a list TODO: Need to query this with course ID not prefix & number.
-            course_data = ods.get_data(ods_spec_dict)[0]
-            # Get the link to the book information TODO: replace hard-coded campus code with proper field when cpapi is updated to return location
-            booklink = compose_booklink('1013', section_data['term'],
-                              section_data['year'], section_data['prefix'],
-                              section_data['number'], section_data['section'])
-
-            item = dict({"section_data":section_data, "course_data":course_data, "booklink":booklink})
-            cart_items.append(item)
-        except:
-            # TODO: Do something besides pass
-            pass
+        item={}
+        section_data = get_object_or_404(models.Section,
+                                  section_code=section)
+        course_data = section_data.course
+        meeting_data = section_data.meeting_set.all()
+        item = dict({"section_data":section_data, "course_data":course_data, "meeting_data":meeting_data})
+        cart_items.append(item)
     return cart_items
 
 def get_cart(request):
@@ -227,17 +213,22 @@ def email_schedule(request):
     for item in schedule:
         course_data = item['course_data']
         section_data = item['section_data']
-        booklink = item['booklink']
+        meeting_data = item['meeting_data']
         message = (
-            "Course: %s %s %s \n" % (course_data['prefix'],
-                                  course_data['number'],
-                                  course_data['title']) +
-            "Section: %s \n" % (section_data['section']) +
-            "Instructor: %s %s \n" % (section_data['instructor_first_name'],
-                                      section_data['instructor_last_name']) +
-            "Campus: \n"  +
-            "Building / Room: \n" +
-            "Meeting Days & Times: \n"
+            "Course: %s %s %s  " % (course_data.prefix,
+                                  course_data.course_number,
+                                  course_data.title) +
+            "Section: %s \n" % (section_data.section_number) +
+            "Instructor: %s \n" % (section_data.instructor_name) +
+            "Campus: %s \n" % (section_data.campus))
+        for meeting in meeting_data:
+            message = message + (
+                "Type: %s \n" % (meeting.meeting_type) +
+                "Building / Room: %s %s \n" % (meeting.building, meeting.room) +
+                "Meeting Days & Times: %s %s - %s \n" % (meeting.days_of_week, meeting.start_time, meeting.end_time)
+            )
+        message = message + (
+            "View book information at %s. \n" % (section_data.book_link)
         )
         email_message = email_message + message + '\n'
     if email_message != "":
