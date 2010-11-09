@@ -102,6 +102,49 @@ def delete_schedule(request, cart_id):
 
     return redirect('show_schedule')
 
+def conflict_resolution(sections):
+    """
+        Checks for any conflicts between the sections on the schedule.
+        Presently, just for classes with overlapping times.
+    """
+    cart_items = get_section_data(sections)
+    conflicting_sections = []
+    for section in sections:
+        test_section = get_object_or_404(models.Section,
+                                         section_code=section)
+        test_meetings = test_section.meeting_set.all()
+        for item in cart_items:
+            section_data = item['section_data']
+            meeting_data = item['meeting_data']
+            if test_section.section_code != section_data.section_code:
+                if test_section not in conflicting_sections:
+                    if ((test_section.start_date <= section_data.start_date and
+                         section_data.start_date <= test_section.end_date) or
+                        (test_section.start_date <= section_data.end_date and
+                         section_data.end_date <= test_section.end_date) or
+                        (section_data.start_date <= test_section.start_date and
+                         test_section.start_date <= section_data.end_date) or
+                        (section_data.start_date <= test_section.end_date and
+                         test_section.end_date <= section_data.end_date)):
+                        # the sections start / end dates have some overlap so
+                        # continue checking for potential conflict
+                        for test_meeting in test_meetings:
+                            for comparison_meeting in meeting_data:
+                                # Check to see if the meetings have any days in common
+                                commondays = "".join(filter(lambda x: x in comparison_meeting.days_of_week,
+                                    test_meeting.days_of_week))
+                                if commondays:
+                                    # Check to see if the meeting times overlap
+                                    if ((test_meeting.start_time <= comparison_meeting.start_time and
+                                         comparison_meeting.start_time <= test_meeting.end_time) or
+                                        (test_meeting.start_time <= comparison_meeting.end_time and
+                                         comparison_meeting.end_time <= test_meeting.end_time) or
+                                        (comparison_meeting.start_time <= test_meeting.end_time and
+                                         test_meeting.start_time <= comparison_meeting.end_time) or
+                                        (comparison_meeting.start_time <= test_meeting.end_time and
+                                         test_meeting.end_time <= comparison_meeting.end_time)):
+                                            conflicting_sections.append(test_section.section_code)
+    return conflicting_sections
 
 def get_section_data(sections):
     """
@@ -173,6 +216,7 @@ def display_cart(request, sections=None):
     """
         Displays shopping cart template.
     """
+    conflicting_sections = []
     saved_schedules = get_schedules(request)
     if not request.session.has_key('WorkingCart'):
         # Only way this should happen is if the user logs out from
@@ -184,11 +228,13 @@ def display_cart(request, sections=None):
         sections = sections.split("/")
         sections.remove('')
         cart_items = get_section_data(sections)
+        conflicting_sections = conflict_resolution(sections)
     else:
         cart_items = []
     return direct_to_template(request,
                               'myschedule/display_cart.html',
-                              {'cartitems':cart_items}
+                              {'cartitems':cart_items,
+                               'conflicting_sections':conflicting_sections}
                              )
 
 def email_schedule(request):

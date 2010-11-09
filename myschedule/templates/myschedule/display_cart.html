@@ -23,6 +23,11 @@
     </div>
   {% endif %}
 {% endif %}
+{% if conflicting_sections %}
+  <div class="message message-warning">
+      There are scheduling conflicts with some of these sections.  See the highlighted sections below.
+  </div>
+{% endif %}
 {% if user.is_authenticated %}
   {% include "myschedule/dialogs/save.html" %}
   <a class="open-window ui-button" href="#save" ref="save" dialog-title="Save Schedule" title="Save this schedule">Save Schedule</a>
@@ -44,7 +49,7 @@
   <tr class="{% cycle 'odd' 'even' %}">
     <td>{{ item.course_data.prefix }} - {{ item.course_data.course_number }} - {{ item.section_data.section }}<i>{{ item.course_data.title }}</i><br/>Synonym: {{ item.section_data.synonym }}</td>
     <td>seat(s)available</td>
-    <td>From {{ item.section_data.start_date }} to {{ item.section_data.end_date }}<br/>
+    <td {% if item.section_data.section_code in conflicting_sections %}class="error"{% endif %}>From {{ item.section_data.start_date }} to {{ item.section_data.end_date }}<br/>
         {{ item.section_data.campus }}
         {% for meeting in item.meeting_data %}
           <br/>

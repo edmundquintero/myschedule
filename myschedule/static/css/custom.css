@@ -39,3 +39,7 @@ td.checkmark {
 li.schedule-li {
     width: 40%;
 }
+
+td.error {
+    color: red;
+}
