@@ -2,11 +2,14 @@
 from django.conf.urls.defaults import include, patterns, url
 # from django.contrib import admin
 
-#from myschedule import views, cart
 
 # admin.autodiscover()
 
-urlpatterns = patterns('myschedule.views',
+urlpatterns = patterns('',
+    url(r'^api/', include('myschedule.api.urls')),
+)
+
+urlpatterns += patterns('myschedule.views',
     url(r'^$', 'index', name='index'),
     url(r'^search/$', 'search', name='search'),
     url(r'^search/([\w ]*)/$', 'search', name='search'),
@@ -26,6 +29,8 @@ urlpatterns += patterns('myschedule.views.cart',
     url(r'^cart/save/$', 'save_cart', name='save_cart'),
     url(r'^schedule/email/$', 'email_schedule', name='email_schedule'),
 )
+
+
 
 # if settings.DEBUG:
 #     urlpatterns += patterns('',

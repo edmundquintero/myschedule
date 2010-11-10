@@ -151,4 +151,3 @@ def show_sections(request, prefix, number, course_id):
              'search':search}
     )
 
-
