@@ -1,0 +1,4 @@
+{{ object.prefix }}
+{{ object.course_number }}
+{{ object.title }}
+{{ object.description }}
