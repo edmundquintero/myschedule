@@ -17,6 +17,8 @@ CACHE_BACKEND = 'dummy://'
 CPAPI_URL_FORMAT = 'http://10.9.4.26:5025/cpapi/?%s'
 #CPAPI_URL_FORMAT = 'http://pas1-central.cpcc.edu/cpapi/?%s'
 CPAPI_KEY = "myschedule_key"
+ODS_API_HOST = 'te409-05.cpcc.edu:8080'
+MYSCHEDULE_API_HOST = 'te409-05.cpcc.edu:8080'
 
 HAYSTACK_SITECONF = 'myschedule.search_sites'
 HAYSTACK_SEARCH_ENGINE = 'whoosh'

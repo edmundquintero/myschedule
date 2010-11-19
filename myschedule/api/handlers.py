@@ -23,9 +23,13 @@ class MyScheduleHandler(BaseHandler):
         c=Client()
         temp1=c.get('/myschedule/api/courseupdate/read')
         temp2=c.delete('/myschedule/api/courseupdate/delete')
-        temp3=c.post('/myschedule/api/courseupdate/create',temp2.content,content_type='application/json')
+        temp3=c.post('/myschedule/api/courseupdate/create',temp1.content,content_type='application/json')
 
+        Might need to eventually add piston to installed_apps in settings and
+        run syncdb to create it's tables.  For now it's not needed (I think it
+        may be needed if add in authorization support.
     """
+
     allowed_methods = ('GET', 'POST', 'DELETE',)
     fields = ('course_code',
               'prefix',
@@ -134,7 +138,7 @@ class MyScheduleHandler(BaseHandler):
                                         building=meeting['building'],
                                         room=meeting['room'])
                                     new_meeting.save()
-            # TODO: Probably need to check value of rc.CREATED in loop and then handle appropriately when it is not equal to CREATED
+            # TODO: check value of rc.CREATED in loop and then handle appropriately when it is not equal to CREATED
             return rc.CREATED
         else:
             super(Course, self).create(request)
@@ -147,5 +151,4 @@ class MyScheduleHandler(BaseHandler):
         courses = self.model.objects.all()
         courses.delete()
         return rc.DELETED
-
 

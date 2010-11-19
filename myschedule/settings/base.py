@@ -22,6 +22,9 @@ SESSION_COOKIE_NAME = 'myschedule_sessionid'
 
 THEME = '3g'
 
+ODS_API_HOST = ''
+MYSCHEDULE_API_HOST = ''
+
 # Settings required to compose book link.
 # Arguments are added to booklook url in view.
 # Important! In order to get the book iframe to consistently load in the

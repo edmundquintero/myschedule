@@ -151,3 +151,48 @@ def show_sections(request, prefix, number, course_id):
              'search':search}
     )
 
+def update_courses(request):
+    """
+        Calls the api to get current course data (includes sections and
+        meetings) and uses that data to pass to the api that creates
+        the records in the myschedule course, section, and meeting tables.
+    """
+    # TODO: Integration with ods api (since it doesn't exist yet, I'm just
+    # reading existing data in the myschedule tables, deleting everything,
+    # from the tables and reloading with the original data.
+    # TODO: Error checking (here and in api)
+    # TODO: Authentication
+    # TODO: Return something useful
+    import httplib
+
+    from django.http import HttpResponse
+
+    # Open the connection to the api that will provide the course data.
+    conn = httplib.HTTPConnection(settings.ODS_API_HOST)
+
+    # Retrieve the ods data (formatted as json).
+    req = conn.request('GET','/myschedule/api/courseupdate/read')
+    resp = conn.getresponse()  # expect resp.status=200
+    data = resp.read()
+
+    # Close the connect to the api.
+    conn.close()
+
+    # Open the connection to the myschedule api (has to be a different port
+    # from where the app is running).
+    conn = httplib.HTTPConnection(settings.MYSCHEDULE_API_HOST)
+
+    # Empty the course, section, and meeting tables.
+    req = conn.request('DELETE', '/myschedule/api/courseupdate/delete')
+    resp = conn.getresponse()   # expect resp.status=204
+
+    # Create the new data.
+    headers = {'Content-type':'application/json'}
+    req = conn.request('POST', '/myschedule/api/courseupdate/create', data, headers)
+    resp = conn.getresponse()   # expect resp.status=201
+
+    # Close the connection.
+    conn.close()
+
+    return HttpResponse('true')
+
