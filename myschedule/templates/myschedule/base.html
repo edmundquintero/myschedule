@@ -44,7 +44,7 @@
       {% if request.session.RecentSearches %}
         <ul class='sidebar'>
           {% for search_text in request.session.RecentSearches %}
-            <li><a href="{% url search search_text %}" title="Show search results for {{ search_text }}">{{ search_text }}</a></li>
+            <li><a href="{% url old_search search_text %}" title="Show search results for {{ search_text }}">{{ search_text }}</a></li>
           {% endfor %}
         </ul>
       {% else %}

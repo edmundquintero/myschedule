@@ -10,8 +10,6 @@ from cpsite import ods
 # from cpsite.decorators import groups_required
 
 from myschedule import models, forms
-from myschedule.views import compose_booklink, get_schedules
-
 
 """
     What is a cart?
@@ -25,16 +23,14 @@ def add_item(request):
     """
     section = request.POST['section']
     errors = ''
-    sections_url = ''
-    if 'WorkingCart' in request.session:
-        sections_url = request.session['WorkingCart']
-    if section not in sections_url:
-        # TODO: Run validation to check for conflicts.
-        request.session['WorkingCart'] = sections_url + section + '/'
-    if request.session.has_key('SelectedScheduleName'):
-        # Contents of a saved schedule were changed - remove the schedule name
-        # from the session variable so "unsaved schedule" message will display.
-        request.session.pop('SelectedScheduleName')
+    sections = []
+    if request.session.has_key('Cart'):
+        sections = request.session['Cart']
+    if section not in sections:
+        sections.append(section)
+        request.session['Cart'] = sections
+    if request.user.is_authenticated():
+        save_cart(request)
     json_data = {'errors':errors}
     json_data = json.dumps(json_data)
     # return JSON object to browser
@@ -42,64 +38,38 @@ def add_item(request):
 
 def save_cart(request):
     """
-        Saves the user's working schedule (cart).  Will overwrite an existing
-        schedule with the same name.
+        Saves the user's working schedule (cart).
     """
     errors = ''
-    if request.method == 'POST':
-        description = request.POST['save_name']
+    sections_url = ''
+    if request.session.has_key('Cart'):
+        for item in request.session['Cart']:
+            sections_url = sections_url + item + '/'
+    if sections_url != '':
         try:
-            # See if a schedule with this name already exists.
-            # TODO: This is not case sensitive.  To make it case sensitive
-            # will require changing mysql setting.
-            cart = models.Schedule.objects.get(
-                           owner=request.user, description=description)
-            cart.sections = request.session['WorkingCart']
+            # See if a schedule already exists for this user.
+            cart = models.Schedule.objects.get(owner=request.user)
+            cart.sections = sections_url
         except models.Schedule.DoesNotExist:
             cart = models.Schedule(owner=request.user,
-                           description=description,
-                           sections=request.session['WorkingCart'])
+                           sections=sections_url)
+        except:
+            #TODO: error handling
+            print 'failure'
         cart.save()
-        # WorkingCart now contains the contents of a saved schedule.  Set the
-        # SelectedScheduleName session variable so the name of the schedule
-        # the user is viewing can be displayed on the page.
-        request.session['SelectedScheduleName'] = cart.description
-
-    json_data = {'errors':errors}
-    json_data = json.dumps(json_data)
-    # return JSON object to browser
-    return HttpResponse(json_data)
+    return errors
 
 def delete_cartitem(request, section):
     """
-        Deletes the specified course section from the shopping cart.
+        Deletes the specified course section from the cart.
     """
     #TODO: Re-run validation when they remove a section
-    if request.session.has_key('WorkingCart'):
-        sections = request.session['WorkingCart']
-        request.session['WorkingCart'] = sections.replace(section+'/',"")
-    if request.session.has_key('SelectedScheduleName'):
-        # Contents of a saved schedule were changed - remove the schedule name
-        # from the session variable so "unsaved schedule" message will display.
-        request.session.pop('SelectedScheduleName')
-    return redirect('show_schedule')
-
-@login_required
-def delete_schedule(request, cart_id):
-    """
-        Deletes a saved schedule from the table.
-    """
-    cart_instance = get_object_or_404(models.Schedule,
-                                      id=cart_id,
-                                      owner=request.user)
-    if (request.session.has_key('SelectedScheduleName') and
-        request.session.has_key('SelectedScheduleName') == cart_instance.description):
-        # Contents of a saved schedule were changed - remove the schedule name
-        # from the session variable so "unsaved schedule" message will display.
-        request.session.pop('SelectedScheduleName')
-
-    cart_instance.delete()
-
+    if request.session.has_key('Cart'):
+        sections = request.session['Cart']
+        sections.remove(section)
+        request.session['Cart'] = sections
+        if request.user.is_authenticated():
+            save_cart(request)
     return redirect('show_schedule')
 
 def conflict_resolution(sections):
@@ -153,7 +123,6 @@ def get_section_data(sections):
     cart_items=[]
     for section in sections:
         item={}
-        item={}
         section_data = get_object_or_404(models.Section,
                                   section_code=section)
         course_data = section_data.course
@@ -162,71 +131,35 @@ def get_section_data(sections):
         cart_items.append(item)
     return cart_items
 
-def get_cart(request):
-    """
-        Retrieves the values in the WorkingCart and SavedSchedules session
-        variables and returns them to the javascript function.
-    """
-    working_cart = ''
-    saved_schedules = []
-    if 'WorkingCart' in request.session:
-        working_cart = request.session['WorkingCart']
-    if 'SavedSchedules' in request.session:
-        for schedule in request.session['SavedSchedules']:
-            temp = {'description': schedule.description,
-                    'sections': schedule.sections}
-            saved_schedules.append(temp)
-    json_data = {'cart_sections':working_cart, 'saved_schedules':saved_schedules}
-    json_data = json.dumps(json_data, indent=2)
-    # return JSON object to browser
-    return HttpResponse(json_data)
-
-def set_cart(request):
-    """
-        Sets session['WorkingCart'] to new value.
-    """
-    errors = ''
-    try:
-        selected_schedule_name = request.POST['selected_schedule_name']
-        saved_schedules = request.session['SavedSchedules']
-        selected_schedule = saved_schedules.get(description=selected_schedule_name)
-        request.session['WorkingCart'] = selected_schedule.sections
-        # WorkingCart now contains the contents of a saved schedule.  Set the
-        # SelectedScheduleName session variable so the name of the schedule
-        # the user is viewing can be displayed on the page.
-        request.session['SelectedScheduleName'] = selected_schedule.description
-    except:
-        errors = 'An error occurred while updating the cart.'
-    json_data = {'errors':errors}
-    json_data = json.dumps(json_data)
-    # return JSON object to browser
-    return HttpResponse(json_data)
-
 def show_schedule(request):
     """
         Processes selection of schedule tab.
     """
-    if request.session.has_key('WorkingCart'):
-        sections=request.session['WorkingCart']
+    sections_url = ""
+    if request.session.has_key('Cart'):
+        for item in request.session['Cart']:
+            sections_url = sections_url + item + '/'
     else:
-        sections = ""
-    return HttpResponseRedirect(reverse('display_cart', args=[sections]))
+        sections_url = None
+    return HttpResponseRedirect(reverse('display_cart', args=[sections_url]))
 
-def display_cart(request, sections=None):
+def display_cart(request, sections_url=None):
     """
         Displays shopping cart template.
     """
+
     conflicting_sections = []
-    saved_schedules = get_schedules(request)
-    if not request.session.has_key('WorkingCart'):
-        # Only way this should happen is if the user logs out from
-        # the display_cart page - in which case we don't want to proceed.
+    if not request.session.has_key('Cart') and sections_url == None:
         return redirect('index')
+    elif not request.session.has_key('Cart') and sections_url != None:
+        sections = sections_url.split("/")
+        sections.remove('')
+        request.session['Cart'] = sections
     # TODO: get all the other information regarding a course section that
     # needs to be displayed
-    if sections != "" and sections != None:
-        sections = sections.split("/")
-        sections.remove('')
+    sections = request.session['Cart']
+
+    if sections != [] and sections != None:
         cart_items = get_section_data(sections)
         conflicting_sections = conflict_resolution(sections)
     else:
@@ -247,11 +180,12 @@ def email_schedule(request):
     to_addressees = email_addresses.split(",")
     to_addressees.remove('')
     errors = ''
+    sections = []
     sections_url = ''
-    if 'WorkingCart' in request.session:
-        sections_url = request.session['WorkingCart']
-    sections = sections_url.split("/")
-    sections.remove('')
+    if 'Cart' in request.session:
+        sections = request.session['Cart']
+        for item in sections:
+            sections_url = sections_url + item + '/'
     schedule = get_section_data(sections)
     app_host = request.get_host()
     schedule_url = reverse('display_cart',args=[sections_url])
