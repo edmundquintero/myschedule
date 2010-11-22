@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% load tabbing %}
+{% load myschedule_filters %}
 
 {% block page_title %}myschedule{% endblock %}
 
@@ -24,21 +25,16 @@
 
 {% block body_class %}sidebar{% endblock %}
 {% block sidebar %}
-    <h5>Saved Schedules</h5>
-      {% if request.session.SavedSchedules %}
+    <h5>Schedule</h5>
+      {% if request.session.Cart %}
         <ul class='sidebar'>
-          {% for schedule in request.session.SavedSchedules %}
-            <li><a class="open-schedule" href="#{{ schedule.description }}" sections="{{ schedule.sections }}" title="Display schedule for {{ schedule.description }}">{{ schedule.description }}</a>
-                <a href="{% url delete_schedule schedule.id %}" title="Delete saved schedule {{ schedule.description }}" class="delete-schedule">X</a>
-            </li>
+          {% for section in request.session.Cart %}
+          <li>{{ section|format_section }}<a href="{% url delete_cartitem section %}" class="ui-icon ui-icon-trash"></a></li>
           {% endfor %}
         </ul>
-      {% else %}
-          {% if user.is_authenticated %}
-            <p><i>You have no saved schedules</i></p>
-          {% else %}
-            <p><i><a href="{% url login %}" title="Sign in with your CPCC Login">Sign in</a> to view saved schedules.</i></p>
-          {% endif %}
+      {% endif %}
+      {% if not user.is_authenticated %}
+            <p><i><a href="{% url login %}" title="Sign in with your CPCC Login">Sign in</a> to save schedule.</i></p>
       {% endif %}
     <h5>Recent Searches</h5>
       {% if request.session.RecentSearches %}

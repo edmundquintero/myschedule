@@ -43,3 +43,7 @@ li.schedule-li {
 td.error {
     color: red;
 }
+
+.ui-icon-trash {
+    display: inline-block;
+}
