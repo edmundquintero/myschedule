@@ -1,17 +1,18 @@
 # from django.conf import settings
 from django.conf.urls.defaults import include, patterns, url
 # from django.contrib import admin
-
+from haystack.views import SearchView
+from haystack.query import SearchQuerySet
 
 # admin.autodiscover()
-
+sqs = SearchQuerySet().order_by('popularity')
 urlpatterns = patterns('',
     url(r'^api/', include('myschedule.api.urls')),
 )
 
 urlpatterns += patterns('myschedule.views',
     url(r'^$', 'index', name='index'),
-    url(r'^search/', include('haystack.urls')),
+    url(r'^search/', SearchView(load_all=False, searchqueryset=sqs), name='haystack_search'),
     url(r'^old_search/', 'old_search', name='old_search'),
     url(r'^old_search/([\w ]*)/$', 'old_search', name='old_search'),
     url(r'^show_courses/', 'show_courses', name='show_courses'),

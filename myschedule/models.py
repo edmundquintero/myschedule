@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
 
 class Schedule(models.Model):
     """
@@ -16,7 +17,17 @@ class Schedule(models.Model):
 
 
 class Course(models.Model):
-    """Course information, preformulated in the API"""
+    """
+        Course information, preformulated in the API
+    """
+    HIGH = 'a'
+    MEDIUM = 'm'
+    LOW = 'z'
+    POPULARITY_CHOICES = (
+        (HIGH, 'High'),
+        (MEDIUM, 'Medium'),
+        (LOW, 'Low'),
+    )
     course_code = models.CharField(max_length=10, blank=False)
     prefix = models.CharField(max_length=10, blank=False)
     course_number = models.CharField(max_length=10, blank=False)
@@ -28,10 +39,23 @@ class Course(models.Model):
     contact_hours = models.CharField(max_length=10, blank=False)
     department = models.CharField(max_length=255, blank=False)
     note = models.TextField(max_length=1000, blank=False)
+    add_count = models.CharField(max_length=10, blank=False, default='0')
+    popularity = models.CharField(max_length=1, blank=False, default=LOW, choices=POPULARITY_CHOICES)
+    
+    def update_popularity(self):
+        if self.add_count > settings.HIGH_THRESHOLD:
+            self.popularity = HIGH
+        elif self.add_count > settings.MEDIUM_THRESHOLD:
+            self.popularity = MEDIUM
+        else:
+            self.popularity = LOW
+        self.save()
 
 
 class Section(models.Model):
-    """Section specific information, preformulated in the API"""
+    """
+        Section specific information, preformulated in the API
+    """
     course = models.ForeignKey(Course)
     section_code = models.CharField(max_length=10, blank=False)
     section_number = models.CharField(max_length=10, blank=False)
@@ -54,7 +78,9 @@ class Section(models.Model):
 
 
 class Meeting(models.Model):
-    """Meeting specific information, related to a Section, preformulated in the API"""
+    """
+        Meeting specific information, related to a Section, preformulated in the API
+    """
     section = models.ForeignKey(Section, blank=False)
     start_time = models.DateTimeField(blank=False)
     end_time = models.DateTimeField(blank=False)
@@ -62,3 +88,15 @@ class Meeting(models.Model):
     days_of_week = models.CharField(max_length=15, blank=False)
     building = models.CharField(max_length=10, blank=False)
     room = models.CharField(max_length=10, blank=False)
+
+
+class Correlation(models.Model):
+    SUCCESSFUL_SEARCH = 'ss' # Searched one time, found the course
+    WRONG_TERM = 'wt' # Could be mispelling, abbr., related term not found in the text
+    SPECIES_CHOICES = (
+        (SUCCESSFUL_SEARCH, 'Successful one time search'),
+        (WRONG_TERM, 'Wrong/Corrected query term'),
+    )
+    species = models.CharField(max_length=20, blank=False, choices=SPECIES_CHOICES)
+    criterion = models.TextField(max_length=1000, blank=True)
+    course = models.ForeignKey(Course, blank=False)

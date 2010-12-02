@@ -39,3 +39,7 @@ BOOKLOOK_DEFAULT_STORE='636'
 # has their own.  All others use the default store ID above.
 BOOKLOOK_STORE_CAMPUS_MAPPING={'2007':'637'}
 BOOKLOOK_TERMS={'fa':'Fall','sp':'Spring','su':'Summer'}
+
+# Heuristic Search Data
+HIGH_THRESHOLD = 1000
+MEDIUM_THRESHOLD = 300

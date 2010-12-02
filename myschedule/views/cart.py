@@ -31,6 +31,19 @@ def add_item(request):
         request.session['Cart'] = sections
     if request.user.is_authenticated():
         save_cart(request)
+    if request.session.has_key('current_query'):
+        correlation = models.Correlation()
+        correlation.criterion = request.session['current_query'].strip('|')
+        if request.session.has_key('previous_query'):
+            correlation.species = models.Correlation.WRONG_TERM
+            correlation.criterion = correlation.criterion + '|' + request.session['previous_query']
+            del request.session['previous query']
+            request.session.modified = True
+        else:
+            correlation.species = models.Correlation.SUCCESSFUL_SEARCH
+        correlation.course = section.course
+        correlation.save()
+
     json_data = {'errors':errors}
     json_data = json.dumps(json_data)
     # return JSON object to browser
