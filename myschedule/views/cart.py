@@ -85,12 +85,11 @@ def delete_cartitem(request, section):
             save_cart(request)
     return redirect('show_schedule')
 
-def conflict_resolution(sections):
+def conflict_resolution(cart_items, sections):
     """
         Checks for any conflicts between the sections on the schedule.
         Presently, just for classes with overlapping times.
     """
-    cart_items = get_section_data(sections)
     conflicting_sections = []
     for section in sections:
         test_section = get_object_or_404(models.Section,
@@ -129,10 +128,50 @@ def conflict_resolution(sections):
                                             conflicting_sections.append(test_section.section_code)
     return conflicting_sections
 
+def get_seats(informer_url, term, year, course_prefix, course_number,
+              course_section=None):
+    """
+        Calls informer to retrieve the current seat counts for the specified
+        course (and optional section).  Returns data in json format.
+
+        TODOs: Make it a standalone api once we figure out where it needs to
+        reside.  Add caching???
+    """
+    import urllib2
+
+    informer_url = (informer_url + '?prefix=' + course_prefix +
+                                   '&number=' + course_number +
+                                   '&term=' + term +
+                                   '&year=' + year)
+    if course_section:
+        informer_url = informer_url + '&section=' + course_section
+    json_list=[]
+    try:
+        resp = urllib2.urlopen(informer_url)
+        counts = resp.read()
+        counts_list = counts.split(';')
+        counts_list.remove('\r\n')
+        for item in counts_list:
+            temp_list = item.split(',')
+            json_list.append({'prefix':temp_list[0],
+                              'number':temp_list[1],
+                              'section':temp_list[2],
+                              'year':temp_list[3],
+                              'term':temp_list[4],
+                              'status':temp_list[5],
+                              'seats':temp_list[6]})
+    except:
+        # In the event it was unable to retrieve a seat count
+        # schedule builder will display a "seat count not available" message.
+        pass
+    json_data = json.dumps(json_list, indent=2)
+    return json_data
+
 def get_section_data(sections):
     """
         Get the section and course data for a list of sections.
     """
+    import httplib
     cart_items=[]
     for section in sections:
         item={}
@@ -140,7 +179,23 @@ def get_section_data(sections):
                                   section_code=section)
         course_data = section_data.course
         meeting_data = section_data.meeting_set.all()
-        item = dict({"section_data":section_data, "course_data":course_data, "meeting_data":meeting_data})
+        # TODO: When get_seats is switched to external api, update this call.
+        seat_counts = get_seats('http://watrain.cpcc.edu/SeatCount/SeatCount',
+                                section_data.term.upper(),
+                                section_data.year,
+                                course_data.prefix,
+                                course_data.course_number,
+                                section_data.section_number)
+        seat_counts = json.loads(seat_counts)
+        if len(seat_counts) == 1:
+            for item in seat_counts:
+                seat_count = item['seats'] + ' seat(s) available'
+        else:
+            seat_count = 'Seat count unavailable'
+        item = dict({"section_data":section_data,
+                     "course_data":course_data,
+                     "meeting_data":meeting_data,
+                     "seat_count": seat_count})
         cart_items.append(item)
     return cart_items
 
@@ -174,7 +229,7 @@ def display_cart(request, sections_url=None):
 
     if sections != [] and sections != None:
         cart_items = get_section_data(sections)
-        conflicting_sections = conflict_resolution(sections)
+        conflicting_sections = conflict_resolution(cart_items, sections)
     else:
         cart_items = []
     return direct_to_template(request,
