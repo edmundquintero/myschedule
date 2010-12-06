@@ -171,32 +171,39 @@ def get_section_data(sections):
     """
         Get the section and course data for a list of sections.
     """
-    import httplib
+    from django.core.cache import cache
+
     cart_items=[]
     for section in sections:
-        item={}
-        section_data = get_object_or_404(models.Section,
+        section_item={}
+        # Check to see if the data for this section has been cached. If not,
+        # query the model.
+        section_item = cache.get(section)
+        if section_item is None:
+            section_data = get_object_or_404(models.Section,
                                   section_code=section)
-        course_data = section_data.course
-        meeting_data = section_data.meeting_set.all()
-        # TODO: When get_seats is switched to external api, update this call.
-        seat_counts = get_seats('http://watrain.cpcc.edu/SeatCount/SeatCount',
+            course_data = section_data.course
+            meeting_data = section_data.meeting_set.all()
+            # TODO: When get_seats is switched to external api, update this call.
+            seat_counts = get_seats('http://watrain.cpcc.edu/SeatCount/SeatCount',
                                 section_data.term.upper(),
                                 section_data.year,
                                 course_data.prefix,
                                 course_data.course_number,
                                 section_data.section_number)
-        seat_counts = json.loads(seat_counts)
-        if len(seat_counts) == 1:
-            for item in seat_counts:
-                seat_count = item['seats'] + ' seat(s) available'
-        else:
-            seat_count = 'Seat count unavailable'
-        item = dict({"section_data":section_data,
+            seat_counts = json.loads(seat_counts)
+            if len(seat_counts) == 1:
+                for item in seat_counts:
+                   seat_count = item['seats'] + ' seat(s) available'
+            else:
+                seat_count = 'Seat count unavailable'
+            section_item = dict({"section_data":section_data,
                      "course_data":course_data,
                      "meeting_data":meeting_data,
                      "seat_count": seat_count})
-        cart_items.append(item)
+            # TODO: put the caching time limit in a setting.
+            cache.add(section, section_item, 60*2)
+        cart_items.append(section_item)
     return cart_items
 
 def show_schedule(request):

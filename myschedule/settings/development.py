@@ -9,7 +9,8 @@ DATABASE_PASSWORD = 'myschedule'
 
 # In development, use the database for sessions, and disable caching.
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-CACHE_BACKEND = 'dummy://'
+# Enabled caching - will be switching to memcached.
+CACHE_BACKEND = 'locmem://'
 
 # MEDIA_ROOT = j(app_root, 'media')
 # MEDIA_URL = APP_NAME + '/media/'
