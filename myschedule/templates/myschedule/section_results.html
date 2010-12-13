@@ -5,9 +5,29 @@
      var basePath = '{% url index %}';
    </script>
   <script type="text/javascript" src="{% url appstatic "js/sections.js" %}"></script>
+  <script type="text/javascript" src="{% url appstatic "js/calendar.js" %}"></script>
 {% endblock %}
 
 {% block page_title %}{{ block.super }} | Search Results{% endblock %}
+
+{% block sidebar %}{{ block.super }}
+<table class="calendar-table">
+<thead>
+  <tr>
+  <th></th>
+  <th>Su</th>
+  <th>Mo</th>
+  <th>Tu</th>
+  <th>We</th>
+  <th>Th</th>
+  <th>Fr</th>
+  <th>Sa</th>
+  </tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+{% endblock %}
 
 {% block content %}{{ block.super }}
   {% include "myschedule/search.html" %}

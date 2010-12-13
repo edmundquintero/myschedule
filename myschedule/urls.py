@@ -27,9 +27,8 @@ urlpatterns += patterns('myschedule.views.cart',
     url(r'^show_schedule/', 'show_schedule', name='show_schedule'),
     url(r'^cart/add/$', 'add_item', name='add_item'),
     url(r'^schedule/email/$', 'email_schedule', name='email_schedule'),
+    url(r'^schedule/calendar/$', 'get_calendar_data', name='get_calendar_data'),
 )
-
-
 
 # if settings.DEBUG:
 #     urlpatterns += patterns('',

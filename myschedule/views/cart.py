@@ -138,6 +138,7 @@ def get_seats(informer_url, term, year, course_prefix, course_number,
         reside.  Add caching???
     """
     import urllib2
+    from datetime import datetime
 
     informer_url = (informer_url + '?prefix=' + course_prefix +
                                    '&number=' + course_number +
@@ -185,18 +186,18 @@ def get_section_data(sections):
             course_data = section_data.course
             meeting_data = section_data.meeting_set.all()
             # TODO: When get_seats is switched to external api, update this call.
-            seat_counts = get_seats('http://watrain.cpcc.edu/SeatCount/SeatCount',
-                                section_data.term.upper(),
-                                section_data.year,
-                                course_data.prefix,
-                                course_data.course_number,
-                                section_data.section_number)
-            seat_counts = json.loads(seat_counts)
-            if len(seat_counts) == 1:
-                for item in seat_counts:
-                   seat_count = item['seats'] + ' seat(s) available'
-            else:
-                seat_count = 'Seat count unavailable'
+            #seat_counts = get_seats('http://watrain.cpcc.edu/SeatCount/SeatCount',
+            #                    section_data.term.upper(),
+            #                    section_data.year,
+            #                    course_data.prefix,
+            #                    course_data.course_number,
+            #                    section_data.section_number)
+            #seat_counts = json.loads(seat_counts)
+            #if len(seat_counts) == 1:
+            #    for item in seat_counts:
+            #       seat_count = item['seats'] + ' seat(s) available'
+            #else:
+            seat_count = 'Seat count unavailable'
             section_item = dict({"section_data":section_data,
                      "course_data":course_data,
                      "meeting_data":meeting_data,
@@ -296,5 +297,69 @@ def email_schedule(request):
     json_data = {'errors':errors}
     json_data = json.dumps(json_data)
     # return JSON object to browser
+    return HttpResponse(json_data)
+
+def get_calendar_data(request):
+    import datetime
+    current_date = datetime.date.today()
+    difference = datetime.timedelta(minutes=5)
+    sections = request.session['Cart']
+    if sections != [] and sections != None:
+        cart_items = get_section_data(sections)
+        conflicting_sections = conflict_resolution(cart_items, sections)
+    else:
+        cart_items = []
+    json_data = []
+    for item in cart_items:
+        item_course_data = item['course_data']
+        item_section_data = item['section_data']
+        item_meeting_data = item['meeting_data']
+        for meeting in item_meeting_data:
+            temp_section = (item_course_data.prefix + ' ' +
+                            item_course_data.course_number +' ' +
+                            item_section_data.section_number)
+            temp_time = meeting.start_time
+            while temp_time <= meeting.end_time:
+                if 'm' in meeting.days_of_week:
+                    meeting_day = 'Mo'
+                    data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
+                    json_data.append(data)
+                if 'tr' in meeting.days_of_week:
+                    meeting_day = 'Th'
+                    data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
+                    json_data.append(data)
+                if 'w' in meeting.days_of_week:
+                    meeting_day = 'We'
+                    data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
+                    json_data.append(data)
+                if 't' in meeting.days_of_week and not 'r' in meeting.days_of_week:
+                    # TODO: Work with this.  Would have a problem if it meets on tuesday and thursday.
+                    meeting_day = 'Tu'
+                    data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
+                    json_data.append(data)
+                if 'f' in meeting.days_of_week:
+                    meeting_day = 'Fr'
+                    data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
+                    json_data.append(data)
+                if 'su' in meeting.days_of_week:
+                    meeting_day = 'Su'
+                    data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
+                    json_data.append(data)
+                if 's' in meeting.days_of_week and not 'u' in meeting.days_of_week:
+                    # TODO: Work with this.  Would have a problem if it meets on tuesday and thursday.
+                    meeting_day = 'S'
+                    data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
+                    json_data.append(data)
+                # Take existing time and convert into datetime object.
+                current_datetime = datetime.datetime(current_date.year,
+                                      current_date.month, current_date.day,
+                                      temp_time.hour, temp_time.minute,
+                                      temp_time.second)
+                # Increment time by 5 minutes.
+                new_datetime = current_datetime + difference
+                # Reset value of temp_time.
+                temp_time = new_datetime.time()
+
+    json_data = json.dumps(json_data, indent=2)
     return HttpResponse(json_data)
 
