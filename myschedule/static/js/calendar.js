@@ -79,10 +79,30 @@ createCalendar = function(calendar_data)
     $('.calendar-table tbody').append(calendar_html);
     
     for (var i=0; i < calendar_data.length; i++){
-        day = calendar_data[i].day
-        hour = calendar_data[i].hour
-        minute = calendar_data[i].minute
-        $('#min-div-'+day+'-'+hour+'-'+minute).addClass('busy')
+        day = calendar_data[i].day;
+        hour = calendar_data[i].hour;
+        minute = calendar_data[i].minute;
+        section = calendar_data[i].section;
+        new_title = '';
+        class_to_add = 'busy';
+        if ($('#min-div-'+day+'-'+hour+'-'+minute).attr('title')){
+            current_title = $('#min-div-'+day+'-'+hour+'-'+minute).attr('title');
+            if (current_title.indexOf(section) == -1){
+                new_title = current_title + ', ' + section;
+                class_to_add = 'busy-with-conflict';
+            }
+            else{
+                new_title = current_title;
+            }
+        }
+        else{
+            new_title = section;
+        }
+        
+        $('#min-div-'+day+'-'+hour+'-'+minute).addClass(class_to_add).attr('title',new_title);
+        if (minute == '0'){
+            $('#min-div-'+day+'-'+hour+'-0').parent().attr('title', new_title);
+        }
     }
 
 };

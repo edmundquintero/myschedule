@@ -81,3 +81,7 @@ table.calendar-table th {
 .busy {
     background-color: gray;
 }
+
+.busy-with-conflict {
+    background-color: red;
+}
