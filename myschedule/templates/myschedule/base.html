@@ -25,6 +25,9 @@
 
 {% block body_class %}sidebar{% endblock %}
 {% block sidebar %}
+    {% if not user.is_authenticated %}
+      <p><i><a href="{% url login %}" title="Sign in with your CPCC Login">Sign in</a> to save schedule.</i></p>
+    {% endif %}
     <h5>Schedule</h5>
       {% if request.session.Cart %}
         <ul class='sidebar'>
@@ -33,9 +36,7 @@
           {% endfor %}
         </ul>
       {% endif %}
-      {% if not user.is_authenticated %}
-            <p><i><a href="{% url login %}" title="Sign in with your CPCC Login">Sign in</a> to save schedule.</i></p>
-      {% endif %}
+    <p><a href="{% url show_schedule %}" class="ui-button">View Full Schedule</a></p>
 {% endblock %}
 {% block content %}
   {% include "myschedule/dialogs/save_cart.html" %}
