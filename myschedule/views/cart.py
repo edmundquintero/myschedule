@@ -205,7 +205,7 @@ def get_section_data(sections, include_seats=True):
                      "meeting_data":meeting_data,
                      "seat_count": seat_count})
             # TODO: put the caching time limit in a setting.
-            cache.add(section, section_item, 60*2)
+            cache.add(section, section_item, 60*settings.CACHE_REFRESH_RATE)
         cart_items.append(section_item)
     return cart_items
 

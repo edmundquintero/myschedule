@@ -12,6 +12,8 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 # Enabled caching - if you don't have memcached installed, switch to locmem.
 # CACHE_BACKEND = 'locmem://'
 CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
+# Specify cache refresh rate in minutes (view will convert to seconds)
+CACHE_REFRESH_RATE = 2
 
 # MEDIA_ROOT = j(app_root, 'media')
 # MEDIA_URL = APP_NAME + '/media/'
