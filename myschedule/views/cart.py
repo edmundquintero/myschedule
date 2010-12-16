@@ -242,10 +242,14 @@ def display_cart(request, sections_url=None):
         conflicting_sections = conflict_resolution(cart_items, sections)
     else:
         cart_items = []
+
+    search = forms.search_form()
+
     return direct_to_template(request,
                               'myschedule/display_cart.html',
                               {'cartitems':cart_items,
-                               'conflicting_sections':conflicting_sections}
+                               'conflicting_sections':conflicting_sections,
+                               'search':search}
                              )
 
 def email_schedule(request):

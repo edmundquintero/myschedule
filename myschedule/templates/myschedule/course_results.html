@@ -3,7 +3,6 @@
 {% block page_title %}{{ block.super }} | Search Results{% endblock %}
 
 {% block content %}{{ block.super }}
-  {% include "myschedule/search.html" %}
   {% for course in courses %}
     <p>
     <a href="{% url show_sections course.prefix course.number course.id%}">{{ course.prefix }} {{ course.number }} - {{course.title }}</a>  <span class='information'>{{ course.information }}</span><br/>
