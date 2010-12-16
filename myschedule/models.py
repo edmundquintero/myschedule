@@ -38,10 +38,10 @@ class Course(models.Model):
     credit_hours = models.CharField(max_length=10, blank=False)
     contact_hours = models.CharField(max_length=10, blank=False)
     department = models.CharField(max_length=255, blank=False)
-    note = models.TextField(max_length=1000, blank=False)
+    note = models.TextField(max_length=1000, blank=True)
     add_count = models.CharField(max_length=10, blank=False, default='0')
     popularity = models.CharField(max_length=1, blank=False, default=LOW, choices=POPULARITY_CHOICES)
-    
+
     def update_popularity(self):
         if self.add_count > settings.HIGH_THRESHOLD:
             self.popularity = HIGH
@@ -69,12 +69,12 @@ class Section(models.Model):
     ceus = models.CharField(max_length=10, blank=False)
     tuition = models.CharField(max_length=10, blank=False)
     delivery_type = models.CharField(max_length=255, blank=False)
-    note = models.TextField(max_length=7000, blank=False)
+    note = models.TextField(max_length=7000, blank=True)
     book_link = models.CharField(max_length=255, blank=False)
     session = models.CharField(max_length=255, blank=False)
     status = models.CharField(max_length=255, blank=False)
-    instructor_name = models.CharField(max_length=510, blank=False)
-    instructor_link = models.CharField(max_length=255, blank=False)
+    instructor_name = models.CharField(max_length=510, blank=True)
+    instructor_link = models.CharField(max_length=255, blank=True)
 
 
 class Meeting(models.Model):
@@ -86,8 +86,8 @@ class Meeting(models.Model):
     end_time = models.DateTimeField(blank=False)
     meeting_type = models.CharField(max_length=255, blank=False)
     days_of_week = models.CharField(max_length=15, blank=False)
-    building = models.CharField(max_length=10, blank=False)
-    room = models.CharField(max_length=10, blank=False)
+    building = models.CharField(max_length=10, blank=True)
+    room = models.CharField(max_length=10, blank=True)
 
 
 class Correlation(models.Model):
