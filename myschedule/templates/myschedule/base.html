@@ -36,16 +36,6 @@
       {% if not user.is_authenticated %}
             <p><i><a href="{% url login %}" title="Sign in with your CPCC Login">Sign in</a> to save schedule.</i></p>
       {% endif %}
-    <h5>Recent Searches</h5>
-      {% if request.session.RecentSearches %}
-        <ul class='sidebar'>
-          {% for search_text in request.session.RecentSearches %}
-            <li><a href="{% url old_search search_text %}" title="Show search results for {{ search_text }}">{{ search_text }}</a></li>
-          {% endfor %}
-        </ul>
-      {% else %}
-        <p><i>No searches to display.</i></p>
-      {% endif %}
 {% endblock %}
 {% block content %}
   {% include "myschedule/dialogs/save_cart.html" %}

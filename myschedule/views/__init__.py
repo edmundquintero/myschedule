@@ -28,12 +28,7 @@ def old_search(request, search_text=None):
     if search_text is None:
         if request.method == 'POST':
             search_text = request.POST['search_text']
-    searches = []
-    if 'RecentSearches' in request.session:
-        searches = request.session['RecentSearches']
-    if search_text not in searches and search_text != None:
-        searches.append(search_text)
-        request.session['RecentSearches'] = searches
+
     # TODO: perform the search!
     return redirect('show_courses')
 
