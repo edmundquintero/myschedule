@@ -1,11 +1,4 @@
 $(function() {
-    // Create the modal dialog for saving an unsaved cart when the user
-    // selects the link to view a saved schedule.  This particular dialog
-    // is loaded on all pages since the saved schedule links are on all pages.
-    createModalWindow('save-cart', 'Save current schedule?',
-             closeDialog, closeDialog); 
-
-
     // Create modal dialog windows, overriding parameters for a specific
     // dialog in the processing for the click function.
     $('a.open-window').each(function(){
