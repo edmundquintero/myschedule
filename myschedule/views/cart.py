@@ -168,7 +168,7 @@ def get_seats(informer_url, term, year, course_prefix, course_number,
     json_data = json.dumps(json_list, indent=2)
     return json_data
 
-def get_section_data(sections):
+def get_section_data(sections, include_seats=True):
     """
         Get the section and course data for a list of sections.
     """
@@ -185,14 +185,16 @@ def get_section_data(sections):
                                   section_code=section)
             course_data = section_data.course
             meeting_data = section_data.meeting_set.all()
-            # TODO: When get_seats is switched to external api, update this call.
-            seat_counts = get_seats('http://watrain.cpcc.edu/SeatCount/SeatCount',
+            seat_counts = []
+            if include_seats:
+                # TODO: When get_seats is switched to external api, update this call.
+                seat_counts = get_seats('http://watrain.cpcc.edu/SeatCount/SeatCount',
                                 section_data.term.upper(),
                                 section_data.year,
                                 course_data.prefix,
                                 course_data.course_number,
                                 section_data.section_number)
-            seat_counts = json.loads(seat_counts)
+                seat_counts = json.loads(seat_counts)
             if len(seat_counts) == 1:
                 for item in seat_counts:
                    seat_count = item['seats'] + ' seat(s) available'
@@ -305,7 +307,7 @@ def get_calendar_data(request):
     difference = datetime.timedelta(minutes=5)
     sections = request.session['Cart']
     if sections != [] and sections != None:
-        cart_items = get_section_data(sections)
+        cart_items = get_section_data(sections, False)
         conflicting_sections = conflict_resolution(cart_items, sections)
     else:
         cart_items = []
