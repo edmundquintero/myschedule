@@ -22,6 +22,7 @@ urlpatterns += patterns('myschedule.views',
 )
 
 urlpatterns += patterns('myschedule.views.cart',
+    url(r'^display_cart/', 'display_cart', name='display_cart'),
     url(r'^display_cart/((?:\w{3}-[\d\w]+-[\d\w]+-\w{2}-\d{4}/?)+)*$', 'display_cart', name='display_cart'),
     url(r'^delete_cartitem/(\w{3}-[\d\w]+-[\d\w]+-\w{2}-\d{4})/$', 'delete_cartitem', name='delete_cartitem'),
     url(r'^show_schedule/', 'show_schedule', name='show_schedule'),

@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic.simple import direct_to_template
 from django.conf import settings
@@ -217,9 +217,13 @@ def show_schedule(request):
     if request.session.has_key('Cart'):
         for item in request.session['Cart']:
             sections_url = sections_url + item + '/'
-    else:
-        sections_url = None
-    return HttpResponseRedirect(reverse('display_cart', args=[sections_url]))
+    elif request.user.is_authenticated():
+        try:
+            cart = models.Schedule.objects.get(owner=request.user)
+            sections_url = cart.sections
+        except:
+            pass
+    return redirect('display_cart', sections_url)
 
 def display_cart(request, sections_url=None):
     """
