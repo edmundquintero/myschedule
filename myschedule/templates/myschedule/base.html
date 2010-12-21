@@ -16,10 +16,27 @@
 <a href="{% url index %}">Schedule Builder</a>
 {% endblock %}
 
+{% block login %}
+  <div id="login">
+  {% if request.user.is_authenticated %}
+    Welcome back, <span id="user-name">{{ request.user.get_full_name }}</span> | <a href="{% url logout %}">Sign Out</a>
+  {% else %}
+    <a href="{% url schedule_login request.path %}">Sign In</a>
+  {% endif %}
+  {% url help as help %}
+  {% block help_text %}
+    | <a href="{{ help }}">Help</a>
+  {% endblock %}
+  </div>
+  {% block help_icon %}
+  <a href="{{ help }}"><img src="{% url static "3g/img/help_icon.png" %}" alt="Help Icon" id="help-icon"></a>
+  {% endblock %}
+{% endblock %}
+
 {% block body_class %}sidebar{% endblock %}
 {% block sidebar %}
-    {% if not user.is_authenticated %}
-      <p><i><a href="{% url login %}" title="Sign in with your CPCC Login">Sign in</a> to save schedule.</i></p>
+    {% if not user.is_authenticated %}   
+      <p><i><a href="{% url schedule_login request.path %}" title="Sign in with your CPCC Login">Sign in</a> to save or retrieve schedule.</i></p>
     {% endif %}
     <h5>Schedule</h5>
       {% if request.session.Cart %}

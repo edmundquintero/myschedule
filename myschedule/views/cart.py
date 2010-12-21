@@ -7,7 +7,7 @@ from django.conf import settings
 from django.utils import simplejson as json
 
 from cpsite import ods
-# from cpsite.decorators import groups_required
+from cpsite.decorators import groups_required
 
 from myschedule import models, forms
 
@@ -16,6 +16,43 @@ from myschedule import models, forms
     The cart represents the schedule that is currently being edited
     (having courses added and removed).
 """
+
+@login_required
+@groups_required(['Students'])
+def schedule_login(request, next):
+    """
+        Instead of sign in links calling login, pass the user through here
+        so can save a schedule they were working on before they signed in and
+        can check for an existing saved schedule.
+    """
+    if request.user.is_authenticated():
+        # First check to see if the user already has a saved schedule in the table.
+        # If they have a saved schedule and have a cart, then will need to
+        # reconcile the two.
+        saved_sections = []
+        try:
+            cart = models.Schedule.objects.get(owner=request.user)
+            saved_sections = cart.sections.split("/")
+            saved_sections.remove('')
+        except:
+            pass
+        if not request.session.has_key('Cart') and saved_sections:
+            # Just need to create the cart session variable and load it.
+            request.session['Cart'] = saved_sections
+        elif request.session.has_key('Cart'):
+            cart_sections = request.session['Cart']
+            if saved_sections:
+                # Compare previously saved items to the cart. Add any
+                # saved items that aren't already in it to the cart.
+                # Possible TODO: check to see if the section is still active
+                # before adding it to the cart.
+                for item in saved_sections:
+                    if item not in cart_sections:
+                        cart_sections.append(item)
+            # Update the cart session variable
+            request.session['Cart'] = cart_sections
+            save_cart(request)
+    return redirect(next)
 
 def add_item(request):
     """
@@ -89,6 +126,7 @@ def conflict_resolution(cart_items, sections):
     """
         Checks for any conflicts between the sections on the schedule.
         Presently, just for classes with overlapping times.
+        TODO: Check section status??
     """
     conflicting_sections = []
     for section in sections:
