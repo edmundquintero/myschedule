@@ -34,7 +34,7 @@
   {% for item in cartitems %}
     <tr class="{% cycle 'odd' 'even' %}">
       <td>{{ item.course_data.prefix }} - {{ item.course_data.course_number }} - {{ item.section_data.section_number }} <i>{{ item.course_data.title }}</i><br/>Synonym: {{ item.section_data.synonym }}</td>
-      <td>{{ item.seat_count }} </td>
+      <td>{{ item.seat_count }}</td>
       <td {% if item.section_data.section_code in conflicting_sections %}class="error"{% endif %}>From {{ item.section_data.start_date }} to {{ item.section_data.end_date }}<br/>
           {{ item.section_data.campus }}
           {% for meeting in item.meeting_data %}

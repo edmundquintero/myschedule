@@ -223,27 +223,31 @@ def get_section_data(sections, include_seats=True):
                                   section_code=section)
             course_data = section_data.course
             meeting_data = section_data.meeting_set.all()
-            seat_counts = []
-            if include_seats:
-                # TODO: When get_seats is switched to external api, update this call.
-                seat_counts = get_seats('http://watrain.cpcc.edu/SeatCount/SeatCount',
+            section_item = dict({"section_data":section_data,
+                     "course_data":course_data,
+                     "meeting_data":meeting_data})
+            cache.add(section, section_item, 60*settings.CACHE_REFRESH_RATE)
+        else:
+            section_data = section_item['section_data']
+            course_data = section_item['course_data']
+        seat_counts = []
+        # Seat count data isn't cached in this application (may be cached
+        # externally).
+        if include_seats:
+            # TODO: When get_seats is switched to external api, update this call.
+            seat_counts = get_seats('http://watrain.cpcc.edu/SeatCount/SeatCount',
                                 section_data.term.upper(),
                                 section_data.year,
                                 course_data.prefix,
                                 course_data.course_number,
                                 section_data.section_number)
-                seat_counts = json.loads(seat_counts)
-            if len(seat_counts) == 1:
-                for item in seat_counts:
-                   seat_count = item['seats'] + ' seat(s) available'
-            else:
-                seat_count = 'Seat count unavailable'
-            section_item = dict({"section_data":section_data,
-                     "course_data":course_data,
-                     "meeting_data":meeting_data,
-                     "seat_count": seat_count})
-            # TODO: put the caching time limit in a setting.
-            cache.add(section, section_item, 60*settings.CACHE_REFRESH_RATE)
+            seat_counts = json.loads(seat_counts)
+        if len(seat_counts) == 1:
+            for item in seat_counts:
+               seat_count = item['seats'] + ' seat(s) available'
+        else:
+            seat_count = 'Seat count unavailable'
+        section_item['seat_count'] = seat_count
         cart_items.append(section_item)
     return cart_items
 
@@ -260,7 +264,7 @@ def show_schedule(request):
             cart = models.Schedule.objects.get(owner=request.user)
             sections_url = cart.sections
         except:
-            pass
+            return redirect('index')
     return redirect('display_cart', sections_url)
 
 def display_cart(request, sections_url=None):
@@ -281,6 +285,7 @@ def display_cart(request, sections_url=None):
 
     if sections != [] and sections != None:
         cart_items = get_section_data(sections)
+        #seat_counts = get_seat_counts(cart_items)
         conflicting_sections = conflict_resolution(cart_items, sections)
     else:
         cart_items = []
