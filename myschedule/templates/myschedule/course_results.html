@@ -5,7 +5,7 @@
 {% block content %}{{ block.super }}
   {% for course in courses %}
     <p>
-    <a href="{% url show_sections course.prefix course.number course.id%}">{{ course.prefix }} {{ course.number }} - {{course.title }}</a>  <span class='information'>{{ course.information }}</span><br/>
+    <a href="{% url show_sections course.id%}">{{ course.prefix }} {{ course.number }} - {{course.title }}</a>  <span class='information'>{{ course.information }}</span><br/>
     <b>{{ course.credit_hours|floatformat:"0" }} {% ifequal course.academic_level 'CE' %}CEU (Continuing Education Units){% endifequal %}{% ifequal course.academic_level 'CU' %}Credit hours (Curriculum){% endifequal %}</b><br/>
     The description would go here if we had one. 
     </p>

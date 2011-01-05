@@ -32,8 +32,12 @@
 {% block content %}{{ block.super }}
   {% if sections %}
     <form action="" method="POST" id="section-form">
-      {{ course.prefix }} {{ course.number }} <b>{{ course.title }}</b><br/>
-      Course description goes here.
+      <table>
+      <tr>
+      <td>{{ sections.0.course.prefix }} {{ sections.0.course.course_number }}</td>
+      <td><b>{{ sections.0.course.title }}</b><br/>{{ sections.0.course.description }}</td>
+      </tr>
+      </table>
       <table>
       <thead>
         <tr>
@@ -48,16 +52,16 @@
       <tbody>
       {% for section in sections %}
         <tr class="{% cycle 'odd' 'even' %}">
-          <td>{{ section.synonym}}</td>
-          <td>{{ section.section }}</td>
+          <td>{{ section.synonym }}</td>
+          <td>{{ section.section_code }}</td>
           <td>seat(s) available</td>
           <td>From {{ section.start_date }} to {{ section.end_date }}</td>
-          <td>{{ section.instructor_first_name }} {{ section.instructor_last_name }}<br/>
-          {% if section.booklink %} <a class="open-window" ref="book" dialog-title="Book Information"  href="#book" booklink="{{ section.booklink }}">View Book Information</a>{% endif %}</td>
-          {% if section.is_in_cart %}
+          <td>{% if section.instructor_link %}<a href="{{ section.instructor_link }}">{{ section.instructor_name }}</a>{% else %}{{ section.instructor_name }}{% endif %}<br/><br/>
+          {% if section.book_link %} <a class="open-window" ref="book" dialog-title="Book Information"  href="#book" booklink="{{ section.book_link }}">View Book Information</a>{% endif %}</td>
+          {% if section.section_code in request.session.Cart %}
             <td class="checkmark">+</td>
           {% else %}
-            <td><a class="ui-button add-item" href="#add" ref="section_{{ section.id }}">Add</a></td>
+            <td><a class="ui-button add-item" href="#add" ref="section_{{ section.section_code }}">Add</a></td>
           {% endif %}
         </tr>
       {% endfor %}

@@ -25,21 +25,6 @@ THEME = '3g'
 ODS_API_HOST = ''
 MYSCHEDULE_API_HOST = ''
 
-# Settings required to compose book link.
-# Arguments are added to booklook url in view.
-# Important! In order to get the book iframe to consistently load in the
-# dialog in IE, I had to use the secure booklook url.  If it doesn't seem
-# to work on staging or production (or causes mixed content warnings) try
-# switching back to http (if IE thinks the local server is secure, then
-# it expects the external site to be secure and vice versa???).
-BOOKLOOK_URL='https://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet'
-BOOKLOOK_DEFAULT_STORE='636'
-# If the bookstores at any other campuses ever happen to get their own store ID
-# with Follett, add it into the mapping variable below.  Currently only Levine
-# has their own.  All others use the default store ID above.
-BOOKLOOK_STORE_CAMPUS_MAPPING={'2007':'637'}
-BOOKLOOK_TERMS={'fa':'Fall','sp':'Spring','su':'Summer'}
-
 # Heuristic Search Data
 HIGH_THRESHOLD = 1000
 MEDIUM_THRESHOLD = 300

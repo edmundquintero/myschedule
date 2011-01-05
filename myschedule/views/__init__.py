@@ -32,33 +32,6 @@ def old_search(request, search_text=None):
     # TODO: perform the search!
     return redirect('show_courses')
 
-def compose_booklink(campus=None, term=None, year=None, course_prefix=None,
-                     course_number=None, section=None):
-    """
-        Composes a link to the textbook publisher's web service.
-    """
-    store_campus_mapping = settings.BOOKLOOK_STORE_CAMPUS_MAPPING
-    store_id = ''
-    if campus != '' and campus != None:
-        store_id = settings.BOOKLOOK_DEFAULT_STORE
-        if campus in store_campus_mapping:
-            store_id = store_campus_mapping[campus]
-    if term.lower() in settings.BOOKLOOK_TERMS:
-        term = settings.BOOKLOOK_TERMS[term.lower()]
-    else:
-        term = ''
-    booklink=''
-    if (store_id != '' and term != '' and year != '' and year != None
-                and course_prefix != '' and course_prefix != None
-                and course_number != '' and course_number != None):
-        booklink = (''+settings.BOOKLOOK_URL +
-                    '?sect-1=' + section +
-                    '&bookstore_id-1=' + store_id +
-                    '&dept-1=' + course_prefix +
-                    '&course-1=' + course_number +
-                    '&term_id-1=' + term + ' ' + year)
-    return booklink
-
 def show_courses(request):
     """
         Displays course search results template.
@@ -83,53 +56,17 @@ def show_courses(request):
              'search':search}
     )
 
-
-def show_sections(request, prefix, number, course_id):
+def show_sections(request, course_id):
     """
         Display section results template for specified course.
     """
-    # TODO: Can't retrieve a course or section records using course_id via
-    # cpapi, so until this whole data thing gets figured out will have to
-    # filter the lists to get the items for a particular course_id. Actually
-    # can only filter the course - sections doesn't include the course ID.
-    ods_spec_dict = {"key": settings.CPAPI_KEY,
-                     "data": "course",
-                     "prefix": prefix,
-                     "number": number}
-    courses = ods.get_data(ods_spec_dict)
-    active_course = {}
-    for course in courses:
-        if course.has_key('id') and course['id'] == course_id:
-            active_course = course
-    # TODO: Get the section data
-    ods_spec_dict = {"key": settings.CPAPI_KEY,
-                     "data": "sections",
-                     "prefix": prefix,
-                     "number": number}
-
-    sections = ods.get_data(ods_spec_dict)
-    active_sections = []
-    for section in sections:
-        if string.upper(section['term'])=='FA' and section['year']=='2010':
-            active_sections.append(section)
-            # Get the link to the book information TODO: replace hard-coded campus code with proper field when cpapi is updated to return location
-            section["booklink"] = compose_booklink('1013', section['term'],
-                      section['year'], section['prefix'],
-                      section['number'], section['section'])
-            # TODO: When upgrade to django 1.2 can remove is_in_cart code and
-            # just check in the template to see if the section is in the cart
-            section['is_in_cart']=False
-            if (request.session.has_key('Cart')):
-                if request.session['Cart'] != None:
-                    if section['id'] in request.session['Cart']:
-                        section['is_in_cart']=True
+    sections = models.Section.objects.filter(course__course_code=course_id, term='FA', year='2010')
 
     search = forms.search_form()
 
     return direct_to_template(request,
             'myschedule/section_results.html',
-            {'course':active_course,
-             'sections':active_sections,
+            {'sections':sections,
              'search':search}
     )
 
