@@ -206,6 +206,7 @@ def get_seats(informer_url, term, year, course_prefix, course_number,
     json_data = json.dumps(json_list, indent=2)
     return json_data
 
+@cache_page(60 * 60)
 def get_section_data(sections, include_seats=True):
     """
         Get the section and course data for a list of sections.

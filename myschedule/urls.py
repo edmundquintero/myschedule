@@ -3,6 +3,7 @@ from django.conf.urls.defaults import include, patterns, url
 # from django.contrib import admin
 from haystack.views import SearchView
 from haystack.query import SearchQuerySet
+from myschedule import models
 
 # admin.autodiscover()
 sqs = SearchQuerySet().order_by('popularity')
