@@ -9,9 +9,9 @@ class CourseIndex(SearchIndex):
     title = CharField(model_attr='title')
     description = CharField(model_attr='description')
     popularity = CharField(model_attr='popularity')
-    
+
     def get_queryset(self):
         return models.Course.objects.all().order_by('popularity')
-        
+
 
 site.register(models.Course, CourseIndex)
