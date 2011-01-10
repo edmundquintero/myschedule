@@ -21,13 +21,13 @@ def index(request):
                               'myschedule/index.html',
                               {'search':search})
 
-def old_search(request, search_text=None):
+def old_search(request, query=None):
     """
         Handles processing for Search button and saved searches.
     """
-    if search_text is None:
+    if query is None:
         if request.method == 'POST':
-            search_text = request.POST['search_text']
+            query = request.POST['query']
 
     # TODO: perform the search!
     return redirect('show_courses')

@@ -7,7 +7,6 @@
   <script type="text/javascript" src="{% url appstatic "js/schedule.js" %}"></script>
 {% endblock %}
 
-{% load tabbing %}
 {% load myschedule_filters %}
 
 {% block page_title %}Schedule Builder{% endblock %}
@@ -33,21 +32,3 @@
   {% endblock %}
 {% endblock %}
 
-{% block body_class %}sidebar{% endblock %}
-{% block sidebar %}
-    {% if not user.is_authenticated %}   
-      <p><i><a href="{% url schedule_login request.path %}" title="Sign in with your CPCC Login">Sign in</a> to save or retrieve schedule.</i></p>
-    {% endif %}
-    <h5>Schedule</h5>
-      {% if request.session.Cart %}
-        <ul class='sidebar'>
-          {% for section in request.session.Cart %}
-          <li>{{ section|format_section }}<a href="{% url delete_cartitem section %}" class="ui-icon ui-icon-trash"></a></li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    <p><a href="{% url show_schedule %}" class="ui-button">View Full Schedule</a></p>
-{% endblock %}
-{% block content %}{{ block.super }} 
-  {% include "myschedule/search.html" %}
-{% endblock %}

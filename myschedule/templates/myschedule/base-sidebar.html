@@ -1,0 +1,20 @@
+{% extends "myschedule/base.html" %}
+
+{% load myschedule_filters %}
+{% block body_class %}sidebar{% endblock %}
+{% block sidebar %}{{ block.super }}
+    {% if not user.is_authenticated %}   
+      <p><i><a href="{% url schedule_login request.path %}" title="Sign in with your CPCC Login">Sign in</a> to save or retrieve schedule.</i></p>
+    {% endif %}
+    <h5>Schedule</h5>
+      {% if request.session.Cart %}
+        <ul id="cart">
+          {% for section in request.session.Cart %}
+          <li><a href="{% url delete_cartitem section %}"><img src="{% url appstatic "img/remove_button.png" %}" alt="Remove"/></a>{{ section|format_section }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    <div id="view-full-schedule">
+      <a href="{% url show_schedule %}"><img src="{% url appstatic "img/view_full_schedule_button.png" %}" alt="View Full Schedule"/></a>
+    </div>
+{% endblock %}

@@ -1,5 +1,5 @@
-<form method="POST" action="{% url old_search%}" id="search-form">
+<form method="POST" action="{% url old_search%}" id="search">
   <div class="search">
-    {{ search.search_text }} <input type="submit" value="Search" />
+    {{ search.query }} <input type="image" name="submit" src="{% url appstatic "img/search_button.png" %}" />
   </div>
 </form>
