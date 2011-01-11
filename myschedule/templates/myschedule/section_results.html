@@ -32,42 +32,44 @@
 {% block content %}{{ block.super }}
   {% if sections %}
     <form action="" method="POST" id="section-form">
-      <table>
-      <tr>
-      <td>{{ sections.0.course.prefix }} {{ sections.0.course.course_number }}</td>
-      <td><b>{{ sections.0.course.title }}</b><br/>{{ sections.0.course.description }}</td>
-      </tr>
-      </table>
-      <table>
-      <thead>
-        <tr>
-          <th>Synonym</th>
-          <th>Section</th>
-          <th>Status</th>
-          <th>Meeting Location & Times</th>
-          <th>Instructor / Book</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
+      <div class="course">
+        <div class="course-top"></div>
+        <div class="course-content">
+          <div class="course-metadata">
+            <p class="course-number">{{ sections.0.course.prefix }} {{ sections.0.course.course_number }}</p>
+            <p class="course-hours">{% ifequal sections.0.course.academic_level 'Corporate and Continuing Education' %}CEUs{% endifequal %}{% ifequal sections.0.course.academic_level 'Curriculum' %}Credit Hours{% endifequal %}<br/>{{ sections.0.course.credit_hours|floatformat:1 }}</p>
+          </div>
+         <div class="course-description">
+            <p class="course-name">{{ sections.0.course.title }}</p>
+            <p>{{ sections.0.course.description }}</p>
+          </div>
+          <div class="clear"></div>
+        </div>
+        <div class="course-bottom"></div>
+      </div>
+              
       {% for section in sections %}
-        <tr class="{% cycle 'odd' 'even' %}">
-          <td>{{ section.synonym }}</td>
-          <td>{{ section.section_code }}</td>
-          <td>seat(s) available</td>
-          <td>From {{ section.start_date }} to {{ section.end_date }}</td>
-          <td>{% if section.instructor_link %}<a href="{{ section.instructor_link }}">{{ section.instructor_name }}</a>{% else %}{{ section.instructor_name }}{% endif %}<br/><br/>
-          {% if section.book_link %} <a class="open-window" ref="book" dialog-title="Book Information"  href="#book" booklink="{{ section.book_link }}">View Book Information</a>{% endif %}</td>
-          {% if section.section_code in request.session.Cart %}
-            <td class="checkmark">+</td>
-          {% else %}
-            <td><a class="ui-button add-item" href="#add" ref="section_{{ section.section_code }}">Add</a></td>
-          {% endif %}
-        </tr>
+        <div class="section">
+
+          <div class="section-top">
+            <div class="section-number">Section {{ section.section_number }}</div>
+            <div class="section-meets">Meets</div>
+            <a class="add-item" href="#add" ref="section_{{ section.section_code }}"><img src="{% url appstatic "img/add_button.png" %}" alt="Add" /></a>
+          </div>
+          <div class="section-content">
+            <div class="section-meets">
+            <p>From {{ section.start_date }} to {{ section.end_date }}</p>
+
+            </div>
+          </div>
+          <div class="section-bottom">
+            <p>{% if section.instructor_link %}<a href="{{ section.instructor_link }}">{{ section.instructor_name }}</a>{% else %}{{ section.instructor_name }}{% endif %}
+            {% if section.book_link %} <a class="open-window" ref="book" dialog-title="Book Information"  href="#book" booklink="{{ section.book_link }}">Book Information</a>{% endif %}</p>
+          </div>
+        </div>
+
       {% endfor %}
-      </tbody>
-      </table>
-      {% include "myschedule/dialogs/book.html" %}
+            {% include "myschedule/dialogs/book.html" %}
     </form>
   {% else %}
     <p>There are no sections currently available for this course.</p>

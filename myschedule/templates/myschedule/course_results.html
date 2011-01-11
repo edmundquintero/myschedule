@@ -5,10 +5,21 @@
 {% block content %}{{ block.super }}
   {% include "myschedule/search.html" %}
   {% for course in courses %}
-    <p>
-    <a href="{% url show_sections course.id%}">{{ course.prefix }} {{ course.number }} - {{course.title }}</a>  <span class='information'>{{ course.information }}</span><br/>
-    <b>{{ course.credit_hours|floatformat:"0" }} {% ifequal course.academic_level 'CE' %}CEU (Continuing Education Units){% endifequal %}{% ifequal course.academic_level 'CU' %}Credit hours (Curriculum){% endifequal %}</b><br/>
-    The description would go here if we had one. 
-    </p>
+    <div class="course">
+      <div class="course-top"></div>
+      <div class="course-content">
+        <div class="course-metadata">
+          <p class="course-number"><a href="{% url show_sections course.id%}">{{ course.prefix }} {{ course.number }}</a></p>
+          <p class="course-hours"> {% ifequal course.academic_level 'CE' %}CEUs{% endifequal %}{% ifequal course.academic_level 'CU' %}Credit Hours{% endifequal %}<br/>{{course.credit_hours|floatformat:1 }}</p>
+        </div>
+        <div class="course-description">
+          <p class="course-name">{{course.title }}</p>
+          <p>{{ course.description }}</p>
+        </div>
+        <div class="clear"></div>
+      </div>
+      <div class="course-bottom"></div>
+    </div>
+
   {% endfor %}
 {% endblock %}
