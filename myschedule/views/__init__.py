@@ -16,7 +16,7 @@ def index(request):
     """
         Handles processing for the index template.
     """
-    search = forms.search_form()
+    search = forms.search_form({"query":"ex. math, bus 121, mec"})
     return direct_to_template(request,
                               'myschedule/index.html',
                               {'search':search})

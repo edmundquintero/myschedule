@@ -157,6 +157,7 @@ div#body.sidebar div#content { width: 684px; }
 {
     margin: 15px 0;
     width: 685px;
+    color: #333;
 }
 .section .section-top
 {
@@ -164,7 +165,6 @@ div#body.sidebar div#content { width: 684px; }
     background: url('../img/section_top_background.png') no-repeat;
     font-size: 18px;
     font-weight: bold;
-    color: #333;
 }
 .section .section-top .section-number
 {
@@ -173,7 +173,7 @@ div#body.sidebar div#content { width: 684px; }
     padding-top: 10px;
     text-align: center;
 }
-.section .section-top .section-meets
+.section .section-top .section-heading
 {
     float: left;
     width: 510px;
@@ -186,28 +186,89 @@ div#body.sidebar div#content { width: 684px; }
     bottom: 7px;
     left: 7px;
 }
-
 .section .section-content
 {
-    background: url('../img/section_background.png') repeat-y;
+    background: url('../img/section_content_background.png') repeat-y;
+}
+.section .section-content .section-seats
+{
+    float: left;
+    width: 135px;
+    padding-top: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+.section .section-content .section-seats .section-seats-label
+{
+    font-size: 14px;
+}
+.section .section-content .section-seats .section-seats-number
+{
+    font-size: 25px;
+}
+.section .section-content .section-meeting
+{
+    float: left;
+    width: 495px;
+    padding: 10px 15px;
+    font-size: 14px;
+}
+.section .section-content .section-meeting table
+{
+    margin: 0;
+    padding: 0;
+}
+.section .section-content .section-meeting table td
+{
+    border: none;
+}
+.section .section-content .section-meeting .section-campus
+{
+    width: 25%;
+    font-weight: bold;
+}
+.section .section-content .section-meeting .section-room
+{
+    width: 22%;
+}
+.section .section-content .section-meeting .section-type
+{
+    width: 10%;
+}
+.section .section-content .section-meeting .section-days
+{
+    width: 10%;
+    font-weight: bold;
+}
+.section .section-content .section-meeting .section-time
+{
+    width: 33%;
+    font-weight: bold;
 }
 .section .section-bottom
 {
     height: 52px;
     background: url('../img/section_bottom_background.png') no-repeat;
+    font-size: 14px;
+}
+.section .section-bottom .section-hours
+{
+    float: left;
+    width: 135px;
+    padding-top: 17px;
+    text-align: center;
+}
+.section .section-bottom .section-instructor
+{
+    float: left;
+    padding: 17px 0 0 15px;
+}
+.section .section-bottom .section-books
+{
+    float: right;
+    padding: 3px 15px 0 0;
 }
 
-/*h1 {
-    display: none;
-}
-
-div.search {
-    width: 40%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 2em;
-}
-*/
 div.book {
     overflow-y: hidden;
     margin: 0;

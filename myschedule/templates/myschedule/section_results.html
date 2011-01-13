@@ -30,6 +30,7 @@
 {% endblock %}
 
 {% block content %}{{ block.super }}
+  {% include "myschedule/search.html" %}
   {% if sections %}
     <form action="" method="POST" id="section-form">
       <div class="course">
