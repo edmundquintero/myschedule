@@ -60,8 +60,7 @@ def show_sections(request, course_id):
     """
         Display section results template for specified course.
     """
-    sections = models.Section.objects.filter(course__course_code=course_id, term='FA', year='2010')
-
+    sections = models.Section.objects.select_related().filter(course__course_code=course_id, term='FA', year='2010')
     search = forms.search_form()
 
     return direct_to_template(request,

@@ -1,14 +1,19 @@
 {% extends "myschedule/base-sidebar.html" %}
 
-{% block page_title %}{{ block.super }} | Display Cart{% endblock %}
+{% block page_title %}{{ block.super }} | Schedule{% endblock %}
+
+{% block schedule %}{% endblock %}
 
 {% block content %}{{ block.super }}
+{% include "myschedule/search.html" %}
 {% if not cartitems %}
+  <br />
   <div class="message message-warning">
     <p>All classes have been removed from this schedule.</p>
   </div>
 {% else %}
   {% if not user.is_authenticated or conflicting_sections %}
+    <br />
     <div class="message message-warning">
     {% if not user.is_authenticated %}
       <p><a href="{% url login %}">Sign in</a> to save this schedule!</p>
@@ -20,35 +25,52 @@
   {% endif %}
   <a class="open-window ui-button" href="#email" ref="email" dialog-title="Email Schedule" title="Email this schedule to yourself or a friend">Email Schedule</a>
   <a href="JavaScript:window.print();" title="Print this page" class="ui-button">Print Schedule</a>
-  <table>
-  <thead>
-    <tr>
-      <th>Course</th>
-      <th>Status</th>
-      <th>Meeting Location & Times</th>
-      <th>Instructor / Book</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
   {% for item in cartitems %}
-    <tr class="{% cycle 'odd' 'even' %}">
-      <td>{{ item.course_data.prefix }} - {{ item.course_data.course_number }} - {{ item.section_data.section_number }} <i>{{ item.course_data.title }}</i><br/>Synonym: {{ item.section_data.synonym }}</td>
-      <td>{{ item.seat_count }}</td>
-      <td {% if item.section_data.section_code in conflicting_sections %}class="error"{% endif %}>From {{ item.section_data.start_date }} to {{ item.section_data.end_date }}<br/>
-          {{ item.section_data.campus }}
-          {% for meeting in item.meeting_data %}
-            <br/>
-            {{ meeting.building }} {{ meeting.room }} {{ meeting.meeting_type }} {{ meeting.days_of_week }} {{ meeting.start_time|time:"h:i A" }} {{ meeting.end_time|time:"h:i A" }}
-          {% endfor %}
-      </td>
-      <td>{% if item.section_data.instructor_link %}<a href="{{ item.section_data.instructor_link }}">{{ item.section_data.instructor_name }}</a>{% else %}{{ item.section_data.instructor_name }}{% endif %}<br/><br/>
-      {% if item.section_data.book_link %} <a class="open-window" ref="book" dialog-title="Book Information" href= "#book" booklink="{{ item.section_data.book_link }}">View Book Information</a>{% endif %}</td>
-      <td><a class="ui-button" href="{% url delete_cartitem item.section_data.section_code %}">Remove</a></td>
-    </tr>
+    <div class="section">
+      <div class="section-top">
+        <div class="section-number">{{ item.course_data.prefix }} {{ item.course_data.course_number }} - {{ item.section_data.section_number }} </div>
+        <div class="section-heading">{{ item.course_data.title }} Synonym: {{ item.section_data.synonym }}</div>
+        <a href="{% url delete_cartitem item.section_data.section_code %}"><img src="{% url appstatic "img/remove_button.png" %}" alt="Remove" /></a>
+      </div>
+      <div class="section-content">
+        <div class="section-seats">
+          {% if item.seat_count != "Seat count unavailable" %}
+            <p class="section-seats-label">Seats Available</p>
+            <p class="section-seats-number">{{ item.seat_count }}</p>
+          {% else %}
+            <p class="section-seats-label">{{ item.seat_count }}</p>
+          {% endif %}
+        </div>
+        <div class="section-meeting  {% if item.section_data.section_code in conflicting_sections %}error{% endif %}">
+          <table>
+            {% for meeting in item.meeting_data %}
+              <tr>
+                <td class="section-campus">{{ item.section_data.campus }}</td>
+                <td class="section-room">Rm {{ meeting.building }} {{ meeting.room }}</td>
+                <td class="section-type">{{ meeting.meeting_type }}</td>
+                <td class="section-days">{{ meeting.days_of_week }}</td>
+                <td class="section-time">{{ meeting.start_time|time:"g:i A" }} - {{ meeting.end_time|time:"g:i A" }}</td>
+              </tr>
+            {% endfor %}
+            <tr>
+              <td colspan="2"><strong>From</strong> {{ item.section_data.start_date|date:"n-j-Y" }} to {{ item.section_data.end_date|date:"n-j-Y" }}</td>
+              <td colspan="3"><strong>Session</strong> {{ item.section_data.session }}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="clear"></div>
+      </div>
+      <div class="section-bottom">
+        <div class="section-hours"><strong>Contact Hours</strong> {{ item.section_data.contact_hours }}</div>
+        <div class="section-instructor"><strong>Instructor</strong> {% if item.section_data.instructor_link %}<a href="{{ item.section_data.instructor_link }}">{{ item.section_data.instructor_name }}</a>{% else %}{{ item.section_data.instructor_name }}{% endif %}
+        </div>
+        <div class="section-books">
+          {% if item.section_data.book_link %} <a class="open-window" ref="book" dialog-title="Book Information" href= "#book" booklink="{{ item.section_data.book_link }}">Book Information</a> <img src="{% url appstatic "img/books_icon.png" %}" alt="Book" />{% endif %}
+        </div>
+        <div class="clear"></div>
+      </div>
+    </div>
   {% endfor %}
-  </tbody>
-  </table>
   {% include "myschedule/dialogs/book.html" %}
   {% include "myschedule/dialogs/email.html" %}
 {% endif %}

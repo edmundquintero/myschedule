@@ -5,29 +5,9 @@
      var basePath = '{% url index %}';
    </script>
   <script type="text/javascript" src="{% url appstatic "js/sections.js" %}"></script>
-  <script type="text/javascript" src="{% url appstatic "js/calendar.js" %}"></script>
 {% endblock %}
 
 {% block page_title %}{{ block.super }} | Search Results{% endblock %}
-
-{% block sidebar %}{{ block.super }}
-<table class="calendar-table">
-<thead>
-  <tr>
-  <th></th>
-  <th>Su</th>
-  <th>Mo</th>
-  <th>Tu</th>
-  <th>We</th>
-  <th>Th</th>
-  <th>Fr</th>
-  <th>Sa</th>
-  </tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-{% endblock %}
 
 {% block content %}{{ block.super }}
   {% include "myschedule/search.html" %}
@@ -51,22 +31,49 @@
               
       {% for section in sections %}
         <div class="section">
-
           <div class="section-top">
             <div class="section-number">Section {{ section.section_number }}</div>
-            <div class="section-meets">Meets</div>
+            <div class="section-heading">Meets</div>
             <a class="add-item" href="#add" ref="section_{{ section.section_code }}"><img src="{% url appstatic "img/add_button.png" %}" alt="Add" /></a>
           </div>
           <div class="section-content">
-            <div class="section-meets">
-            <p>From {{ section.start_date }} to {{ section.end_date }}</p>
-
+            <div class="section-seats">
+              {% if item.seat_count != "Seat count unavailable" %}
+                <p class="section-seats-label">Seats Available</p>
+                <p class="section-seats-number">{{ item.seat_count }}</p>
+              {% else %}
+                <p class="section-seats-label">{{ item.seat_count }}</p>
+              {% endif %}
             </div>
+
+            <div class="section-meeting">
+              <table>
+              {% for meeting in section.meeting_set.all %}
+                <tr>
+                  <td class="section-campus">{{ section.campus }}</td>
+                  <td class="section-room">Rm {{ meeting.building }} {{ meeting.room }}</td>
+                  <td class="section-type">{{ meeting.meeting_type }}</td>
+                  <td class="section-days">{{ meeting.days_of_week }}</td>
+                  <td class="section-time">{{ meeting.start_time|time:"g:i A" }} - {{ meeting.end_time|time:"g:i A" }}</td>
+                </tr>
+              {% endfor %}
+              <tr>
+                <td colspan="2"><strong>From</strong> {{ section.start_date|date:"n-j-Y" }} to {{ section.end_date|date:"n-j-Y" }}</td>
+                <td colspan="3"><strong>Session</strong> {{ section.session }}</td>
+              </tr>
+              </table>
+            </div>
+            <div class="clear"></div>
           </div>
           <div class="section-bottom">
-            <p>{% if section.instructor_link %}<a href="{{ section.instructor_link }}">{{ section.instructor_name }}</a>{% else %}{{ section.instructor_name }}{% endif %}
-            {% if section.book_link %} <a class="open-window" ref="book" dialog-title="Book Information"  href="#book" booklink="{{ section.book_link }}">Book Information</a>{% endif %}</p>
+            <div class="section-hours"><strong>Contact Hours</strong> {{ section.contact_hours }}</div>
+            <div class="section-instructor"><strong>Instructor</strong> {% if section.instructor_link %}<a href="{{ section.instructor_link }}">{{ section.instructor_name }}</a>{% else %}{{ section.instructor_name }}{% endif %}
+            </div>
+            <div class="section-books">
+            {% if section.book_link %} <a class="open-window" ref="book" dialog-title="Book Information" href= "#book" booklink="{{ section.book_link }}">Book Information</a> <img src="{% url appstatic "img/books_icon.png" %}" alt="Book" />{% endif %}
+            </div>
           </div>
+          <div class="clear"></div>
         </div>
 
       {% endfor %}

@@ -1,4 +1,10 @@
 {% extends "myschedule/base.html" %}
+{% block scripts %}{{ block.super }}
+   <script type="text/javascript">
+     var basePath = '{% url index %}';
+   </script>
+  <script type="text/javascript" src="{% url appstatic "js/calendar.js" %}"></script>
+{% endblock %}
 
 {% load myschedule_filters %}
 {% block body_class %}sidebar{% endblock %}
@@ -6,6 +12,7 @@
     {% if not user.is_authenticated %}   
       <p><i><a href="{% url schedule_login request.path %}" title="Sign in with your CPCC Login">Sign in</a> to save or retrieve schedule.</i></p>
     {% endif %}
+    {% block schedule %}
     <h5>Schedule</h5>
       {% if request.session.Cart %}
         <ul id="cart">
@@ -17,4 +24,21 @@
     <div id="view-full-schedule">
       <a href="{% url show_schedule %}"><img src="{% url appstatic "img/view_full_schedule_button.png" %}" alt="View Full Schedule"/></a>
     </div>
+    {% endblock %}
+    <table class="calendar-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Su</th>
+          <th>Mo</th>
+          <th>Tu</th>
+          <th>We</th>
+          <th>Th</th>
+          <th>Fr</th>
+          <th>Sa</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
 {% endblock %}
