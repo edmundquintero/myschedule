@@ -15,7 +15,9 @@
 
             {% for result in page.object_list %}
                 <p>
+					<a href="{% url dtbp result.object.id %}">{{ result.object.prefix }}{{ result.object.course_number }}</a>
                     <a href="{% url dtbp result.object.id %}">{{ result.object.title }}</a>
+					<a href="{% url dtbp result.object.id %}">{{ result.object.description }}</a>
                 </p>
             {% empty %}
             {% if spelling_suggestion %}
