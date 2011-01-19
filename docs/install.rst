@@ -17,4 +17,4 @@ CD back to ./example and run "java -jar start.jar"
 You should be able to update/rebuild your search indexes at that point in myschedule root with "python appmanage.py update_index" or "python appmanage.py rebuild_index"
 
 Note on installation of Solr:
-Presently, django-haystack supports solr versions 1.3+, and at present there have been no issues in using 1.4.1. If we change to a 1.3.x release, you will need to run "python appmanage build_solr_schema" and replace the existing schema.xml. It will likely produce the same xml as before, but it is best to cover bases here.
+Presently, django-haystack supports solr versions 1.3+, and thus far there have been no issues in using 1.4.1. If we change to a 1.3.x release, you will need to run "python appmanage build_solr_schema" and replace the existing schema.xml. It will likely produce the same xml as before, but it is best to cover bases here.
