@@ -44,12 +44,20 @@ class Course(models.Model):
 
     def update_popularity(self):
         if self.add_count > settings.HIGH_THRESHOLD:
-            self.popularity = HIGH
+            self.popularity = Course.HIGH
         elif self.add_count > settings.MEDIUM_THRESHOLD:
-            self.popularity = MEDIUM
+            self.popularity = Course.MEDIUM
         else:
-            self.popularity = LOW
+            self.popularity = Course.LOW
         self.save()
+    
+    def correlation_slug(self):
+        correlations = self.correlation_set.all()
+        slug = ''
+        if correlations.count() > settings.CRITERION_THRESHOLD:
+            for correlation in correlations:
+                slug = slug + ' ' + correlation.easy_view()
+        return slug
 
 
 class Section(models.Model):
@@ -100,3 +108,13 @@ class Correlation(models.Model):
     species = models.CharField(max_length=20, blank=False, choices=SPECIES_CHOICES)
     criterion = models.TextField(max_length=1000, blank=True)
     course = models.ForeignKey(Course, blank=False)
+    
+    def __unicode__(self):
+        return self.criterion
+    
+    def easy_view(self):
+        if self.species == Correlation.WRONG_TERM:
+            criterion = self.criterion.split('|')[1]
+        elif self.species == Correlation.SUCCESSFUL_SEARCH:
+            criterion = self.criterion.split('|')[0]
+        return criterion

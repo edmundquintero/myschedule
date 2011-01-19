@@ -1,28 +1,28 @@
 {% extends 'base.html' %}
 
-{% block content %}
-    <h2>Search</h2>
+{% block page_title %}{{ block.super }} | Search Results{% endblock %}
+{% block title %}Schedule Builder{% endblock %}
 
-    <form method="get" action=".">
-        <table>
-            {{ form.as_table }}
-            <tr>
-                <td>&nbsp;</td>
-                <td>
-                    <input type="submit" value="Search">
-                </td>
-            </tr>
-        </table>
+{% block body_class %}sidebar{% endblock %}
+
+{% block content %}
+    <form method="get" action="." id="search">
+        <input type="text" name="q" id="id_query" {% if form.q.initial %}value="{{ form.q.initial }}"{% endif %}/>
+        <input type="image" value="Search" name="submit" src="{% url appstatic "img/search_button.png" %}" />
 
         {% if query %}
             <h3>Results</h3>
 
             {% for result in page.object_list %}
                 <p>
-                    <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}</a>
+                    <a href="{% url dtbp result.object.id %}">{{ result.object.title }}</a>
                 </p>
             {% empty %}
+            {% if spelling_suggestion %}
+				<p>Did you mean <a href="{% url haystack_search %}?q={{ spelling_suggestion }}">{{ spelling_suggestion }}</a></p>
+			{% else %}
                 <p>No results found.</p>
+			{% endif %}
             {% endfor %}
 
             {% if page.has_previous or page.has_next %}

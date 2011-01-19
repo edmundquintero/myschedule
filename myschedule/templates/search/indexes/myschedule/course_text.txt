@@ -1,7 +1,73 @@
+{% ifequal object.popularity 'a' %}
+{{ object.prefix }}{{ object.course_number }}
 {{ object.prefix }} {{ object.course_number }}
+{{ object.prefix }}{{ object.course_number }}
 {{ object.prefix }} {{ object.course_number }}
+{{ object.prefix }}{{ object.course_number }}
 {{ object.prefix }} {{ object.course_number }}
+{{ object.prefix }}{{ object.course_number }}
 {{ object.prefix }} {{ object.course_number }}
+{{ object.prefix }}{{ object.course_number }}
+{{ object.prefix }} {{ object.course_number }}
+{{ object.prefix }}{{ object.course_number }}
 {{ object.prefix }} {{ object.course_number }}
 {{ object.title }}
+{{ object.title }}
+{{ object.title }}
+{{ object.title }}
+{{ object.title }}
+{{ object.title }}
 {{ object.description }}
+{{ object.title }}
+{{ object.description }}
+{{ object.title }}
+{{ object.description }}
+{{ object.title }}
+{{ object.title }}
+{% endifequal %}
+{% ifequal object.popularity 'm' %}
+{{ object.prefix }}{{ object.course_number }}
+{{ object.prefix }} {{ object.course_number }}
+{{ object.prefix }}{{ object.course_number }}
+{{ object.prefix }} {{ object.course_number }}
+{{ object.prefix }}{{ object.course_number }}
+{{ object.prefix }} {{ object.course_number }}
+{{ object.prefix }}{{ object.course_number }}
+{{ object.prefix }} {{ object.course_number }}
+{{ object.prefix }}{{ object.course_number }}
+{{ object.prefix }} {{ object.course_number }}
+{{ object.prefix }}{{ object.course_number }}
+{{ object.prefix }} {{ object.course_number }}
+{{ object.title }}
+{{ object.title }}
+{{ object.title }}
+{{ object.title }}
+{{ object.title }}
+{{ object.title }}
+{{ object.description }}
+{{ object.title }}
+{{ object.description }}
+{{ object.title }}
+{% endifequal %}
+{% ifequal object.popularity 'z' %}
+{{ object.prefix }}{{ object.course_number }}
+{{ object.prefix }} {{ object.course_number }}
+{{ object.prefix }}{{ object.course_number }}
+{{ object.prefix }} {{ object.course_number }}
+{{ object.prefix }}{{ object.course_number }}
+{{ object.prefix }} {{ object.course_number }}
+{{ object.prefix }}{{ object.course_number }}
+{{ object.prefix }} {{ object.course_number }}
+{{ object.prefix }}{{ object.course_number }}
+{{ object.prefix }} {{ object.course_number }}
+{{ object.prefix }}{{ object.course_number }}
+{{ object.prefix }} {{ object.course_number }}
+{{ object.title }}
+{{ object.title }}
+{{ object.title }}
+{{ object.title }}
+{{ object.title }}
+{{ object.title }}
+{{ object.description }}
+{% endifequal %}
+{{ object.correlation_slug }}

@@ -1,7 +1,7 @@
 # from django.conf import settings
 from django.conf.urls.defaults import include, patterns, url
 # from django.contrib import admin
-from haystack.views import SearchView
+from myschedule.views.cart import SQSSearchView
 from haystack.query import SearchQuerySet
 from myschedule import models
 
@@ -13,7 +13,7 @@ urlpatterns = patterns('',
 
 urlpatterns += patterns('myschedule.views',
     url(r'^$', 'index', name='index'),
-    url(r'^search/', SearchView(load_all=False, searchqueryset=sqs), name='haystack_search'),
+    url(r'^search/', SQSSearchView(load_all=False, searchqueryset=sqs), name='haystack_search'),
     url(r'^old_search/', 'old_search', name='old_search'),
     url(r'^old_search/([\w ]*)/$', 'old_search', name='old_search'),
     url(r'^show_courses/', 'show_courses', name='show_courses'),
@@ -31,6 +31,7 @@ urlpatterns += patterns('myschedule.views.cart',
     url(r'^schedule/email/$', 'email_schedule', name='email_schedule'),
     url(r'^schedule/calendar/$', 'get_calendar_data', name='get_calendar_data'),
     url(r'^schedule_login/([-\w/]+)/$', 'schedule_login', name='schedule_login'),
+    url(r'^test_add/([\d]+)$', 'delete_this_before_production', name='dtbp'),
 )
 
 # if settings.DEBUG:

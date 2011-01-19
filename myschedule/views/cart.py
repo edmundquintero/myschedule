@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.views.generic.simple import direct_to_template
 from django.conf import settings
 from django.utils import simplejson as json
+from haystack.views import SearchView
 
 from cpsite import ods
 from cpsite.decorators import groups_required
@@ -69,17 +70,23 @@ def add_item(request):
     if request.user.is_authenticated():
         save_cart(request)
     if request.session.has_key('current_query'):
+        course = get_object_or_404(models.Section, section_code=section)
+        course = course.course
         correlation = models.Correlation()
-        correlation.criterion = request.session['current_query'].strip('|')
+        correlation.criterion = request.session['current_query']
         if request.session.has_key('previous_query'):
-            correlation.species = models.Correlation.WRONG_TERM
-            correlation.criterion = correlation.criterion + '|' + request.session['previous_query']
-            del request.session['previous query']
+            if request.session['previous_query'] not in settings.BLACKLIST:
+                correlation.species = models.Correlation.WRONG_TERM
+                correlation.criterion = correlation.criterion + '|' + request.session['previous_query']
+            del request.session['previous_query']
+            del request.session['current_query']
             request.session.modified = True
         else:
             correlation.species = models.Correlation.SUCCESSFUL_SEARCH
-        correlation.course = section.course
+        correlation.course = course
         correlation.save()
+        course.add_count = course.add_count + 1
+        course.save() 
 
     json_data = {'errors':errors}
     json_data = json.dumps(json_data)
@@ -356,9 +363,7 @@ def get_calendar_data(request):
     import datetime
     current_date = datetime.date.today()
     difference = datetime.timedelta(minutes=5)
-    sections = []
-    if request.session.has_key('Cart'):
-        sections = request.session['Cart']
+    sections = request.session['Cart']
     if sections != [] and sections != None:
         cart_items = get_section_data(sections, False)
         conflicting_sections = conflict_resolution(cart_items, sections)
@@ -417,4 +422,41 @@ def get_calendar_data(request):
 
     json_data = json.dumps(json_data, indent=2)
     return HttpResponse(json_data)
+    
 
+class SQSSearchView(SearchView):
+    def extra_context(self):
+        extra = super(SQSSearchView, self).extra_context()
+        extra['spelling_suggestion'] = self.searchqueryset.spelling_suggestion()
+        return extra
+    
+    def __call__(self, request):
+        if 'current_query' in request.session:
+            request.session['previous_query'] = request.session['current_query']
+        if 'q' in request.GET:
+            request.session['current_query'] = request.GET['q']
+            request.session.modified = True
+        return super(SQSSearchView, self).__call__(request)
+
+def delete_this_before_production(request, id):
+    if request.session.has_key('current_query'):
+        course = get_object_or_404(models.Course, id=id)
+        correlation = models.Correlation()
+        correlation.criterion = request.session['current_query']
+        if request.session.has_key('previous_query'):
+            if request.session['previous_query'] not in settings.BLACKLIST:
+                correlation.species = models.Correlation.WRONG_TERM
+                correlation.criterion = correlation.criterion + '|' + request.session['previous_query']
+            del request.session['previous_query']    
+        else:
+            correlation.species = models.Correlation.SUCCESSFUL_SEARCH
+        del request.session['current_query']
+        request.session.modified = True
+        correlation.course = course
+        correlation.save()
+        course.add_count = str(int(course.add_count) + 1)
+        course.save()
+        words = 'Good Jorb! Add Count for %s: %s' % (course.title, course.add_count)
+        return HttpResponse('Good Jorb! Add Count for %s: %s\nCorrelation: criterion - %s / species - %s' % (course.title, course.add_count, correlation.criterion, correlation.species))
+    else:
+        return HttpResponse('Well, that didn\'t work')
