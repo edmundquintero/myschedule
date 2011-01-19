@@ -14,6 +14,7 @@ Unpack to somewhere convenient, and make sure Sun Java is installed and java is 
 Snag pysolr (easy_install or similar is suggested, as pysolr has plenty of dependencies itself)
 CD into your solr folder, then ./example/solr/conf/ and drop schema.xml and solrconfig.xml here
 CD back to ./example and run "java -jar start.jar"
+Update HAYSTACK_SOLR_URL in development.py to point to your machine. Port 8983 is the default, so you should not have to change that.
 You should be able to update/rebuild your search indexes at that point in myschedule root with "python appmanage.py update_index" or "python appmanage.py rebuild_index"
 
 Note on installation of Solr:

@@ -26,6 +26,7 @@ MYSCHEDULE_API_HOST = 'te409-05.cpcc.edu:8080'
 
 HAYSTACK_SITECONF = 'myschedule.search_sites'
 HAYSTACK_SEARCH_ENGINE = 'solr'
+# Change me before running update_index or rebuild_index
 HAYSTACK_SOLR_URL = 'http://te409-04.cpcc.edu:8983/solr'
 HAYSTACK_INCLUDE_SPELLING = True
 HAYSTACK_WHOOSH_PATH = j(app_root, 'haystack_index')
