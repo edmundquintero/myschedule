@@ -363,7 +363,9 @@ def get_calendar_data(request):
     import datetime
     current_date = datetime.date.today()
     difference = datetime.timedelta(minutes=5)
-    sections = request.session['Cart']
+    sections = []
+    if request.session.has_key('Cart'):
+        sections = request.session['Cart']
     if sections != [] and sections != None:
         cart_items = get_section_data(sections, False)
         conflicting_sections = conflict_resolution(cart_items, sections)
