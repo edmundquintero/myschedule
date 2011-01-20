@@ -6,7 +6,7 @@ from haystack.query import SearchQuerySet
 from myschedule import models
 
 # admin.autodiscover()
-sqs = SearchQuerySet().order_by('popularity')
+sqs = SearchQuerySet()
 urlpatterns = patterns('',
     url(r'^api/', include('myschedule.api.urls')),
 )

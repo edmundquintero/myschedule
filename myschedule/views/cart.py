@@ -431,10 +431,12 @@ class SQSSearchView(SearchView):
         return extra
     
     def __call__(self, request):
-        if 'current_query' in request.session:
-            request.session['previous_query'] = request.session['current_query']
         if 'q' in request.GET:
-            request.session['current_query'] = request.GET['q']
+            if 'current_query' in request.session:
+                if request.session['current_query'] == request.GET['q'].lower():
+                    return super(SQSSearchView, self).__call__(request)
+                request.session['previous_query'] = request.session['current_query'].lower()
+            request.session['current_query'] = request.GET['q'].lower()
             request.session.modified = True
         return super(SQSSearchView, self).__call__(request)
 

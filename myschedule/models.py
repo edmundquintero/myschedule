@@ -59,6 +59,34 @@ class Course(models.Model):
                 slug = slug + ' ' + correlation.easy_view()
         return slug
 
+    def boost(self, species, weight, primary_criterion, secondary_criterion=None):
+        if int(weight) > 0:
+            correlation = Correlation()
+            correlation.course = self
+            correlation.criterion = primary_criterion
+            if species in Correlation.SPECIES_CHOICES:
+                if species == Correlation.WRONG_TERM:
+                    if secondary_criterion:
+                        correlation.species = species
+                    else:
+                        correlation.species = Correlation.SUCCESSFUL_SEARCH
+                else:
+                    correlation.species = species
+            else:
+                if secondary_criterion:
+                    correlation.species = Correlation.WRONG_TERM
+                else:
+                    correlation.species = Correlation.SUCCESSFUL_SEARCH
+            if secondary_criterion:
+                correlation.criterion = correlation.criterion + '|' + secondary_criterion
+            correlation.save()
+            weight = int(weight)
+            while weight > 0:
+                correlation.clone()
+                weight = weight - 1
+        self.add_count = str(int(self.add_count) + weight)
+        self.save()
+
 
 class Section(models.Model):
     """
@@ -118,3 +146,11 @@ class Correlation(models.Model):
         elif self.species == Correlation.SUCCESSFUL_SEARCH:
             criterion = self.criterion.split('|')[0]
         return criterion
+    
+    def clone(self):
+        clone = Correlation()
+        clone.species = self.species
+        clone.criterion = self.criterion
+        clone.course = self.course
+        clone.save()
+        return clone
