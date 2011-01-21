@@ -2,10 +2,14 @@ from myschedule.settings.base import *
 
 DEBUG = TEMPLATE_DEBUG = True
 
-DATABASE_ENGINE = 'mysql'
-DATABASE_NAME = 'myschedule'
-DATABASE_USER = 'myschedule'
-DATABASE_PASSWORD = 'myschedule'
+DATABASES = {
+    'default': {
+        "ENGINE": "mysql",
+        "NAME": "myschedule",
+        "USER": "myschedule",
+        "PASSWORD": "myschedule",
+    }
+}
 
 # In development, use the database for sessions, and disable caching.
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
