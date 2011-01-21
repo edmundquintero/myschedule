@@ -3,7 +3,7 @@ from datetime import datetime
 from piston.handler import BaseHandler
 from piston.utils import rc, validate
 
-from myschedule.models import Course, Section, Meeting
+from myschedule.models import CourseTemp, SectionTemp, MeetingTemp
 
 class MyScheduleHandler(BaseHandler):
     """
@@ -27,7 +27,7 @@ class MyScheduleHandler(BaseHandler):
 
         Might need to eventually add piston to installed_apps in settings and
         run syncdb to create it's tables.  For now it's not needed (I think it
-        may be needed if add in authorization support.
+        may be needed if add in authorization support).
     """
 
     allowed_methods = ('GET', 'POST', 'DELETE',)
@@ -72,7 +72,7 @@ class MyScheduleHandler(BaseHandler):
                 )
               )
              )
-    model = Course
+    model = CourseTemp
 
     def read(self, request):
         """
@@ -108,7 +108,7 @@ class MyScheduleHandler(BaseHandler):
                     course.save()
                     if item['section_set'] != []:
                         for section in item['section_set']:
-                            new_section = Section(course=course,
+                            new_section = SectionTemp(course=course,
                                 section_code=section['section_code'],
                                 section_number=section['section_number'],
                                 term=section['term'],
@@ -130,7 +130,7 @@ class MyScheduleHandler(BaseHandler):
                             new_section.save()
                             if section['meeting_set'] != []:
                                 for meeting in section['meeting_set']:
-                                    new_meeting = Meeting(section=new_section,
+                                    new_meeting = MeetingTemp(section=new_section,
                                         start_time=datetime.strptime(meeting['start_time'],"%H:%M:%S"),
                                         end_time=datetime.strptime(meeting['end_time'],"%H:%M:%S"),
                                         meeting_type=meeting['meeting_type'],
@@ -141,7 +141,7 @@ class MyScheduleHandler(BaseHandler):
             # TODO: check value of rc.CREATED in loop and then handle appropriately when it is not equal to CREATED
             return rc.CREATED
         else:
-            super(Course, self).create(request)
+            super(CourseTemp, self).create(request)
 
     def delete(self, request):
         """

@@ -16,18 +16,11 @@ class Schedule(models.Model):
         return self.description
 
 
-class Course(models.Model):
+class CourseAbstract(models.Model):
     """
-        Course information, preformulated in the API
+        Abstract model for courses.  Table is not created for this
+        model - it is inherited by Course and CourseTemp models.
     """
-    HIGH = 'a'
-    MEDIUM = 'm'
-    LOW = 'z'
-    POPULARITY_CHOICES = (
-        (HIGH, 'High'),
-        (MEDIUM, 'Medium'),
-        (LOW, 'Low'),
-    )
     course_code = models.CharField(max_length=10, blank=False)
     prefix = models.CharField(max_length=10, blank=False)
     course_number = models.CharField(max_length=10, blank=False)
@@ -39,6 +32,26 @@ class Course(models.Model):
     contact_hours = models.CharField(max_length=10, blank=False)
     department = models.CharField(max_length=255, blank=False)
     note = models.TextField(max_length=1000, blank=True)
+
+    class Meta:
+        abstract = True
+
+    def __unicode__(self):
+        return self.title
+
+
+class Course(CourseAbstract):
+    """
+        Course information, preformulated in the API
+    """
+    HIGH = 'a'
+    MEDIUM = 'm'
+    LOW = 'z'
+    POPULARITY_CHOICES = (
+        (HIGH, 'High'),
+        (MEDIUM, 'Medium'),
+        (LOW, 'Low'),
+    )
     add_count = models.CharField(max_length=10, blank=False, default='0')
     popularity = models.CharField(max_length=1, blank=False, default=LOW, choices=POPULARITY_CHOICES)
 
@@ -50,7 +63,7 @@ class Course(models.Model):
         else:
             self.popularity = Course.LOW
         self.save()
-    
+
     def correlation_slug(self):
         correlations = self.correlation_set.all()
         slug = ''
@@ -59,7 +72,7 @@ class Course(models.Model):
                 slug = slug + ' ' + correlation.easy_view()
         return slug
 
-    def boost(self, species, weight, primary_criterion, secondary_criterion=None):
+def boost(self, species, weight, primary_criterion, secondary_criterion=None):
         if int(weight) > 0:
             correlation = Correlation()
             correlation.course = self
@@ -88,12 +101,21 @@ class Course(models.Model):
         self.save()
 
 
-class Section(models.Model):
+class CourseTemp(CourseAbstract):
     """
-        Section specific information, preformulated in the API
+        Creates a temporary table to hold course records retrieved
+        by the courseupdate api.
     """
-    course = models.ForeignKey(Course)
-    section_code = models.CharField(max_length=10, blank=False)
+    pass
+
+
+class SectionAbstract(models.Model):
+    """
+        Abstract model for sections.  Table is not created for this
+        model - it is inherited by Section and SectionTemp models.
+    """
+
+    section_code = models.CharField(max_length=25, blank=False)
     section_number = models.CharField(max_length=10, blank=False)
     term = models.CharField(max_length=4, blank=False)
     year = models.CharField(max_length=4, blank=False)
@@ -102,7 +124,7 @@ class Section(models.Model):
     start_date = models.DateField(blank=False)
     end_date = models.DateField(blank=False)
     credit_hours = models.CharField(max_length=10, blank=False)
-    ceus = models.CharField(max_length=10, blank=False)
+    ceus = models.CharField(max_length=10, blank=True)
     tuition = models.CharField(max_length=10, blank=False)
     delivery_type = models.CharField(max_length=255, blank=False)
     note = models.TextField(max_length=7000, blank=True)
@@ -112,18 +134,62 @@ class Section(models.Model):
     instructor_name = models.CharField(max_length=510, blank=True)
     instructor_link = models.CharField(max_length=255, blank=True)
 
+    class Meta:
+        abstract = True
 
-class Meeting(models.Model):
+    def __unicode__(self):
+        return self.section_code
+
+
+class Section(SectionAbstract):
     """
-        Meeting specific information, related to a Section, preformulated in the API
+        Section specific information, preformulated in the API
     """
-    section = models.ForeignKey(Section, blank=False)
-    start_time = models.DateTimeField(blank=False)
-    end_time = models.DateTimeField(blank=False)
+    course = models.ForeignKey(Course)
+    pass
+
+
+class SectionTemp(SectionAbstract):
+    """
+        Creates a temporary table to hold section records retrieved by the
+        courseupdate api.
+    """
+    course = models.ForeignKey(CourseTemp)
+    pass
+
+
+class MeetingAbstract(models.Model):
+    """
+        Abstract model for meetings.  Table is not created for this
+        model - it is inherited by Meeting and MeetingTemp models.
+    """
+
+    start_time = models.TimeField(blank=False)
+    end_time = models.TimeField(blank=False)
     meeting_type = models.CharField(max_length=255, blank=False)
     days_of_week = models.CharField(max_length=15, blank=False)
     building = models.CharField(max_length=10, blank=True)
     room = models.CharField(max_length=10, blank=True)
+
+    class Meta:
+        abstract = True
+
+
+class Meeting(MeetingAbstract):
+    """
+        Meeting specific information, related to a Section, preformulated in the API
+    """
+    section = models.ForeignKey(Section, blank=False)
+    pass
+
+
+class MeetingTemp(MeetingAbstract):
+    """
+        Creates a temporary table to hold meeting records retrieved by the
+        courseupdate api.
+    """
+    section = models.ForeignKey(SectionTemp, blank=False)
+    pass
 
 
 class Correlation(models.Model):
@@ -136,17 +202,17 @@ class Correlation(models.Model):
     species = models.CharField(max_length=20, blank=False, choices=SPECIES_CHOICES)
     criterion = models.TextField(max_length=1000, blank=True)
     course = models.ForeignKey(Course, blank=False)
-    
+
     def __unicode__(self):
         return self.criterion
-    
+
     def easy_view(self):
         if self.species == Correlation.WRONG_TERM:
             criterion = self.criterion.split('|')[1]
         elif self.species == Correlation.SUCCESSFUL_SEARCH:
             criterion = self.criterion.split('|')[0]
         return criterion
-    
+
     def clone(self):
         clone = Correlation()
         clone.species = self.species
