@@ -350,4 +350,7 @@ table.calendar-table th {
     background-color: red;
 }
 
-
+@media print
+{
+    #content img { display: none; }  
+}

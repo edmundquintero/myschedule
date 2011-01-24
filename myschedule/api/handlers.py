@@ -42,7 +42,7 @@ class MyScheduleHandler(BaseHandler):
               'contact_hours',
               'department',
               'note',
-              ('section_set',
+              ('sectiontemp_set',
                 ('section_code',
                  'section_number',
                  'term',
@@ -61,7 +61,7 @@ class MyScheduleHandler(BaseHandler):
                  'status',
                  'instructor_name',
                  'instructor_link',
-                 ('meeting_set',
+                 ('meetingtemp_set',
                     ('start_time',
                      'end_time',
                      'meeting_type',
@@ -106,7 +106,7 @@ class MyScheduleHandler(BaseHandler):
                         note=item['note']
                     )
                     course.save()
-                    if item['section_set'] != []:
+                    if item['sectiontemp_set'] != []:
                         for section in item['section_set']:
                             new_section = SectionTemp(course=course,
                                 section_code=section['section_code'],
@@ -128,7 +128,7 @@ class MyScheduleHandler(BaseHandler):
                                 instructor_name=section['instructor_name'],
                                 instructor_link=section['instructor_link'])
                             new_section.save()
-                            if section['meeting_set'] != []:
+                            if section['meetingtemp_set'] != []:
                                 for meeting in section['meeting_set']:
                                     new_meeting = MeetingTemp(section=new_section,
                                         start_time=datetime.strptime(meeting['start_time'],"%H:%M:%S"),

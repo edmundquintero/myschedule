@@ -146,7 +146,6 @@ class Section(SectionAbstract):
         Section specific information, preformulated in the API
     """
     course = models.ForeignKey(Course)
-    pass
 
 
 class SectionTemp(SectionAbstract):
@@ -155,7 +154,6 @@ class SectionTemp(SectionAbstract):
         courseupdate api.
     """
     course = models.ForeignKey(CourseTemp)
-    pass
 
 
 class MeetingAbstract(models.Model):
@@ -180,7 +178,6 @@ class Meeting(MeetingAbstract):
         Meeting specific information, related to a Section, preformulated in the API
     """
     section = models.ForeignKey(Section, blank=False)
-    pass
 
 
 class MeetingTemp(MeetingAbstract):
@@ -189,7 +186,6 @@ class MeetingTemp(MeetingAbstract):
         courseupdate api.
     """
     section = models.ForeignKey(SectionTemp, blank=False)
-    pass
 
 
 class Correlation(models.Model):

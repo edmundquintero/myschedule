@@ -28,6 +28,8 @@ $(function() {
             $('.book').append('<iframe id="book-frame" frameBorder="1" width="99%" height="850" src="' + $(this).attr('booklink') + '"><p>Your browser does not support iframes. Book information can be viewed <a class="booklink" href="' + $(this).attr('booklink') + '">here</a></p></iframe>');
         }
     });
+
+    $("a.print-schedule").click(function() {window.print();});
 });
 
 function createModalWindow(element, title, createCallback,
@@ -94,6 +96,4 @@ sendEmail = function()
         }
     }
 };
-
-
 

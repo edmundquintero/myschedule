@@ -187,6 +187,7 @@ def load_courses():
             section = models.Section(
                 course=course,
                 section_code=tempsection.section_code,
+                section_number=tempsection.section_number,
                 term=tempsection.term,
                 year=tempsection.year,
                 campus=tempsection.campus,
