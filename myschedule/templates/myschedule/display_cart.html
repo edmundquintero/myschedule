@@ -31,7 +31,7 @@
       <div class="section-top">
         <div class="section-number">{{ item.course_data.prefix }} {{ item.course_data.course_number }} - {{ item.section_data.section_number }} </div>
         <div class="section-heading">{{ item.course_data.title }} Synonym: {{ item.section_data.synonym }}</div>
-        <a href="{% url delete_cartitem item.section_data.section_code %}"><img src="{% url appstatic "img/remove_button.png" %}" alt="Remove" /></a>
+        <a class="remove-link" href="{% url delete_cartitem item.section_data.section_code %}"><img src="{% url appstatic "img/remove_button.png" %}" alt="Remove" /></a>
       </div>
       <div class="section-content">
         <div class="section-seats">
@@ -63,10 +63,11 @@
       </div>
       <div class="section-bottom">
         <div class="section-hours"><strong>Contact Hours</strong> {{ item.section_data.contact_hours }}</div>
-        <div class="section-instructor"><strong>Instructor</strong> {% if item.section_data.instructor_link %}<a href="{{ item.section_data.instructor_link }}">{{ item.section_data.instructor_name }}</a>{% else %}{{ item.section_data.instructor_name }}{% endif %}
+        <div class="section-instructor"><strong>Instructor</strong> {% if item.section_data.instructor_link %}<a href="{{ item.section_data.instructor_link }}">{{ item.section_data.instructor_name }}</a><span class="print-only print-link"> {{ item.section_data.instructor_link }}</span>{% else %}{{ item.section_data.instructor_name }}{% endif %}
         </div>
         <div class="section-books">
-          {% if item.section_data.book_link %} <a class="open-window" ref="book" dialog-title="Book Information" href= "#book" booklink="{{ item.section_data.book_link }}">Book Information</a> <img src="{% url appstatic "img/books_icon.png" %}" alt="Book" />{% endif %}
+          {% if item.section_data.book_link %} <a class="open-window" ref="book" dialog-title="Book Information" href= "#book" booklink="{{ item.section_data.book_link }}">Book Information</a> <img src="{% url appstatic "img/books_icon.png" %}" alt="Book" /><span class="print-only"><span class="print-label">Book Information </span><span class="print-link">{{ item.section_data.book_link }}</span></span>{% endif %}
+
         </div>
         <div class="clear"></div>
       </div>

@@ -350,7 +350,34 @@ table.calendar-table th {
     background-color: red;
 }
 
+span.print-only {
+    display: none;
+}
+
 @media print
 {
-    #content img { display: none; }  
+    #content img, .message,
+    #search, a.remove-link,
+    a.do-not-print, a.open-window,
+    span.do-not-print {
+        display: none;
+    }
+
+    span.print-only {
+        display: block;
+        float: left;
+    }
+
+    span.print-label {
+        font-weight: bold;
+    }
+
+    span.print-link {
+        display: inline;
+        color: #00f;
+        margin-left: 5px;
+        float: right;
+    }
+
+
 }
