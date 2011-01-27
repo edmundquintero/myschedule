@@ -350,7 +350,7 @@ table.calendar-table th {
     background-color: red;
 }
 
-span.print-only {
+span.print-only, div.print-only {
     display: none;
 }
 
@@ -363,9 +363,8 @@ span.print-only {
         display: none;
     }
 
-    span.print-only {
+    span.print-only, div.print-only {
         display: block;
-        float: left;
     }
 
     span.print-label {
@@ -373,11 +372,11 @@ span.print-only {
     }
 
     span.print-link {
-        display: inline;
         color: #00f;
         margin-left: 5px;
-        float: right;
     }
 
-
+    span.instructor-link {
+        margin-left: 0px;
+    }
 }
