@@ -24,6 +24,8 @@
 {{ object.description }}
 {{ object.title }}
 {{ object.title }}
+{{ object.description }}
+{{ object.description }}
 {% endifequal %}
 {% ifequal object.popularity 'm' %}
 {{ object.prefix }}{{ object.course_number }}
