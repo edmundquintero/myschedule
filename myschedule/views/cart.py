@@ -86,7 +86,7 @@ def add_item(request):
         correlation.course = course
         correlation.save()
         course.add_count = course.add_count + 1
-        course.save() 
+        course.save()
 
     json_data = {'errors':errors}
     json_data = json.dumps(json_data)
@@ -136,6 +136,7 @@ def conflict_resolution(cart_items, sections):
         TODO: Check section status??
     """
     conflicting_sections = []
+    conflicted_meetings = []
     for section in sections:
         test_section = get_object_or_404(models.Section,
                                          section_code=section)
@@ -144,7 +145,10 @@ def conflict_resolution(cart_items, sections):
             section_data = item['section_data']
             meeting_data = item['meeting_data']
             if test_section.section_code != section_data.section_code:
-                if test_section not in conflicting_sections:
+                cs_sections = []
+                for section_code in conflicting_sections:
+                    cs_sections.append(section_code['section_code'])
+                if test_section not in cs_sections:
                     if ((test_section.start_date <= section_data.start_date and
                          section_data.start_date <= test_section.end_date) or
                         (test_section.start_date <= section_data.end_date and
@@ -155,6 +159,7 @@ def conflict_resolution(cart_items, sections):
                          test_section.end_date <= section_data.end_date)):
                         # the sections start / end dates have some overlap so
                         # continue checking for potential conflict
+
                         for test_meeting in test_meetings:
                             for comparison_meeting in meeting_data:
                                 # Check to see if the meetings have any days in common
@@ -170,7 +175,11 @@ def conflict_resolution(cart_items, sections):
                                          test_meeting.start_time <= comparison_meeting.end_time) or
                                         (comparison_meeting.start_time <= test_meeting.end_time and
                                          test_meeting.end_time <= comparison_meeting.end_time)):
-                                            conflicting_sections.append(test_section.section_code)
+                                            conflicted_meetings.append(comparison_meeting.id)
+
+                        if len(conflicted_meetings)>0:
+                            conflicting_sections.append({"section_code":test_section.section_code,
+                                                     "conflicted_meetings":conflicted_meetings})
     return conflicting_sections
 
 def get_seats(informer_url, term, year, course_prefix, course_number,
@@ -255,6 +264,7 @@ def get_section_data(sections, include_seats=True):
         else:
             seat_count = 'Seat count unavailable'
         section_item['seat_count'] = seat_count
+        # Check for conflicts between this section and others in cart.
         cart_items.append(section_item)
     return cart_items
 

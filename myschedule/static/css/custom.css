@@ -300,8 +300,11 @@ li.schedule-li {
     width: 40%;
 }
 
-td.error {
-    color: red;
+.section .section-content .section-meeting table td.error {
+    margin: 0;
+    border-style: solid;
+    border-color: red;
+    border-width: 1px;
 }
 
 .ui-icon-trash {

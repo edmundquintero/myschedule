@@ -50,7 +50,7 @@
                 <td class="section-room">Rm {{ meeting.building }} {{ meeting.room }}</td>
                 <td class="section-type">{{ meeting.meeting_type }}</td>
                 <td class="section-days">{{ meeting.days_of_week }}</td>
-                <td class="section-time">{{ meeting.start_time|time:"g:i A" }} - {{ meeting.end_time|time:"g:i A" }}</td>
+                <td class="section-time{% for conflicting_section in conflicting_sections %}{% if meeting.id in conflicting_section.conflicted_meetings %} error{% endif %}{% endfor %}">{{ meeting.start_time|time:"g:i A" }} - {{ meeting.end_time|time:"g:i A" }}</td>
               </tr>
             {% endfor %}
             <tr>
