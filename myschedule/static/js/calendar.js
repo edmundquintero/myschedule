@@ -1,9 +1,13 @@
 $(function() {
+    loadCalendar();
+
+});
+
+loadCalendar = function(){
     $.post(basePath + 'schedule/calendar/', {}, function(calendar_data){
         createCalendar(calendar_data);    
     }, 'json');
-
-});
+};
 
 createCalendar = function(calendar_data)
 {
@@ -11,7 +15,6 @@ createCalendar = function(calendar_data)
     var calendar_days = [0,1,2,3,4,5,6];
     var calendar_minutes = [0,5,10,15,20,25,30,35,40,45,50,55];
     var calendar_html = '<tr><td>';
-
     for (var i=0; i<calendar_hours.length; i++){
         if (calendar_hours[i]%2 == 0){
             cal_hours = '' + calendar_hours[i];
@@ -76,6 +79,7 @@ createCalendar = function(calendar_data)
     }
         
     calendar_html = calendar_html + '</tr>';
+    $('.calendar-table tbody').empty();
     $('.calendar-table tbody').append(calendar_html);
     
     for (var i=0; i < calendar_data.length; i++){

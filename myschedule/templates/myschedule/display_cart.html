@@ -31,7 +31,8 @@
       <div class="section-top">
         <div class="section-number">{{ item.course_data.prefix }} {{ item.course_data.course_number }} - {{ item.section_data.section_number }} </div>
         <div class="section-heading">{{ item.course_data.title }} Synonym: {{ item.section_data.synonym }}</div>
-        <a class="remove-link" href="{% url delete_cartitem item.section_data.section_code %}"><img src="{% url appstatic "img/remove_button.png" %}" alt="Remove" /></a>
+        <a class="remove-link" href="#remove" ref="{{ item.section_data.section_code }}"><img src="{% url appstatic "img/remove_button.png" %}" alt="Remove" /></a>
+
       </div>
       <div class="section-content">
         <div class="section-seats">

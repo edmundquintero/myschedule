@@ -30,6 +30,8 @@ $(function() {
     });
 
     $("a.print-schedule").click(function() {window.print();});
+    $("a.remove-link").click(remove_section);
+
 });
 
 function createModalWindow(element, title, createCallback,
@@ -97,3 +99,10 @@ sendEmail = function()
     }
 };
 
+remove_section = function()
+{
+    $(this).parent('li.remove-item').hide();
+    $(this).parents('.section').hide();
+    $.post(basePath + 'schedule/delete/', {section:$(this).attr('ref')});
+    loadCalendar();
+}

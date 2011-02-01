@@ -17,7 +17,7 @@
       {% if request.session.Cart %}
         <ul id="cart">
           {% for section in request.session.Cart %}
-          <li><a href="{% url delete_cartitem section %}"><img src="{% url appstatic "img/remove_button.png" %}" alt="Remove"/></a>{{ section|format_section }}</li>
+          <li class="remove-item"><a class="remove-link" href="#remove" ref="{{ section }}"><img src="{% url appstatic "img/remove_button.png" %}" alt="Remove"/></a>{{ section|format_section }}</li>
           {% endfor %}
         </ul>
       {% endif %}

@@ -116,10 +116,11 @@ def save_cart(request):
         cart.save()
     return errors
 
-def delete_cartitem(request, section):
+def delete_cartitem(request):
     """
         Deletes the specified course section from the cart.
     """
+    section = request.POST['section']
     #TODO: Re-run validation when they remove a section
     if request.session.has_key('Cart'):
         sections = request.session['Cart']
@@ -127,7 +128,7 @@ def delete_cartitem(request, section):
         request.session['Cart'] = sections
         if request.user.is_authenticated():
             save_cart(request)
-    return redirect('show_schedule')
+    return HttpResponse()
 
 def conflict_resolution(cart_items, sections):
     """
