@@ -1,0 +1,84 @@
+{% extends "myschedule/base-sidebar.html" %}
+
+{% block page_title %}{{ block.super }} | Schedule{% endblock %}
+
+{% block schedule %}{% endblock %}
+
+{% block content %}{{ block.super }}
+{% include "myschedule/search.html" %}
+{% if not cartitems %}
+  <br />
+  <div class="message message-warning">
+    <p>All classes have been removed from this schedule.</p>
+  </div>
+{% else %}
+  {% if not user.is_authenticated or conflicting_sections %}
+    <br />
+    <div class="message message-warning">
+    {% if not user.is_authenticated %}
+      <p><a href="{% url login %}">Sign in</a> to save this schedule!</p>
+    {% endif %}
+    {% if conflicting_sections %}
+      <p>See the highlighted sections below for scheduling conflicts.</p>
+    {% endif %}
+    </div>
+  {% endif %}
+  <a class="open-window ui-button" href="#email" ref="email" dialog-title="Email Schedule" title="Email this schedule to yourself or a friend">Email Schedule</a>
+  <a href="#print" title="Print this page" class="print-schedule ui-button">Print Schedule</a>
+
+  {% for item in cartitems %}
+    <div class="section">
+      <div class="section-top">
+        <div class="section-number">{{ item.course.prefix }} {{ item.course.course_number }} - {{ item.section_number }} </div>
+        <div class="section-heading">{{ item.course.title }} Synonym: {{ item.synonym }}</div>
+        <a class="remove-link" href="#remove" ref="{{ item.section_code }}"><img src="{% url appstatic "img/remove_button.png" %}" alt="Remove" /></a>
+
+      </div>
+      <div class="section-content">
+        <div class="section-seats">
+          {% if item.seat_count != "Seat count unavailable" %}
+            <p class="section-seats-label">Seats Available</p>
+            <p class="section-seats-number">{{ item.seat_count }}</p>
+          {% else %}
+            <p class="section-seats-label">{{ item.seat_count }}</p>
+          {% endif %}
+        </div>
+        <div class="section-meeting  {% if item.section_code in conflicting_sections %}error{% endif %}">
+          <table>
+            {% for meeting in item.meeting_set.all %}
+              <tr>
+                <td class="section-campus">{{ item.campus }}</td>
+                <td class="section-room">Rm {{ meeting.building }} {{ meeting.room }}</td>
+                <td class="section-type">{{ meeting.meeting_type }}</td>
+                <td class="section-days">{{ meeting.days_of_week }}</td>
+                <td class="section-time{% for conflicting_section in conflicting_sections %}{% if meeting.id in conflicting_section.conflicted_meetings %} error{% endif %}{% endfor %}">{{ meeting.start_time|time:"g:i A" }} - {{ meeting.end_time|time:"g:i A" }}</td>
+              </tr>
+            {% endfor %}
+            <tr>
+              <td colspan="2"><strong>From</strong> {{ item.start_date|date:"n-j-Y" }} to {{ item.end_date|date:"n-j-Y" }}</td>
+              <td colspan="3"><strong>Session</strong> {{ item.session }}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="clear"></div>
+      </div>
+      <div class="section-bottom">
+        <div class="section-hours"><strong>Contact Hours</strong> {{ item.contact_hours }}</div>
+        <div class="section-instructor"><strong>Instructor</strong> {% if item.instructor_link %}<a href="{{ item.instructor_link }}">{{ item.instructor_name }}</a><span class="print-only print-link instructor-link"> {{ item.instructor_link }}</span>{% else %}<span class="instructor-name">{{ item.instructor_name }}</span>{% endif %}
+        </div>
+        <div class="section-books do-not-print">
+          {% if item.book_link %} <a class="open-window" ref="book" dialog-title="Book Information" href= "#book" booklink="{{ item.book_link }}">Book Information</a> <img src="{% url appstatic "img/books_icon.png" %}" alt="Book" />{% endif %}
+
+        </div>
+
+        <div class="clear"></div>
+      </div>
+      <div class="print-only">
+        <span class="print-label">Book Information </span><span class="print-link">{{ item.book_link }}</span></div>
+    </div>
+  {% endfor %}
+
+  {% include "myschedule/dialogs/book.html" %}
+  {% include "myschedule/dialogs/email.html" %}
+{% endif %}
+{% endblock %}

@@ -183,6 +183,56 @@ def conflict_resolution(cart_items, sections):
                                                      "conflicted_meetings":conflicted_meetings})
     return conflicting_sections
 
+def conflict_resolution_new(cart_items):
+    """
+        Checks for any conflicts between the sections on the schedule.
+        Presently, just for classes with overlapping times.
+        TODO: Check section status??
+    """
+    conflicting_sections = []
+    conflicted_meetings = []
+    for item in cart_items:
+        test_section = item
+        test_meetings = test_section.meeting_set.all()
+        for item in cart_items:
+            if test_section.section_code != item.section_code:
+                cs_sections = []
+                for section_code in conflicting_sections:
+                    cs_sections.append(section_code['section_code'])
+                if test_section not in cs_sections:
+                    if ((test_section.start_date <= item.start_date and
+                         item.start_date <= test_section.end_date) or
+                        (test_section.start_date <= item.end_date and
+                         item.end_date <= test_section.end_date) or
+                        (item.start_date <= test_section.start_date and
+                         test_section.start_date <= item.end_date) or
+                        (item.start_date <= test_section.end_date and
+                         test_section.end_date <= item.end_date)):
+                        # the sections start / end dates have some overlap so
+                        # continue checking for potential conflict
+
+                        for test_meeting in test_meetings:
+                            for comparison_meeting in item.meeting_set.all():
+                                # Check to see if the meetings have any days in common
+                                commondays = "".join(filter(lambda x: x in comparison_meeting.days_of_week,
+                                    test_meeting.days_of_week))
+                                if commondays:
+                                    # Check to see if the meeting times overlap
+                                    if ((test_meeting.start_time <= comparison_meeting.start_time and
+                                         comparison_meeting.start_time <= test_meeting.end_time) or
+                                        (test_meeting.start_time <= comparison_meeting.end_time and
+                                         comparison_meeting.end_time <= test_meeting.end_time) or
+                                        (comparison_meeting.start_time <= test_meeting.end_time and
+                                         test_meeting.start_time <= comparison_meeting.end_time) or
+                                        (comparison_meeting.start_time <= test_meeting.end_time and
+                                         test_meeting.end_time <= comparison_meeting.end_time)):
+                                            conflicted_meetings.append(comparison_meeting.id)
+
+                        if len(conflicted_meetings)>0:
+                            conflicting_sections.append({"section_code":test_section.section_code,
+                                                     "conflicted_meetings":conflicted_meetings})
+    return conflicting_sections
+
 def get_seats(informer_url, term, year, course_prefix, course_number,
               course_section=None):
     """
@@ -225,7 +275,8 @@ def get_seats(informer_url, term, year, course_prefix, course_number,
 
 def get_section_data(sections, include_seats=True):
     """
-        Get the section and course data for a list of sections.
+        Get the section, course, and meeting data for a list of sections.
+        Will optionally get the seat count information.
     """
     from django.core.cache import cache
 
@@ -241,8 +292,8 @@ def get_section_data(sections, include_seats=True):
             course_data = section_data.course
             meeting_data = section_data.meeting_set.all()
             section_item = dict({"section_data":section_data,
-                     "course_data":course_data,
-                     "meeting_data":meeting_data})
+                            "course_data":course_data,
+                            "meeting_data":meeting_data})
             cache.add(section, section_item, 60*settings.CACHE_REFRESH_RATE)
         else:
             section_data = section_item['section_data']
@@ -265,7 +316,6 @@ def get_section_data(sections, include_seats=True):
         else:
             seat_count = 'Seat count unavailable'
         section_item['seat_count'] = seat_count
-        # Check for conflicts between this section and others in cart.
         cart_items.append(section_item)
     return cart_items
 
@@ -302,16 +352,16 @@ def display_cart(request, sections_url=None):
     sections = request.session['Cart']
 
     if sections != [] and sections != None:
-        cart_items = get_section_data(sections)
-        #seat_counts = get_seat_counts(cart_items)
-        conflicting_sections = conflict_resolution(cart_items, sections)
+        #cart_items = get_section_data(sections)
+        cart_items = models.Section.objects.filter(section_code__in=sections)
+        conflicting_sections = conflict_resolution_new(cart_items)
     else:
         cart_items = []
 
     search = forms.search_form()
 
     return direct_to_template(request,
-                              'myschedule/display_cart.html',
+                              'myschedule/display_cart_new.html',
                               {'cartitems':cart_items,
                                'conflicting_sections':conflicting_sections,
                                'search':search}
