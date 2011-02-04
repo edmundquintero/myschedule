@@ -121,7 +121,6 @@ def delete_cartitem(request):
         Deletes the specified course section from the cart.
     """
     section = request.POST['section']
-    #TODO: Re-run validation when they remove a section
     if request.session.has_key('Cart'):
         sections = request.session['Cart']
         sections.remove(section)
@@ -183,6 +182,14 @@ def conflict_resolution(cart_items, sections):
                                                      "conflicted_meetings":conflicted_meetings})
     return conflicting_sections
 
+def get_conflicts(request):
+    sections = request.session['Cart']
+    cart_items = models.Section.objects.filter(section_code__in=sections)
+    conflicts = conflict_resolution_new(cart_items)
+    json_data = {'conflicts':conflicts}
+    json_data = json.dumps(json_data, indent=2)
+    return HttpResponse(json_data)
+
 def conflict_resolution_new(cart_items):
     """
         Checks for any conflicts between the sections on the schedule.
@@ -190,48 +197,46 @@ def conflict_resolution_new(cart_items):
         TODO: Check section status??
     """
     conflicting_sections = []
-    conflicted_meetings = []
+    conflicting_meetings = []
+    test_items = cart_items
     for item in cart_items:
-        test_section = item
-        test_meetings = test_section.meeting_set.all()
-        for item in cart_items:
-            if test_section.section_code != item.section_code:
-                cs_sections = []
-                for section_code in conflicting_sections:
-                    cs_sections.append(section_code['section_code'])
-                if test_section not in cs_sections:
-                    if ((test_section.start_date <= item.start_date and
-                         item.start_date <= test_section.end_date) or
-                        (test_section.start_date <= item.end_date and
-                         item.end_date <= test_section.end_date) or
-                        (item.start_date <= test_section.start_date and
-                         test_section.start_date <= item.end_date) or
-                        (item.start_date <= test_section.end_date and
-                         test_section.end_date <= item.end_date)):
+        if item.section_code not in conflicting_sections:
+            for test_item in test_items:
+                if test_item.section_code != item.section_code:
+                    if ((test_item.start_date <= item.start_date and
+                         item.start_date <= test_item.end_date) or
+                        (test_item.start_date <= item.end_date and
+                         item.end_date <= test_item.end_date) or
+                        (item.start_date <= test_item.start_date and
+                         test_item.start_date <= item.end_date) or
+                        (item.start_date <= test_item.end_date and
+                         test_item.end_date <= item.end_date)):
                         # the sections start / end dates have some overlap so
                         # continue checking for potential conflict
-
-                        for test_meeting in test_meetings:
-                            for comparison_meeting in item.meeting_set.all():
-                                # Check to see if the meetings have any days in common
-                                commondays = "".join(filter(lambda x: x in comparison_meeting.days_of_week,
-                                    test_meeting.days_of_week))
-                                if commondays:
-                                    # Check to see if the meeting times overlap
-                                    if ((test_meeting.start_time <= comparison_meeting.start_time and
-                                         comparison_meeting.start_time <= test_meeting.end_time) or
-                                        (test_meeting.start_time <= comparison_meeting.end_time and
-                                         comparison_meeting.end_time <= test_meeting.end_time) or
-                                        (comparison_meeting.start_time <= test_meeting.end_time and
-                                         test_meeting.start_time <= comparison_meeting.end_time) or
-                                        (comparison_meeting.start_time <= test_meeting.end_time and
-                                         test_meeting.end_time <= comparison_meeting.end_time)):
-                                            conflicted_meetings.append(comparison_meeting.id)
-
-                        if len(conflicted_meetings)>0:
-                            conflicting_sections.append({"section_code":test_section.section_code,
-                                                     "conflicted_meetings":conflicted_meetings})
-    return conflicting_sections
+                        item_meetings = item.meeting_set.all()
+                        test_meetings = test_item.meeting_set.all()
+                        for item_meeting in item_meetings:
+                            for test_meeting in test_meetings:
+                                if item_meeting.id != test_meeting.id and item_meeting.id not in conflicting_meetings:
+                                    # Check to see if the meetings have any days in common
+                                    commondays = "".join(filter(lambda x: x in item_meeting.days_of_week,
+                                        test_meeting.days_of_week))
+                                    if commondays:
+                                        # Check to see if the meeting times overlap
+                                        if ((test_meeting.start_time <= item_meeting.start_time and
+                                             item_meeting.start_time <= test_meeting.end_time) or
+                                            (test_meeting.start_time <= item_meeting.end_time and
+                                            item_meeting.end_time <= test_meeting.end_time) or
+                                            (item_meeting.start_time <= test_meeting.end_time and
+                                            test_meeting.start_time <= item_meeting.end_time) or
+                                            (item_meeting.start_time <= test_meeting.end_time and
+                                            test_meeting.end_time <= item_meeting.end_time)):
+                                                conflicting_meetings.append(item_meeting.id)
+                                                if item.section_code not in conflicting_sections:
+                                                    conflicting_sections.append(item.section_code)
+    conflicts = dict({"conflicting_sections":conflicting_sections,
+                      "conflicting_meetings":conflicting_meetings})
+    return conflicts
 
 def get_seats(informer_url, term, year, course_prefix, course_number,
               course_section=None):
@@ -354,7 +359,7 @@ def display_cart(request, sections_url=None):
     if sections != [] and sections != None:
         #cart_items = get_section_data(sections)
         cart_items = models.Section.objects.filter(section_code__in=sections)
-        conflicting_sections = conflict_resolution_new(cart_items)
+        conflicts = conflict_resolution_new(cart_items)
     else:
         cart_items = []
 
@@ -363,7 +368,7 @@ def display_cart(request, sections_url=None):
     return direct_to_template(request,
                               'myschedule/display_cart_new.html',
                               {'cartitems':cart_items,
-                               'conflicting_sections':conflicting_sections,
+                               'conflicts':conflicts,
                                'search':search}
                              )
 
@@ -428,49 +433,45 @@ def get_calendar_data(request):
     if request.session.has_key('Cart'):
         sections = request.session['Cart']
     if sections != [] and sections != None:
-        cart_items = get_section_data(sections, False)
-        conflicting_sections = conflict_resolution(cart_items, sections)
+        cart_items = models.Section.objects.filter(section_code__in=sections)
+        conflicting_sections = conflict_resolution_new(cart_items)
     else:
         cart_items = []
     json_data = []
     for item in cart_items:
-        item_course_data = item['course_data']
-        item_section_data = item['section_data']
-        item_meeting_data = item['meeting_data']
-        for meeting in item_meeting_data:
-            temp_section = (item_course_data.prefix + ' ' +
-                            item_course_data.course_number +' ' +
-                            item_section_data.section_number)
+        meeting_data = item.meeting_set.all()
+        for meeting in meeting_data:
+            temp_section = (item.course.prefix + ' ' +
+                            item.course.course_number +' ' +
+                            item.section_number)
             temp_time = meeting.start_time
             while temp_time <= meeting.end_time:
                 if 'm' in meeting.days_of_week:
                     meeting_day = 'Mo'
                     data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
                     json_data.append(data)
-                if 'tr' in meeting.days_of_week:
-                    meeting_day = 'Th'
+                if 't' in meeting.days_of_week:
+                    meeting_day = 'Tu'
                     data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
                     json_data.append(data)
                 if 'w' in meeting.days_of_week:
                     meeting_day = 'We'
                     data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
                     json_data.append(data)
-                if 't' in meeting.days_of_week and not 'r' in meeting.days_of_week:
-                    # TODO: Work with this.  Would have a problem if it meets on tuesday and thursday.
-                    meeting_day = 'Tu'
+                if 'r' in meeting.days_of_week:
+                    meeting_day = 'Th'
                     data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
                     json_data.append(data)
                 if 'f' in meeting.days_of_week:
                     meeting_day = 'Fr'
                     data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
                     json_data.append(data)
-                if 'su' in meeting.days_of_week:
-                    meeting_day = 'Su'
+                if 's' in meeting.days_of_week:
+                    meeting_day = 'Sa'
                     data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
                     json_data.append(data)
-                if 's' in meeting.days_of_week and not 'u' in meeting.days_of_week:
-                    # TODO: Work with this.  Would have a problem if it meets on tuesday and thursday.
-                    meeting_day = 'S'
+                if 'u' in meeting.days_of_week:
+                    meeting_day = 'Su'
                     data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
                     json_data.append(data)
                 # Take existing time and convert into datetime object.

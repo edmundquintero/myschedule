@@ -45,7 +45,7 @@
             <p class="section-seats-label">{{ item.seat_count }}</p>
           {% endif %}
         </div>
-        <div class="section-meeting  {% if item.section_code in conflicting_sections %}error{% endif %}">
+        <div class="section-meeting">
           <table>
             {% for meeting in item.meeting_set.all %}
               <tr>
@@ -53,7 +53,7 @@
                 <td class="section-room">Rm {{ meeting.building }} {{ meeting.room }}</td>
                 <td class="section-type">{{ meeting.meeting_type }}</td>
                 <td class="section-days">{{ meeting.days_of_week|days_of_week }}</td>
-                <td class="section-time{% for conflicting_section in conflicting_sections %}{% if meeting.id in conflicting_section.conflicted_meetings %} error{% endif %}{% endfor %}">{{ meeting.start_time|time:"g:i A" }} - {{ meeting.end_time|time:"g:i A" }}</td>
+                <td class="section-time{% if meeting.id in conflicts.conflicting_meetings %} error{% endif %}" id="{{ meeting.id }}">{{ meeting.start_time|time:"g:i A" }} - {{ meeting.end_time|time:"g:i A" }}</td>
               </tr>
             {% endfor %}
             <tr>

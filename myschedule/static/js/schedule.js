@@ -102,7 +102,15 @@ sendEmail = function()
 remove_section = function()
 {
     $(this).parent('li.remove-item').hide();
-    $(this).parents('.section').hide();
     $.post(basePath + 'schedule/delete/', {section:$(this).attr('ref')});
+    $(this).parents('.section').hide();
+    $.post(basePath + 'schedule/conflicts/', {}, function(conflicts){
+        $('.section-meeting td').removeClass('error'); 
+        if (conflicts.conflicts.conflicting_meetings.length > 0){
+            for (var i=0; i<conflicts.conflicts.conflicting_meetings.length; i++){
+                $('#'+conflicts.conflicts.conflicting_meetings[i]).addClass('error');
+            }
+        }
+    }, 'json');
     loadCalendar();
 }
