@@ -1,5 +1,7 @@
 {% extends "myschedule/base-sidebar.html" %}
 
+{% load myschedule_filters %}
+
 {% block page_title %}{{ block.super }} | Schedule{% endblock %}
 
 {% block schedule %}{% endblock %}
@@ -50,7 +52,7 @@
                 <td class="section-campus">{{ item.campus }}</td>
                 <td class="section-room">Rm {{ meeting.building }} {{ meeting.room }}</td>
                 <td class="section-type">{{ meeting.meeting_type }}</td>
-                <td class="section-days">{{ meeting.days_of_week }}</td>
+                <td class="section-days">{{ meeting.days_of_week|days_of_week }}</td>
                 <td class="section-time{% for conflicting_section in conflicting_sections %}{% if meeting.id in conflicting_section.conflicted_meetings %} error{% endif %}{% endfor %}">{{ meeting.start_time|time:"g:i A" }} - {{ meeting.end_time|time:"g:i A" }}</td>
               </tr>
             {% endfor %}
