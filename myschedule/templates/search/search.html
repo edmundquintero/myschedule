@@ -2,7 +2,7 @@
 
 {% block page_title %}Schedule Builder | Search Results{% endblock %}
 {% block title %}Schedule Builder{% endblock %}
-
+{% block buttons %} {% endblock %}
 {% block content %}
     <form method="get" action="." id="search">
         <input type="text" name="q" id="id_query" {% if form.q.initial %}value="{{ form.q.initial }}"{% else %}value="{{ query }}"{% endif %} />

@@ -279,6 +279,24 @@ span.information {
     margin-left: 5px;
 }
 
+.button {
+    display: block;
+    margin: 5px auto;
+    background: url('../img/button_background.png') no-repeat;
+    padding-top: 20px;
+    width: 203px;
+    height: 40px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: bold;
+    color: #beec76;
+}
+
+.button:hover {
+    color: #beec76;
+}
+
 input.save-button {
     visibility: hidden;
 }
