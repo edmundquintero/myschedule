@@ -14,10 +14,10 @@
     {% endif %}
     {% block schedule %}
     <h5>Schedule</h5>
-      {% if request.session.Cart %}
+      {% if cart_items %}
         <ul id="cart">
-          {% for section in request.session.Cart %}
-          <li class="remove-item"><a class="remove-link" href="#remove" ref="{{ section }}"><img src="{% url appstatic "img/remove_button.png" %}" alt="Remove"/></a>{{ section|format_section }}</li>
+          {% for item in cart_items %}
+              <li class="remove-item"><a class="remove-link" href="#remove" ref="{{ item.section_code }}"><img src="{% url appstatic "img/remove_button.png" %}" alt="Remove"/></a>{{ item.course.prefix }} {{ item.course.course_number }} - {{ item.section_number }}<br/>{{ item.course.title }}</li>
           {% endfor %}
         </ul>
       {% endif %}

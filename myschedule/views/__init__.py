@@ -60,12 +60,19 @@ def show_sections(request, course_id):
     """
         Display section results template for specified course.
     """
+    if request.session.has_key('Cart'):
+        cart_items = models.Section.objects.filter(
+			section_code__in=request.session['Cart'])
+    else:
+	cart_items = []
+
     sections = models.Section.objects.select_related().filter(course__course_code=course_id, term='FA', year='2010')
     search = forms.search_form()
 
     return direct_to_template(request,
             'myschedule/section_results.html',
             {'sections':sections,
+             'cart_items':cart_items,
              'search':search}
     )
 
