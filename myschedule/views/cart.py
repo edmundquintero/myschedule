@@ -357,7 +357,6 @@ def display_cart(request, sections_url=None):
     sections = request.session['Cart']
 
     if sections != [] and sections != None:
-        #cart_items = get_section_data(sections)
         cart_items = models.Section.objects.filter(section_code__in=sections)
         conflicts = conflict_resolution_new(cart_items)
     else:
@@ -378,6 +377,7 @@ def email_schedule(request):
     """
     from django.core.mail import send_mail
     from datetime import date
+    from time import strftime
     email_addresses = request.POST['email_addresses']
     to_addressees = email_addresses.split(",")
     to_addressees.remove('')
@@ -388,29 +388,31 @@ def email_schedule(request):
         sections = request.session['Cart']
         for item in sections:
             sections_url = sections_url + item + '/'
-    schedule = get_section_data(sections)
+    cart_items = models.Section.objects.filter(section_code__in=sections)
     app_host = request.get_host()
     schedule_url = reverse('display_cart',args=[sections_url])
     email_message = "View this schedule online at http://%s%s.\n\n" % (app_host, schedule_url)
-    for item in schedule:
-        course_data = item['course_data']
-        section_data = item['section_data']
-        meeting_data = item['meeting_data']
+    for item in cart_items:
         message = (
-            "Course: %s %s %s  " % (course_data.prefix,
-                                  course_data.course_number,
-                                  course_data.title) +
-            "Section: %s \n" % (section_data.section_number) +
-            "Instructor: %s \n" % (section_data.instructor_name) +
-            "Campus: %s \n" % (section_data.campus))
-        for meeting in meeting_data:
+            "%s %s - %s %s \n" % (item.course.prefix,
+                                  item.course.course_number,
+                                  item.section_number,
+                                  item.course.title) +
+            "Synonym: %s \n" % (item.synonym) +
+            "Instructor: %s \n" % (item.instructor_name) +
+            "Meets: %s \n" % (item.campus))
+        for meeting in item.meeting_set.all():
             message = message + (
-                "Type: %s \n" % (meeting.meeting_type) +
-                "Building / Room: %s %s \n" % (meeting.building, meeting.room) +
-                "Meeting Days & Times: %s %s - %s \n" % (meeting.days_of_week, meeting.start_time, meeting.end_time)
+                "       %s - %s %s   %s %s - %s \n" % (
+                meeting.meeting_type,
+                meeting.building,
+                meeting.room,
+                meeting.days_of_week.upper().replace('R','Th').replace('U','Su'),
+                meeting.start_time.strftime("%I:%M %p"),
+                meeting.end_time.strftime("%I:%M %p"))
             )
         message = message + (
-            "View book information at %s. \n" % (section_data.book_link)
+            "View book information at %s. \n" % (item.book_link)
         )
         email_message = email_message + message + '\n'
     if email_message != "":
