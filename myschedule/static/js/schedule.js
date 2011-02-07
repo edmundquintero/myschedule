@@ -111,6 +111,13 @@ remove_section = function()
                 $('#'+conflicts.conflicts.conflicting_meetings[i]).addClass('error');
             }
         }
+        else{
+            $('#conflict-message').hide();
+            $('#conflict-login-message').hide();
+            $('p[id="login-message"]').each(function(){
+                $('#conflict-login-message').show();
+            });
+        }
     }, 'json');
     loadCalendar();
 }

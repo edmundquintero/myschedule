@@ -365,8 +365,8 @@ def display_cart(request, sections_url=None):
     search = forms.search_form()
 
     return direct_to_template(request,
-                              'myschedule/display_cart_new.html',
-                              {'cartitems':cart_items,
+                              'myschedule/display_cart.html',
+                              {'sections':cart_items,
                                'conflicts':conflicts,
                                'search':search}
                              )
