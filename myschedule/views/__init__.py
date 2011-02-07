@@ -60,13 +60,34 @@ def show_sections(request, course_id):
     """
         Display section results template for specified course.
     """
+    # Help make future searches smarter - save query and update course add_count.
+    if request.session.has_key('current_query'):
+        course = get_object_or_404(models.Course, id=course_id)
+        correlation = models.Correlation()
+        correlation.criterion = request.session['current_query']
+        if request.session.has_key('previous_query'):
+            if request.session['previous_query'] not in settings.BLACKLIST:
+                correlation.species = models.Correlation.WRONG_TERM
+                correlation.criterion = correlation.criterion + '|' + request.session['previous_query']
+            del request.session['previous_query']
+        else:
+            correlation.species = models.Correlation.SUCCESSFUL_SEARCH
+        del request.session['current_query']
+        request.session.modified = True
+        correlation.course = course
+        correlation.save()
+        course.add_count = str(int(course.add_count) + 1)
+        course.save()
+
+    # Get the sections currently in the cart (for displaying in sidebar)
     if request.session.has_key('Cart'):
         cart_items = models.Section.objects.filter(
 			section_code__in=request.session['Cart'])
     else:
 	cart_items = []
 
-    sections = models.Section.objects.select_related().filter(course__course_code=course_id, term='FA', year='2010')
+    # Get the sections for the selected course TODO: What to do about term and year???
+    sections = models.Section.objects.select_related().filter(course=course_id, term='FA', year='2010')
     search = forms.search_form()
 
     return direct_to_template(request,

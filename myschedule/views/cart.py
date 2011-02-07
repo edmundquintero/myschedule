@@ -488,14 +488,20 @@ def get_calendar_data(request):
 
     json_data = json.dumps(json_data, indent=2)
     return HttpResponse(json_data)
-    
 
 class SQSSearchView(SearchView):
     def extra_context(self):
         extra = super(SQSSearchView, self).extra_context()
         extra['spelling_suggestion'] = self.searchqueryset.spelling_suggestion()
+        # Needs the cart_items to display in sidebar.
+        if self.request.session.has_key('Cart'):
+            cart_items = models.Section.objects.filter(
+                section_code__in=self.request.session['Cart'])
+        else:
+            cart_items = []
+        extra['cart_items'] = cart_items
         return extra
-    
+
     def __call__(self, request):
         if 'q' in request.GET:
             if 'current_query' in request.session:

@@ -1,9 +1,7 @@
-{% extends 'base.html' %}
+{% extends "myschedule/base-sidebar.html" %}
 
 {% block page_title %}Schedule Builder | Search Results{% endblock %}
 {% block title %}Schedule Builder{% endblock %}
-
-{% block body_class %}sidebar{% endblock %}
 
 {% block content %}
     <form method="get" action="." id="search">
@@ -20,7 +18,7 @@
 							<p class="course-hours">Credit Hours<br />{{ result.object.credit_hours }}</p>
 						</div>
 						<div class="course-description">
-							<p class="course-name"><a href="{% url dtbp result.object.id %}">{{ result.object.title }}</a></span>
+							<p class="course-name"><a href="{% url show_sections result.object.id %}">{{ result.object.title }}</a></span>
 							<p>{{ result.object.description|truncatewords:23 }}</p>
 							<p class="course-prerequisites">Has Prerequisites. <a href='http://www.youtube.com/watch?v=cS_c7fEPzzM'>Or does it?</a></p>
 						</div>
@@ -49,23 +47,3 @@
 
 {% endblock %}
 
-{% block sidebar %}
-<h5>Schedule</h5>
-<ul id="cart">
-  <li>
-    <a href="#"><img src="{% url appstatic "img/remove_button.png" %}" alt="Remove" /></a>
-    MAT 050 - 29<br />This is just
-  </li>
-  <li>
-    <a href="#"><img src="{% url appstatic "img/remove_button.png" %}" alt="Remove" /></a>
-    MAT 101 - 01<br />a big pile of
-  </li>
-  <li>
-    <a href="#"><img src="{% url appstatic "img/remove_button.png" %}" alt="Remove" /></a>
-    MAT 121 - 20<br />test data
-  </li>
-</ul>
-<div id="view-full-schedule">
-  <a href="{% url index %}"><img src="{% url appstatic "img/view_full_schedule_button.png" %}" alt="View Full Schedule" /></a>
-</div>
-{% endblock %}
