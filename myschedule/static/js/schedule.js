@@ -101,9 +101,17 @@ sendEmail = function()
 
 remove_section = function()
 {
+    // Remove item from sidebar and redisplay in section results (only applies if
+    // user deleted section via sidebar.
     $(this).parent('li.remove-item').hide();
-    $.post(basePath + 'schedule/delete/', {section:$(this).attr('ref')});
+    section_code = $(this).attr('ref');
+    $('#'+section_code).show();
+    // Hide section from displaying in schedule (only applies if section deleted
+    // on view full schedule page.
     $(this).parents('.section').hide();
+    // Actually remove section from session variable, user's saved schedule
+    // and recheck conflicts.
+    $.post(basePath + 'schedule/delete/', {section:$(this).attr('ref')});
     $.post(basePath + 'schedule/conflicts/', {}, function(conflicts){
         $('.section-meeting td').removeClass('error'); 
         if (conflicts.conflicts.conflicting_meetings.length > 0){

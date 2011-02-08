@@ -69,8 +69,10 @@ def add_item(request):
         request.session['Cart'] = sections
     if request.user.is_authenticated():
         save_cart(request)
+    # Need course info to return to javascript and need to save
+    # search data.
+    course = get_object_or_404(models.Section, section_code=section)
     if request.session.has_key('current_query'):
-        course = get_object_or_404(models.Section, section_code=section)
         course = course.course
         correlation = models.Correlation()
         correlation.criterion = request.session['current_query']
@@ -87,9 +89,13 @@ def add_item(request):
         correlation.save()
         course.add_count = course.add_count + 1
         course.save()
-
-    json_data = {'errors':errors}
-    json_data = json.dumps(json_data)
+    section_data = {'prefix': course.course.prefix,
+                    'course_number': course.course.course_number,
+                    'section_number': course.section_number,
+                    'title': course.course.title}
+    print section_data
+    json_data = {'section_data':section_data, 'errors':errors}
+    json_data = json.dumps(json_data, indent=2)
     # return JSON object to browser
     return HttpResponse(json_data)
 

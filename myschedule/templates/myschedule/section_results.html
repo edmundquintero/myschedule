@@ -1,8 +1,11 @@
 {% extends "myschedule/base-sidebar.html" %}
 
+{% load myschedule_filters %}
+
 {% block scripts %}{{ block.super }}
    <script type="text/javascript">
      var basePath = '{% url index %}';
+     var buttonPath = '{% url appstatic "img/remove_button.png" %}';
    </script>
   <script type="text/javascript" src="{% url appstatic "js/sections.js" %}"></script>
 {% endblock %}
@@ -30,7 +33,8 @@
       </div>
               
       {% for section in sections %}
-        <div class="section">
+        <div class="section" id="{{ section.section_code }}">
+
           <div class="section-top">
             <div class="section-number">Section {{ section.section_number }}</div>
             <div class="section-heading">Meets</div>
@@ -53,7 +57,7 @@
                   <td class="section-campus">{{ section.campus }}</td>
                   <td class="section-room">Rm {{ meeting.building }} {{ meeting.room }}</td>
                   <td class="section-type">{{ meeting.meeting_type }}</td>
-                  <td class="section-days">{{ meeting.days_of_week }}</td>
+                  <td class="section-days">{{ meeting.days_of_week|days_of_week }}</td>
                   <td class="section-time">{{ meeting.start_time|time:"g:i A" }} - {{ meeting.end_time|time:"g:i A" }}</td>
                 </tr>
               {% endfor %}
@@ -75,7 +79,6 @@
           </div>
           <div class="clear"></div>
         </div>
-
       {% endfor %}
             {% include "myschedule/dialogs/book.html" %}
     </form>
