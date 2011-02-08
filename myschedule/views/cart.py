@@ -129,68 +129,18 @@ def delete_cartitem(request):
             save_cart(request)
     return HttpResponse()
 
-def conflict_resolution(cart_items, sections):
-    """
-        Checks for any conflicts between the sections on the schedule.
-        Presently, just for classes with overlapping times.
-        TODO: Check section status??
-    """
-    conflicting_sections = []
-    conflicted_meetings = []
-    for section in sections:
-        test_section = get_object_or_404(models.Section,
-                                         section_code=section)
-        test_meetings = test_section.meeting_set.all()
-        for item in cart_items:
-            section_data = item['section_data']
-            meeting_data = item['meeting_data']
-            if test_section.section_code != section_data.section_code:
-                cs_sections = []
-                for section_code in conflicting_sections:
-                    cs_sections.append(section_code['section_code'])
-                if test_section not in cs_sections:
-                    if ((test_section.start_date <= section_data.start_date and
-                         section_data.start_date <= test_section.end_date) or
-                        (test_section.start_date <= section_data.end_date and
-                         section_data.end_date <= test_section.end_date) or
-                        (section_data.start_date <= test_section.start_date and
-                         test_section.start_date <= section_data.end_date) or
-                        (section_data.start_date <= test_section.end_date and
-                         test_section.end_date <= section_data.end_date)):
-                        # the sections start / end dates have some overlap so
-                        # continue checking for potential conflict
-
-                        for test_meeting in test_meetings:
-                            for comparison_meeting in meeting_data:
-                                # Check to see if the meetings have any days in common
-                                commondays = "".join(filter(lambda x: x in comparison_meeting.days_of_week,
-                                    test_meeting.days_of_week))
-                                if commondays:
-                                    # Check to see if the meeting times overlap
-                                    if ((test_meeting.start_time <= comparison_meeting.start_time and
-                                         comparison_meeting.start_time <= test_meeting.end_time) or
-                                        (test_meeting.start_time <= comparison_meeting.end_time and
-                                         comparison_meeting.end_time <= test_meeting.end_time) or
-                                        (comparison_meeting.start_time <= test_meeting.end_time and
-                                         test_meeting.start_time <= comparison_meeting.end_time) or
-                                        (comparison_meeting.start_time <= test_meeting.end_time and
-                                         test_meeting.end_time <= comparison_meeting.end_time)):
-                                            conflicted_meetings.append(comparison_meeting.id)
-
-                        if len(conflicted_meetings)>0:
-                            conflicting_sections.append({"section_code":test_section.section_code,
-                                                     "conflicted_meetings":conflicted_meetings})
-    return conflicting_sections
-
 def get_conflicts(request):
+    """
+        Called from javascript to recheck conflicts.
+    """
     sections = request.session['Cart']
     cart_items = models.Section.objects.filter(section_code__in=sections)
-    conflicts = conflict_resolution_new(cart_items)
+    conflicts = conflict_resolution(cart_items)
     json_data = {'conflicts':conflicts}
     json_data = json.dumps(json_data, indent=2)
     return HttpResponse(json_data)
 
-def conflict_resolution_new(cart_items):
+def conflict_resolution(cart_items):
     """
         Checks for any conflicts between the sections on the schedule.
         Presently, just for classes with overlapping times.
@@ -358,7 +308,7 @@ def display_cart(request, sections_url=None):
 
     if sections != [] and sections != None:
         cart_items = models.Section.objects.filter(section_code__in=sections)
-        conflicts = conflict_resolution_new(cart_items)
+        conflicts = conflict_resolution(cart_items)
     else:
         cart_items = []
 
@@ -436,7 +386,7 @@ def get_calendar_data(request):
         sections = request.session['Cart']
     if sections != [] and sections != None:
         cart_items = models.Section.objects.filter(section_code__in=sections)
-        conflicting_sections = conflict_resolution_new(cart_items)
+        conflicting_sections = conflict_resolution(cart_items)
     else:
         cart_items = []
     json_data = []
