@@ -16,45 +16,8 @@ def index(request):
     """
         Handles processing for the index template.
     """
-    search = forms.search_form({"query":"ex. math, bus 121, mec"})
     return direct_to_template(request,
-                              'myschedule/index.html',
-                              {'search':search})
-
-def old_search(request, query=None):
-    """
-        Handles processing for Search button and saved searches.
-    """
-    if query is None:
-        if request.method == 'POST':
-            query = request.POST['query']
-
-    # TODO: perform the search!
-    return redirect('show_courses')
-
-def show_courses(request):
-    """
-        Displays course search results template.
-    """
-    # TODO: For now we'll just grab all mat courses via cpapi so we'll have
-    # some courses to display.
-    ods_spec_dict = {"key": settings.CPAPI_KEY,
-                     "data": "course",
-                     "prefix": 'MAT'}
-    courses = ods.get_data(ods_spec_dict)
-    active_courses = []
-    for course in courses:
-        if course.has_key('status') and string.upper(course['status'])=='AB':
-            # TODO: Update this with actual seat availability.
-            course['information']='Sections with seats remaining'
-            active_courses.append(course)
-    active_courses.sort(key=lambda c: (c['prefix'], c['number']))
-    search = forms.search_form()
-    return direct_to_template(request,
-            'myschedule/course_results.html',
-            {'courses':active_courses,
-             'search':search}
-    )
+                              'myschedule/index.html')
 
 def show_sections(request, course_id):
     """
@@ -88,13 +51,11 @@ def show_sections(request, course_id):
 
     # Get the sections for the selected course TODO: What to do about term and year???
     sections = models.Section.objects.select_related().filter(course=course_id)
-    search = forms.search_form()
 
     return direct_to_template(request,
             'myschedule/section_results.html',
             {'sections':sections,
-             'cart_items':cart_items,
-             'search':search}
+             'cart_items':cart_items}
     )
 
 def update_courses(request):
