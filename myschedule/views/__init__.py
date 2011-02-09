@@ -35,6 +35,11 @@ def show_sections(request, course_id):
             del request.session['previous_query']
         else:
             correlation.species = models.Correlation.SUCCESSFUL_SEARCH
+        # Store the value of the current query in another session variable that
+        # be used to display the last query value in the search field on the
+        # pages other than search. (Can't just not delete the current_query
+        # session variable - unfortunate things will happen.)
+        request.session['q_value'] = request.session['current_query']
         del request.session['current_query']
         request.session.modified = True
         correlation.course = course

@@ -27,10 +27,19 @@ function addItem(section)
             else{
                 // Create the sidebar button for the section.
                 section_data = data.section_data;
-                item_html = '<li class="remove-item"><a class="remove-link" href="#remove" ref="' + section + '" ><img src="' + buttonPath + '" alt="Remove"/></a>' + section_data.prefix + ' ' + section_data.course_number + ' - ' + section_data.section_number + '<br/>' + section_data.title +'</li>';
-                $('#cart').append(item_html);
-                // Re-instantiate click event otherwise the delete won't work for item added to the sidebar.
-                $('a.remove-link').click(remove_section);
+                exists = 0;
+                $('a.remove-link').each(function(){
+                    if ($(this).attr('ref')==section){
+                        $(this).parents('.remove-item').show();
+                        exists = 1;
+                    }
+                });
+                if (exists == 0){
+                    item_html = '<li class="remove-item"><a class="remove-link" href="#remove" ref="' + section + '" ><img src="' + buttonPath + '" alt="Remove"/></a>' + section_data.prefix + ' ' + section_data.course_number + ' - ' + section_data.section_number + '<br/>' + section_data.title +'</li>';
+                    $('#cart').append(item_html);
+                    // Re-instantiate click event otherwise the delete won't work for item added to the sidebar.
+                    $('a.remove-link').click(remove_section);
+                }
                 // Show the view full schedule button in case it was previously hidden.
                 $('#view-full-schedule').show();
                 // Re-load the calendar to show newly added sections.

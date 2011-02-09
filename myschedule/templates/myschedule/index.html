@@ -1,14 +1,14 @@
 {% extends "myschedule/base.html" %}
 
+{% block scripts %}{{ block.super }}
+  <script type="text/javascript" src="{% url appstatic "js/index.js" %}"></script>
+{% endblock %}
+
 {% block page_title %}{{ block.super }} | Home{% endblock %}
 {% block title %}{% endblock %}
 
 {% block content %}
-{% comment %}
-<form id="search">
-  <input type="text" name="query" id="id_query" value="ex. math, bus 121, mec" /><input type="image" name="submit" src="{% url appstatic "img/search_button.png" %}" alt="Search" />
-</form>
-{% endcomment %}
+
 {% include "myschedule/search.html" %}
 <p id="headline">It's that simple.</p>
 <ul id="steps">
