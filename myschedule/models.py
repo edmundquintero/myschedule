@@ -27,9 +27,6 @@ class CourseAbstract(models.Model):
     title = models.TextField(max_length=1000, blank=False)
     description = models.TextField(max_length=4000, blank=False)
     academic_level = models.CharField(max_length=255, blank=False)
-    credit_type = models.CharField(max_length=255, blank=False)
-    credit_hours = models.CharField(max_length=10, blank=False)
-    contact_hours = models.CharField(max_length=10, blank=False)
     department = models.CharField(max_length=255, blank=False)
     note = models.TextField(max_length=1000, blank=True)
 
@@ -123,6 +120,7 @@ class SectionAbstract(models.Model):
     synonym = models.CharField(max_length=10, blank=False)
     start_date = models.DateField(blank=False)
     end_date = models.DateField(blank=False)
+    contact_hours = models.CharField(max_length=10, blank=False)
     credit_hours = models.CharField(max_length=10, blank=False)
     ceus = models.CharField(max_length=10, blank=True)
     tuition = models.CharField(max_length=10, blank=False)

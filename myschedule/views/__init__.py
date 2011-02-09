@@ -87,7 +87,7 @@ def show_sections(request, course_id):
 	cart_items = []
 
     # Get the sections for the selected course TODO: What to do about term and year???
-    sections = models.Section.objects.select_related().filter(course=course_id, term='FA', year='2010')
+    sections = models.Section.objects.select_related().filter(course=course_id)
     search = forms.search_form()
 
     return direct_to_template(request,
@@ -103,13 +103,11 @@ def update_courses(request):
         meetings) and passes that data to the api that creates the records
         in the myschedule course, section, and meeting temporary tables.
     """
-    # TODO: Integration with ods api (since it doesn't exist yet, I'm just
-    # reading existing data in the myschedule tables, deleting everything,
-    # from the tables and reloading with the original data.
     # TODO: Error checking (here and in api)
-    # TODO: Authentication
+    # TODO: Authentication??
     # TODO: Return something useful
     import httplib
+    import urllib
 
     from django.http import HttpResponse
 
@@ -119,25 +117,13 @@ def update_courses(request):
     ## Recreate dropped tables.
     create_tables()
 
-    ## Load data in temp tables
-    # Open the connection to the api that will provide the course data.
-    conn = httplib.HTTPConnection(settings.ODS_API_HOST)
-
     # Retrieve the ods data (formatted as json).
-    req = conn.request('GET','/myschedule/api/courseupdate/read')
-    resp = conn.getresponse()  # expect resp.status=200
-    data = resp.read()
-
-    # Close the connect to the api.
-    conn.close()
+    req = urllib.urlopen(settings.ODS_API_URL)
+    data = req.read()
 
     # Open the connection to the myschedule api (has to be a different port
     # from where the app is running).
     conn = httplib.HTTPConnection(settings.MYSCHEDULE_API_HOST)
-
-    # Empty the course, section, and meeting temp tables.
-    #req = conn.request('DELETE', '/myschedule/api/courseupdate/delete')
-    #resp = conn.getresponse()   # expect resp.status=204
 
     # Add the new data into the temp tables.
     headers = {'Content-type':'application/json'}
@@ -148,7 +134,7 @@ def update_courses(request):
     conn.close()
 
     ## Update courses and create section and meeting records.
-    load_courses(request)
+    load_courses()
 
     return HttpResponse('true')
 
@@ -203,9 +189,6 @@ def load_courses():
         course.title=tempcourse.title
         course.description=tempcourse.description
         course.academic_level=tempcourse.academic_level
-        course.credit_type=tempcourse.credit_type
-        course.credit_hours=tempcourse.credit_hours
-        course.contact_hours=tempcourse.contact_hours
         course.department=tempcourse.department
         course.note=tempcourse.note
 
@@ -222,6 +205,7 @@ def load_courses():
                 synonym=tempsection.synonym,
                 start_date=tempsection.start_date,
                 end_date=tempsection.end_date,
+                contact_hours=tempsection.contact_hours,
                 credit_hours=tempsection.credit_hours,
                 ceus=tempsection.ceus,
                 tuition=tempsection.tuition,

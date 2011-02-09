@@ -5,6 +5,12 @@ from piston.utils import rc, validate
 
 from myschedule.models import CourseTemp, SectionTemp, MeetingTemp
 
+
+def format_time(time_value):
+    if time_value == "":
+        time_value = "00:00"
+    return datetime.strptime(time_value,"%H:%M")
+
 class MyScheduleHandler(BaseHandler):
     """
         Handler for reading, deleting and creating course and associated
@@ -37,9 +43,6 @@ class MyScheduleHandler(BaseHandler):
               'title',
               'description',
               'academic_level',
-              'credit_type',
-              'credit_hours',
-              'contact_hours',
               'department',
               'note',
               ('sectiontemp_set',
@@ -51,6 +54,7 @@ class MyScheduleHandler(BaseHandler):
                  'synonym',
                  'start_date',
                  'end_date',
+                 'contact_hours',
                  'credit_hours',
                  'ceus',
                  'tuition',
@@ -83,61 +87,68 @@ class MyScheduleHandler(BaseHandler):
         courses = self.model.objects.all()
         return courses
 
+
+
     def create(self, request):
         """
             Creates course records and associated section and meeting records
             based on json formatted data submitted via request.
         """
+        import traceback
         if request.content_type:
             if request.data:
                 data = request.data
                 for item in data:
-                    course = self.model(
-                        course_code=item['course_code'],
-                        prefix=item['prefix'],
-                        course_number=item['course_number'],
-                        title=item['title'],
-                        description=item['description'],
-                        academic_level=item['academic_level'],
-                        credit_type=item['credit_type'],
-                        credit_hours=item['credit_hours'],
-                        contact_hours=item['contact_hours'],
-                        department=item['department'],
-                        note=item['note']
-                    )
-                    course.save()
-                    if item['sectiontemp_set'] != []:
-                        for section in item['sectiontemp_set']:
-                            new_section = SectionTemp(course=course,
-                                section_code=section['section_code'],
-                                section_number=section['section_number'],
-                                term=section['term'],
-                                year=section['year'],
-                                campus=section['campus'],
-                                synonym=section['synonym'],
-                                start_date=section['start_date'],
-                                end_date=section['end_date'],
-                                credit_hours=section['credit_hours'],
-                                ceus=section['ceus'],
-                                tuition=section['tuition'],
-                                delivery_type=section['delivery_type'],
-                                note=section['note'],
-                                book_link=section['book_link'],
-                                session=section['session'],
-                                status=section['status'],
-                                instructor_name=section['instructor_name'],
-                                instructor_link=section['instructor_link'])
-                            new_section.save()
-                            if section['meetingtemp_set'] != []:
-                                for meeting in section['meetingtemp_set']:
-                                    new_meeting = MeetingTemp(section=new_section,
-                                        start_time=datetime.strptime(meeting['start_time'],"%H:%M:%S"),
-                                        end_time=datetime.strptime(meeting['end_time'],"%H:%M:%S"),
-                                        meeting_type=meeting['meeting_type'],
-                                        days_of_week=meeting['days_of_week'],
-                                        building=meeting['building'],
-                                        room=meeting['room'])
-                                    new_meeting.save()
+                    try:
+                        course = self.model(
+                            course_code=item['course_code'],
+                            prefix=item['prefix'],
+                            course_number=item['course_number'],
+                            title=item['title'],
+                            description=item['description'],
+                            academic_level=item['academic_level'],
+                            department=item['department'],
+                            note=item['note']
+                        )
+                        course.save()
+                        if item['sectiontemp_set'] != []:
+                            for section in item['sectiontemp_set']:
+                                new_section = SectionTemp(course=course,
+                                    section_code=section['section_code'],
+                                    section_number=section['section_number'],
+                                    term=section['term'],
+                                    year=section['year'],
+                                    campus=section['campus'],
+                                    synonym=section['synonym'],
+                                    start_date=datetime.strptime(section['start_date'], "%Y-%m-%d"),
+                                    end_date=datetime.strptime(section['end_date'], "%Y-%m-%d"),
+                                    contact_hours=section['contact_hours'],
+                                    credit_hours=section['credit_hours'],
+                                    ceus=section['ceus'],
+                                    tuition=section['tuition'],
+                                    delivery_type=section['delivery_type'],
+                                    note=section['note'],
+                                    book_link=section['book_link'],
+                                    session=section['session'],
+                                    status=section['status'],
+                                    instructor_name=section['instructor_name'],
+                                    instructor_link=section['instructor_link'])
+                                new_section.save()
+                                if section['meetingtemp_set'] != []:
+                                    for meeting in section['meetingtemp_set']:
+                                        new_meeting = MeetingTemp(section=new_section,
+                                            start_time=format_time(meeting['start_time']),
+                                            end_time=format_time(meeting['end_time']),
+                                            meeting_type=meeting['meeting_type'],
+                                            days_of_week=meeting['days_of_week'],
+                                            building=meeting['building'],
+                                            room=meeting['room'])
+                                        new_meeting.save()
+                    except:
+                        print item
+                        traceback.print_exc()
+
+
             # TODO: check value of rc.CREATED in loop and then handle appropriately when it is not equal to CREATED
             return rc.CREATED
         else:
@@ -151,4 +162,6 @@ class MyScheduleHandler(BaseHandler):
         courses = self.model.objects.all()
         courses.delete()
         return rc.DELETED
+
+
 

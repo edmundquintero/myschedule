@@ -300,7 +300,6 @@ def display_cart(request, sections_url=None):
     """
         Displays shopping cart template.
     """
-
     conflicting_sections = []
     if not request.session.has_key('Cart') and sections_url == None:
         return redirect('index')
@@ -404,31 +403,31 @@ def get_calendar_data(request):
                             item.section_number)
             temp_time = meeting.start_time
             while temp_time <= meeting.end_time:
-                if 'm' in meeting.days_of_week:
+                if 'M' in meeting.days_of_week.upper():
                     meeting_day = 'Mo'
                     data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
                     json_data.append(data)
-                if 't' in meeting.days_of_week:
+                if 'T' in meeting.days_of_week.upper():
                     meeting_day = 'Tu'
                     data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
                     json_data.append(data)
-                if 'w' in meeting.days_of_week:
+                if 'W' in meeting.days_of_week.upper():
                     meeting_day = 'We'
                     data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
                     json_data.append(data)
-                if 'r' in meeting.days_of_week:
+                if 'R' in meeting.days_of_week.upper():
                     meeting_day = 'Th'
                     data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
                     json_data.append(data)
-                if 'f' in meeting.days_of_week:
+                if 'F' in meeting.days_of_week.upper():
                     meeting_day = 'Fr'
                     data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
                     json_data.append(data)
-                if 's' in meeting.days_of_week:
+                if 'S' in meeting.days_of_week.upper():
                     meeting_day = 'Sa'
                     data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
                     json_data.append(data)
-                if 'u' in meeting.days_of_week:
+                if 'U' in meeting.days_of_week.upper():
                     meeting_day = 'Su'
                     data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
                     json_data.append(data)

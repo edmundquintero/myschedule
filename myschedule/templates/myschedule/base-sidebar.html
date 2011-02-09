@@ -18,13 +18,15 @@
     {% endblock %}
     {% block schedule %}
     <h5>Schedule</h5>
+
+    <ul id="cart">
       {% if cart_items %}
-        <ul id="cart">
           {% for item in cart_items %}
               <li class="remove-item"><a class="remove-link" href="#remove" ref="{{ item.section_code }}"><img src="{% url appstatic "img/remove_button.png" %}" alt="Remove"/></a>{{ item.course.prefix }} {{ item.course.course_number }} - {{ item.section_number }}<br/>{{ item.course.title }}</li>
           {% endfor %}
-        </ul>
       {% endif %}
+    </ul>
+
     <div id="view-full-schedule">
       <a href="{% url show_schedule %}"><img src="{% url appstatic "img/view_full_schedule_button.png" %}" alt="View Full Schedule"/></a>
     </div>
