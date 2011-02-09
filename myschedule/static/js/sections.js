@@ -2,6 +2,7 @@ $(function() {
     $('a.add-item').click(function() {
         section = $(this).attr('ref').replace('section_','');
         $(this).parents('.section').hide();
+        $('#view-full-schedule').show();
         addItem(section);
     });
 
@@ -24,11 +25,15 @@ function addItem(section)
                 alert(data.errors);
             }
             else{
+                // Create the sidebar button for the section.
                 section_data = data.section_data;
                 item_html = '<li class="remove-item"><a class="remove-link" href="#remove" ref="' + section + '" ><img src="' + buttonPath + '" alt="Remove"/></a>' + section_data.prefix + ' ' + section_data.course_number + ' - ' + section_data.section_number + '<br/>' + section_data.title +'</li>';
                 $('#cart').append(item_html);
                 // Re-instantiate click event otherwise the delete won't work for item added to the sidebar.
-                $("a.remove-link").click(remove_section);
+                $('a.remove-link').click(remove_section);
+                // Show the view full schedule button in case it was previously hidden.
+                $('#view-full-schedule').show();
+                // Re-load the calendar to show newly added sections.
                 loadCalendar();
             }
     }, 'json');

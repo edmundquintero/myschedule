@@ -9,28 +9,26 @@
 {% load myschedule_filters %}
 {% block body_class %}sidebar{% endblock %}
 {% block sidebar %}{{ block.super }}
-    {% if not user.is_authenticated %}   
-      <p><i><a href="{% url schedule_login request.path %}" title="Sign in with your CPCC Login">Sign in</a> to save or retrieve schedule.</i></p>
-    {% endif %}
+
     {% block buttons %}
       <a class="open-window button" href="#email" ref="email" dialog-title="Email Schedule" title="Email this schedule to yourself or a friend">Email Schedule</a>
       <a href="#print" title="Print this page" class="print-schedule button">Print Schedule</a>   
     {% endblock %}
+
     {% block schedule %}
-    <h5>Schedule</h5>
-
-    <ul id="cart">
-      {% if cart_items %}
-          {% for item in cart_items %}
-              <li class="remove-item"><a class="remove-link" href="#remove" ref="{{ item.section_code }}"><img src="{% url appstatic "img/remove_button.png" %}" alt="Remove"/></a>{{ item.course.prefix }} {{ item.course.course_number }} - {{ item.section_number }}<br/>{{ item.course.title }}</li>
-          {% endfor %}
-      {% endif %}
-    </ul>
-
-    <div id="view-full-schedule">
-      <a href="{% url show_schedule %}"><img src="{% url appstatic "img/view_full_schedule_button.png" %}" alt="View Full Schedule"/></a>
-    </div>
+      <h5>Schedule</h5>
+      <ul id="cart">
+        {% if cart_items %}
+            {% for item in cart_items %}
+                <li class="remove-item"><a class="remove-link" href="#remove" ref="{{ item.section_code }}"><img src="{% url appstatic "img/remove_button.png" %}" alt="Remove"/></a>{{ item.course.prefix }} {{ item.course.course_number }} - {{ item.section_number }}<br/>{{ item.course.title }}</li>
+            {% endfor %}
+        {% endif %}
+      </ul>
+      <div id="view-full-schedule">
+        <a href="{% url show_schedule %}"><img src="{% url appstatic "img/view_full_schedule_button.png" %}" alt="View Full Schedule"/></a>
+      </div>
     {% endblock %}
+
     <table class="calendar-table">
       <thead>
         <tr>

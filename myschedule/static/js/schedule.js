@@ -32,6 +32,12 @@ $(function() {
     $("a.print-schedule").click(function() {window.print();});
     $("a.remove-link").click(remove_section);
 
+    sidebar_section_count = $('li.remove-item').length;
+    //sidebar_hidden_count = $('li.remove-item:hidden').length;
+    if (sidebar_section_count == 0){
+        $('#view-full-schedule').hide();
+    }
+
 });
 
 function createModalWindow(element, title, createCallback,
@@ -102,10 +108,16 @@ sendEmail = function()
 remove_section = function()
 {
     // Remove item from sidebar and redisplay in section results (only applies if
-    // user deleted section via sidebar.
+    // user deleted section via sidebar).
     $(this).parent('li.remove-item').hide();
     section_code = $(this).attr('ref');
     $('#'+section_code).show();
+    // If all sections were removed from sidebar, hide view-full-schedule button.
+    sidebar_section_count = $('li.remove-item').length;
+    sidebar_hidden_count = $('li.remove-item:hidden').length;
+    if (sidebar_section_count == sidebar_hidden_count){
+        $('#view-full-schedule').hide();
+    }
     // Hide section from displaying in schedule (only applies if section deleted
     // on view full schedule page.
     $(this).parents('.section').hide();

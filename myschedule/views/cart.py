@@ -300,7 +300,8 @@ def display_cart(request, sections_url=None):
     """
         Displays shopping cart template.
     """
-    conflicting_sections = []
+    conflicts = {}
+    cart_items = []
     if not request.session.has_key('Cart') and sections_url == None:
         return redirect('index')
     elif not request.session.has_key('Cart') and sections_url != None:
@@ -314,16 +315,11 @@ def display_cart(request, sections_url=None):
     if sections != [] and sections != None:
         cart_items = models.Section.objects.filter(section_code__in=sections)
         conflicts = conflict_resolution(cart_items)
-    else:
-        cart_items = []
-
-    search = forms.search_form()
 
     return direct_to_template(request,
                               'myschedule/display_cart.html',
                               {'cart_items':cart_items,
-                               'conflicts':conflicts,
-                               'search':search}
+                               'conflicts':conflicts}
                              )
 
 def email_schedule(request):
