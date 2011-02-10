@@ -42,6 +42,26 @@ function addItem(section)
                 }
                 // Show the view full schedule button in case it was previously hidden.
                 $('#view-full-schedule').show();
+                $.post(basePath + 'schedule/conflicts/', {}, function(conflicts){ 
+                    if (conflicts.conflicts.conflicting_meetings.length > 0){
+                        //for (var i=0; i<conflicts.conflicts.conflicting_meetings.length; i++){
+                        //    $('#'+conflicts.conflicts.conflicting_meetings[i]).addClass('error');
+                        //}
+                        if ($('#conflict-message').length == 0){
+                            $('#conflict-login-message').append('<p id="conflict-message">This schedule contains scheduling conflicts.</p>');
+                        }
+                        $('#conflict-message').show();
+                        $('#conflict-login-message').show();
+                    }
+                    else{
+                        $('#conflict-message').hide();
+                        $('#conflict-login-message').hide();
+                        $('p[id="login-message"]').each(function(){
+                            $('#conflict-login-message').show();
+                        });
+                    }
+                }, 'json');
+
                 // Re-load the calendar to show newly added sections.
                 loadCalendar();
             }

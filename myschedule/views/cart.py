@@ -175,8 +175,8 @@ def conflict_resolution(cart_items):
                             for test_meeting in test_meetings:
                                 if item_meeting.id != test_meeting.id and item_meeting.id not in conflicting_meetings:
                                     # Check to see if the meetings have any days in common
-                                    commondays = "".join(filter(lambda x: x in item_meeting.days_of_week,
-                                        test_meeting.days_of_week))
+                                    commondays = "".join(filter(lambda x: x in item_meeting.days_of_week.upper(),
+                                        test_meeting.days_of_week.upper()))
                                     if commondays:
                                         # Check to see if the meeting times overlap
                                         if ((test_meeting.start_time <= item_meeting.start_time and
@@ -444,13 +444,17 @@ class SQSSearchView(SearchView):
     def extra_context(self):
         extra = super(SQSSearchView, self).extra_context()
         extra['spelling_suggestion'] = self.searchqueryset.spelling_suggestion()
-        # Needs the cart_items to display in sidebar.
+        # Needs the cart_items to display in sidebar and the conflicts so
+        # know if need to display a warning message to user.
         if self.request.session.has_key('Cart'):
             cart_items = models.Section.objects.filter(
                 section_code__in=self.request.session['Cart'])
+            conflicts = conflict_resolution(cart_items)
         else:
             cart_items = []
+            conflicts = {}
         extra['cart_items'] = cart_items
+        extra['conflicts'] = conflicts
         return extra
 
     def __call__(self, request):

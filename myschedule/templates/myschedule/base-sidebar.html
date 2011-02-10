@@ -20,7 +20,7 @@
       <ul id="cart">
         {% if cart_items %}
             {% for item in cart_items %}
-                <li class="remove-item"><a class="remove-link" href="#remove" ref="{{ item.section_code }}"><img src="{% url appstatic "img/remove_button.png" %}" alt="Remove"/></a>{{ item.course.prefix }} {{ item.course.course_number }} - {{ item.section_number }}<br/>{{ item.course.title }}</li>
+                <li class="remove-item"><a class="remove-link" href="#remove" ref="{{ item.section_code }}"><img src="{% url appstatic "img/remove_button.png" %}" alt="Remove"/></a>{{ item.course.prefix }} {{ item.course.course_number }} - {{ item.section_number }}<br/>{{ item.course.title|slice:"0:20" }}</li>
             {% endfor %}
         {% endif %}
       </ul>

@@ -8,6 +8,17 @@
         <input type="text" name="q" id="id_query" {% if form.q.initial %}value="{{ form.q.initial }}"{% else %}value="{{ query }}"{% endif %} />
         <input type="image" value="Search" name="submit" src="{% url appstatic "img/search_button.png" %}" />
 	</form>
+{% if not user.is_authenticated or conflicts.conflicting_sections %}
+    <br />
+    <div class="message message-warning" id="conflict-login-message">
+    {% if not user.is_authenticated %}
+      <p id="login-message"><a href="{% url schedule_login request.path %}">Sign in</a> to save this schedule!</p>
+    {% endif %}
+    {% if conflicts.conflicting_sections %}
+      <p id="conflict-message">This schedule contains scheduling conflicts.</p>
+    {% endif %}
+    </div>
+  {% endif %}
         {% if query %}
             {% for result in page.object_list %}
 				<div class="course">

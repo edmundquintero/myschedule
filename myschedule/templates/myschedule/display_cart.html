@@ -18,7 +18,7 @@
     <br />
     <div class="message message-warning" id="conflict-login-message">
     {% if not user.is_authenticated %}
-      <p id="login-message"><a href="{% url login %}">Sign in</a> to save this schedule!</p>
+      <p id="login-message"><a href="{% url schedule_login request.path %}">Sign in</a> to save this schedule!</p>
     {% endif %}
     {% if conflicts.conflicting_sections %}
       <p id="conflict-message">Scheduling conflicts are highlighted below.</p>
@@ -43,8 +43,13 @@
             <p class="section-seats-label">{{ item.seat_count }}</p>
           {% endif %}
         </div>
+
         <div class="section-meeting">
           <table>
+             <tr>
+                <td colspan="6">{{item.delivery_type }}</td>
+             </tr>
+
             {% for meeting in item.meeting_set.all %}
               <tr>
                 <td class="section-campus">{{ item.campus }}</td>

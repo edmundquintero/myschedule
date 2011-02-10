@@ -14,6 +14,17 @@
 {% block buttons %} {% endblock %}
 {% block content %}{{ block.super }}
   {% include "myschedule/search.html" %}
+  {% if not user.is_authenticated or conflicts.conflicting_sections %}
+    <br />
+    <div class="message message-warning" id="conflict-login-message">
+    {% if not user.is_authenticated %}
+      <p id="login-message"><a href="{% url schedule_login request.path %}">Sign in</a> to save this schedule!</p>
+    {% endif %}
+    {% if conflicts.conflicting_sections %}
+      <p id="conflict-message">This schedule contains scheduling conflicts.</p>
+    {% endif %}
+    </div>
+  {% endif %}
   {% if sections %}
     <form action="" method="POST" id="section-form">
       <div class="course">
@@ -21,7 +32,7 @@
         <div class="course-content">
           <div class="course-metadata">
             <p class="course-number">{{ sections.0.course.prefix }} {{ sections.0.course.course_number }}</p>
-            <p class="course-hours">{% ifequal sections.0.course.academic_level 'Corporate and Continuing Education' %}CEUs{% endifequal %}{% ifequal sections.0.course.academic_level 'Curriculum' %}Credit Hours{% endifequal %}<br/>{{ sections.0.course.credit_hours|floatformat:1 }}</p>
+            <p class="course-hours">{% ifequal sections.0.course.academic_level 'Corporate and Continuing Education' %}CEUs<br/>{{ sections.0.ceus }}{% endifequal %}{% ifequal sections.0.course.academic_level 'Curriculum' %}Credit Hours<br/>{{ sections.0.credit_hours }}{% endifequal %}</p>
           </div>
          <div class="course-description">
             <p class="course-name">{{ sections.0.course.title }}</p>
@@ -52,6 +63,9 @@
 
             <div class="section-meeting">
               <table>
+              <tr>
+                <td colspan="6">{{section.delivery_type }}</td>
+              </tr>
               {% for meeting in section.meeting_set.all %}
                 <tr>
                   <td class="section-campus">{{ section.campus }}</td>
@@ -62,7 +76,7 @@
                 </tr>
               {% endfor %}
               <tr>
-                <td colspan="2"><strong>From</strong> {{ section.start_date|date:"n-j-Y" }} to {{ section.end_date|date:"n-j-Y" }}</td>
+                <td colspan="2"><strong>From</strong> {{ section.start_date|date:"n-j-Y" }} <strong>to</strong> {{ section.end_date|date:"n-j-Y" }}</td>
                 <td colspan="3"><strong>Session</strong> {{ section.session }}</td>
               </tr>
               </table>

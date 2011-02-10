@@ -11,6 +11,7 @@ import string
 # from cpsite.decorators import groups_required
 
 from myschedule import models, forms
+from myschedule.views.cart import conflict_resolution
 
 def index(request):
     """
@@ -51,8 +52,10 @@ def show_sections(request, course_id):
     if request.session.has_key('Cart'):
         cart_items = models.Section.objects.filter(
 			section_code__in=request.session['Cart'])
+        conflicts = conflict_resolution(cart_items)
     else:
-	cart_items = []
+        cart_items = []
+        conflicts = {}
 
     # Get the sections for the selected course TODO: What to do about term and year???
     sections = models.Section.objects.select_related().filter(course=course_id)
@@ -60,7 +63,8 @@ def show_sections(request, course_id):
     return direct_to_template(request,
             'myschedule/section_results.html',
             {'sections':sections,
-             'cart_items':cart_items}
+             'cart_items':cart_items,
+             'conflicts':conflicts}
     )
 
 def update_courses(request):
@@ -178,6 +182,7 @@ def load_courses():
                 delivery_type=tempsection.delivery_type,
                 note=tempsection.note,
                 book_link=tempsection.book_link,
+                session=tempsection.session,
                 status=tempsection.status,
                 instructor_name=tempsection.instructor_name,
                 instructor_link=tempsection.instructor_link)
