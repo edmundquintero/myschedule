@@ -30,26 +30,33 @@
     <div class="section">
       <div class="section-top">
         <div class="section-number">{{ item.course.prefix }} {{ item.course.course_number }} - {{ item.section_number }} </div>
-        <div class="section-heading">{{ item.course.title }} Synonym: {{ item.synonym }}</div>
+        <div class="section-heading">{{ item.course.title }}</div>
         <a class="remove-link" href="#remove" ref="{{ item.section_code }}"><img src="{% url appstatic "img/remove_button.png" %}" alt="Remove" /></a>
 
       </div>
       <div class="section-content">
         <div class="section-seats">
-          {% if item.seat_count != "Seat count unavailable" %}
-            <p class="section-seats-label">Seats Available</p>
-            <p class="section-seats-number">{{ item.seat_count }}</p>
-          {% else %}
-            <p class="section-seats-label">{{ item.seat_count }}</p>
-          {% endif %}
+          <table>
+            {% if item.seat_count != "Seat count unavailable" %}
+              <tr>
+                <td class="section-seats-label">Seats Available</td>
+              </tr>
+              <tr>
+                <td class="section-seats-number">{{ item.seat_count }}</td>
+              </tr>  
+            {% else %}
+            <tr>
+              <td class="section-seats-label">{{ item.seat_count }}</td>
+            </tr>
+            {% endif %}
+            <tr>
+              <td class="section-tuition">Tuition ${{ item.tuition }}</td>
+            </tr>
+          </table>
         </div>
 
         <div class="section-meeting">
           <table>
-             <tr>
-                <td colspan="6">{{item.delivery_type }}</td>
-             </tr>
-
             {% for meeting in item.meeting_set.all %}
               <tr>
                 <td class="section-campus">{{ item.campus }}</td>
@@ -62,6 +69,9 @@
             <tr>
               <td colspan="2"><strong>From</strong> {{ item.start_date|date:"n-j-Y" }} to {{ item.end_date|date:"n-j-Y" }}</td>
               <td colspan="3"><strong>Session</strong> {{ item.session }}</td>
+            </tr>
+            <tr>
+                <td colspan="6">{{item.delivery_type }}</td>
             </tr>
           </table>
         </div>

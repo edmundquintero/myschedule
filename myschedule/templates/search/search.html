@@ -26,7 +26,7 @@
 					<div class="course-content">
 						<div class="course-metadata">
 							<p class="course-number">{{ result.object.prefix }} {{ result.object.course_number }}</p>
-							<p class="course-hours">Credit Hours<br />{{ result.object.credit_hours }}</p>
+							<p class="course-hours">{% if result.object.section_set.all %}{% if result.object.section_set.all.0.ceus %}CEUs<br />{{ result.object.section_set.all.0.ceus }}{% else %}{% if result.object.section_set.all.0.credit_hours %}Credit Hours<br />{{ result.object.section_set.all.0.credit_hours }}{% else %}No Credit{% endif %}{% endif %}{% endif %}</p>
 						</div>
 						<div class="course-description">
 							<p class="course-name"><a href="{% url show_sections result.object.id %}">{{ result.object.title }}</a></span>

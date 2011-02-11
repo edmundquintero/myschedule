@@ -37,6 +37,7 @@
          <div class="course-description">
             <p class="course-name">{{ sections.0.course.title }}</p>
             <p>{{ sections.0.course.description }}</p>
+            <p class="contact-hours">Contact Hours {{ section.0.contact_hours }}</p>
           </div>
           <div class="clear"></div>
         </div>
@@ -53,19 +54,29 @@
           </div>
           <div class="section-content">
             <div class="section-seats">
-              {% if item.seat_count != "Seat count unavailable" %}
-                <p class="section-seats-label">Seats Available</p>
-                <p class="section-seats-number">{{ item.seat_count }}</p>
-              {% else %}
-                <p class="section-seats-label">{{ item.seat_count }}</p>
-              {% endif %}
+              <table>
+                {% if section.seat_count != "Seat count unavailable" %}
+                  <tr>
+                    <td class="section-seats-label">Seats Available</td>
+                  </tr>
+                  <tr>
+                    <td class="section-seats-number">{{ section.seat_count }}</td>
+                  </tr>
+                {% else %}
+                  <tr>
+                    <td class="section-seats-label">{{ section.seat_count }}</td>
+                    </tr>
+                {% endif %}
+                {% ifnotequal section.tuition "0.00" %}
+                  <tr>
+                    <td class="section-tuition">Tuition ${{ section.tuition }}</td>
+                  </tr>
+                {% endifnotequal %}
+              </table>
             </div>
 
             <div class="section-meeting">
               <table>
-              <tr>
-                <td colspan="6">{{section.delivery_type }}</td>
-              </tr>
               {% for meeting in section.meeting_set.all %}
                 <tr>
                   <td class="section-campus">{{ section.campus }}</td>
@@ -79,12 +90,15 @@
                 <td colspan="2"><strong>From</strong> {{ section.start_date|date:"n-j-Y" }} <strong>to</strong> {{ section.end_date|date:"n-j-Y" }}</td>
                 <td colspan="3"><strong>Session</strong> {{ section.session }}</td>
               </tr>
+              <tr>
+                <td colspan="6">{{section.delivery_type }}</td>
+              </tr>
               </table>
             </div>
             <div class="clear"></div>
           </div>
           <div class="section-bottom">
-            <div class="section-hours"><strong>Contact Hours</strong> {{ section.contact_hours }}</div>
+            <div class="section-synonym">Synonym {{ section.synonym }}</div>
             <div class="section-instructor"><strong>Instructor</strong> {% if section.instructor_link %}<a href="{{ section.instructor_link }}">{{ section.instructor_name }}</a>{% else %}{{ section.instructor_name }}{% endif %}
             </div>
             <div class="section-books">
