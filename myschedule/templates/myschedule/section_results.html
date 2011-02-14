@@ -38,6 +38,7 @@
             <p class="course-name">{{ sections.0.course.title }}</p>
             <p>{{ sections.0.course.description }}</p>
             <p class="contact-hours">Contact Hours {{ section.0.contact_hours }}</p>
+            {% if sections.0.course.note %}<p class="course-note"><a class="open-window" href="#note" ref="show-note" dialog-title="Notes" dialog-note="{{ sections.0.course.note }}">Notes </a></p>{% endif %}
           </div>
           <div class="clear"></div>
         </div>
@@ -102,13 +103,15 @@
             <div class="section-instructor"><strong>Instructor</strong> {% if section.instructor_link %}<a href="{{ section.instructor_link }}">{{ section.instructor_name }}</a>{% else %}{{ section.instructor_name }}{% endif %}
             </div>
             <div class="section-books">
-            {% if section.book_link %} <a class="open-window" ref="book" dialog-title="Book Information" href= "#book" booklink="{{ section.book_link }}">Book Information</a> <img src="{% url appstatic "img/books_icon.png" %}" alt="Book" />{% endif %}
+            {% if section.book_link %} <a class="open-window" ref="book" dialog-title="Book Information" href= "#book" booklink="{{ section.book_link }}">Book Information</a> <img src="{% url appstatic "img/books_icon.png" %}" alt="Book" />{% endif %}<br/>
+            {% if section.note %}<a class="open-window" ref="show-note" dialog-title="Notes" dialog-note="{{ section.note }}" href="#note">Notes</a>{% endif %}
             </div>
           </div>
           <div class="clear"></div>
         </div>
       {% endfor %}
-            {% include "myschedule/dialogs/book.html" %}
+      {% include "myschedule/dialogs/book.html" %}
+      {% include "myschedule/dialogs/show_note.html" %}
     </form>
   {% else %}
     <p>There are no sections currently available for this course.</p>

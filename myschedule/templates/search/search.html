@@ -8,53 +8,53 @@
         <input type="text" name="q" id="id_query" {% if form.q.initial %}value="{{ form.q.initial }}"{% else %}value="{{ query }}"{% endif %} />
         <input type="image" value="Search" name="submit" src="{% url appstatic "img/search_button.png" %}" />
 	</form>
-{% if not user.is_authenticated or conflicts.conflicting_sections %}
+  {% if not user.is_authenticated or conflicts.conflicting_sections %}
     <br />
     <div class="message message-warning" id="conflict-login-message">
-    {% if not user.is_authenticated %}
-      <p id="login-message"><a href="{% url schedule_login request.path %}">Sign in</a> to save this schedule!</p>
-    {% endif %}
-    {% if conflicts.conflicting_sections %}
-      <p id="conflict-message">This schedule contains scheduling conflicts.</p>
-    {% endif %}
+      {% if not user.is_authenticated %}
+        <p id="login-message"><a href="{% url schedule_login request.path %}">Sign in</a> to save this schedule!</p>
+      {% endif %}
+      {% if conflicts.conflicting_sections %}
+        <p id="conflict-message">This schedule contains scheduling conflicts.</p>
+      {% endif %}
     </div>
   {% endif %}
-        {% if query %}
-            {% for result in page.object_list %}
-				<div class="course">
-					<div class="course-top"></div>
-					<div class="course-content">
-						<div class="course-metadata">
-							<p class="course-number">{{ result.object.prefix }} {{ result.object.course_number }}</p>
-							<p class="course-hours">{% if result.object.section_set.all %}{% if result.object.section_set.all.0.ceus %}CEUs<br />{{ result.object.section_set.all.0.ceus }}{% else %}{% if result.object.section_set.all.0.credit_hours %}Credit Hours<br />{{ result.object.section_set.all.0.credit_hours }}{% else %}No Credit{% endif %}{% endif %}{% endif %}</p>
-						</div>
-						<div class="course-description">
-							<p class="course-name"><a href="{% url show_sections result.object.id %}">{{ result.object.title }}</a></span>
-							<p>{{ result.object.description|truncatewords:23 }}</p>
-							<p class="course-prerequisites">Has Prerequisites. <a href='http://www.youtube.com/watch?v=cS_c7fEPzzM'>Or does it?</a></p>
-						</div>
-						<div class="clear"></div>
-					</div>
-					<div class="course-bottom"></div>
-				</div>
-            {% empty %}
-            {% if spelling_suggestion %}
-				<p>Did you mean <a href="{% url haystack_search %}?q={{ spelling_suggestion }}">{{ spelling_suggestion }}</a></p>
-			{% else %}
-                <p>No results found.</p>
-			{% endif %}
-            {% endfor %}
-
-            {% if page.has_previous or page.has_next %}
-                <div>
-                    {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
+  {% if query %}
+      {% for result in page.object_list %}
+	      <div class="course">
+	        <div class="course-top"></div>
+	        <div class="course-content">
+		        <div class="course-metadata">
+			        <p class="course-number">{{ result.object.prefix }} {{ result.object.course_number }}</p>
+			        <p class="course-hours">{% if result.object.section_set.all %}{% if result.object.section_set.all.0.ceus %}CEUs<br />{{ result.object.section_set.all.0.ceus }}{% else %}{% if result.object.section_set.all.0.credit_hours %}Credit Hours<br />{{ result.object.section_set.all.0.credit_hours }}{% else %}No Credit{% endif %}{% endif %}{% endif %}</p>
+		        </div>
+		        <div class="course-description">
+			        <p class="course-name"><a href="{% url show_sections result.object.id %}">{{ result.object.title }}</a></span>
+			        <p>{{ result.object.description|truncatewords:23 }}</p>
+			        <p class="course-prerequisites">Has Prerequisites. <a href='http://www.youtube.com/watch?v=cS_c7fEPzzM'>Or does it?</a></p>
+              {% if result.object.note %}<p class="course-note"><a class="open-window" href="#note" ref="show-note" dialog-title="Notes" dialog-note="{{ result.object.note }}">Notes </a></p>{% endif %}
+		        </div>
+		        <div class="clear"></div>
+	        </div>
+	        <div class="course-bottom"></div>
+	      </div>     
+      {% empty %}
+        {% if spelling_suggestion %}
+		      <p>Did you mean <a href="{% url haystack_search %}?q={{ spelling_suggestion }}">{{ spelling_suggestion }}</a></p>
+		    {% else %}
+          <p>No results found.</p>
+		    {% endif %}
+      {% endfor %}
+      {% if page.has_previous or page.has_next %}
+          <div>
+              {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
                     |
-                    {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
-                </div>
-            {% endif %}
-        {% else %}
-            {# Show some example queries to run, maybe query syntax, something else? #}
-        {% endif %}
-
+              {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+          </div>
+      {% endif %}
+  {% else %}
+    {# Show some example queries to run, maybe query syntax, something else? #}
+  {% endif %}
+  {% include "myschedule/dialogs/show_note.html" %}
 {% endblock %}
 

@@ -13,6 +13,11 @@ $(function() {
             buttons = { "Cancel": closeDialog,
                         "Send": sendEmail }
         }
+        if($(this).attr('ref') == 'show-note') {
+            buttons = { "Close": closeDialog }
+            $('#show-note').empty();
+            $('#show-note').append('<p>'+$(this).attr('dialog-note')+'</p>');
+        }
         if($(this).attr('ref') == 'book') {
             $('a.booklink').attr('href', $(this).attr('booklink'));
             buttons = { "Close": closeDialog }
