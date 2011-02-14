@@ -4,8 +4,8 @@ from django import template
 register = template.Library()
 
 @register.filter
-def format_section(value):
-    return value.replace('-', ' ').replace('fa', 'Fall').replace('sp', 'Spring')
+def format_term(value):
+    return value.upper().replace('FA', 'Fall').replace('SP', 'Spring').replace('SU', 'Summer')
 
 @register.filter(name='days_of_week')
 def days_of_week(value):

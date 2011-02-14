@@ -203,9 +203,16 @@ div#body.sidebar div#content { width: 684px; }
     text-align: center;
     font-weight: bold;
 }
+.section .section-content .section-seats table
+{
+    border: none;
+    margin: 0;
+    padding: 0;
+}
 .section .section-content .section-seats table td
 {
     border: none;
+    vertical-align: top;
 }
 .section .section-content .section-seats .section-seats-label
 {
@@ -235,10 +242,11 @@ div#body.sidebar div#content { width: 684px; }
 .section .section-content .section-meeting table td
 {
     border: none;
+    vertical-align: top;
 }
 .section .section-content .section-meeting .section-campus
 {
-    width: 25%;
+    width: 27%;
     font-weight: bold;
 }
 .section .section-content .section-meeting .section-room
@@ -256,8 +264,9 @@ div#body.sidebar div#content { width: 684px; }
 }
 .section .section-content .section-meeting .section-time
 {
-    width: 33%;
+    width: 31%;
     font-weight: bold;
+    padding-right: 5px;
 }
 .section .section-bottom
 {
@@ -289,6 +298,11 @@ div#body.sidebar div#content { width: 684px; }
 {
     float: right;
     padding: 3px 15px 0 0;
+}
+.section .section-bottom .section-note
+{
+    float: left;
+    padding: 2px 0 0 150px;
 }
 div.book {
     overflow-y: hidden;

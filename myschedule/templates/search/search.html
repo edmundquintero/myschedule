@@ -32,7 +32,7 @@
 			        <p class="course-name"><a href="{% url show_sections result.object.id %}">{{ result.object.title }}</a></span>
 			        <p>{{ result.object.description|truncatewords:23 }}</p>
 			        <p class="course-prerequisites">Has Prerequisites. <a href='http://www.youtube.com/watch?v=cS_c7fEPzzM'>Or does it?</a></p>
-              {% if result.object.note %}<p class="course-note"><a class="open-window" href="#note" ref="show-note" dialog-title="Notes" dialog-note="{{ result.object.note }}">Notes </a></p>{% endif %}
+              {% if result.object.note %}<p class="course-note"><strong>Note</strong> {{ result.object.note }}</p>{% endif %}
 		        </div>
 		        <div class="clear"></div>
 	        </div>
@@ -55,6 +55,5 @@
   {% else %}
     {# Show some example queries to run, maybe query syntax, something else? #}
   {% endif %}
-  {% include "myschedule/dialogs/show_note.html" %}
 {% endblock %}
 

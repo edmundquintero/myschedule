@@ -37,8 +37,8 @@
          <div class="course-description">
             <p class="course-name">{{ sections.0.course.title }}</p>
             <p>{{ sections.0.course.description }}</p>
-            <p class="contact-hours">Contact Hours {{ section.0.contact_hours }}</p>
-            {% if sections.0.course.note %}<p class="course-note"><a class="open-window" href="#note" ref="show-note" dialog-title="Notes" dialog-note="{{ sections.0.course.note }}">Notes </a></p>{% endif %}
+            <p class="contact-hours">Contact Hours {{ section.0.contact_hours }}10</p>
+            {% if sections.0.course.note %}<p class="course-note"><strong>Note</strong> {{ sections.0.course.note }}</p>{% endif %}
           </div>
           <div class="clear"></div>
         </div>
@@ -61,7 +61,7 @@
                     <td class="section-seats-label">Seats Available</td>
                   </tr>
                   <tr>
-                    <td class="section-seats-number">{{ section.seat_count }}</td>
+                    <td class="section-seats-number">{{ section.seat_count }}10</td>
                   </tr>
                 {% else %}
                   <tr>
@@ -89,7 +89,7 @@
               {% endfor %}
               <tr>
                 <td colspan="2"><strong>From</strong> {{ section.start_date|date:"n-j-Y" }} <strong>to</strong> {{ section.end_date|date:"n-j-Y" }}</td>
-                <td colspan="3"><strong>Session</strong> {{ section.session }}</td>
+                <td colspan="3"><strong>Term</strong> {{ section.term|format_term }} {{ section.year }} {% if section.session %}{{ section.session }}{% endif %}</td>
               </tr>
               <tr>
                 <td colspan="6">{{section.delivery_type }}</td>
@@ -104,14 +104,15 @@
             </div>
             <div class="section-books">
             {% if section.book_link %} <a class="open-window" ref="book" dialog-title="Book Information" href= "#book" booklink="{{ section.book_link }}">Book Information</a> <img src="{% url appstatic "img/books_icon.png" %}" alt="Book" />{% endif %}<br/>
-            {% if section.note %}<a class="open-window" ref="show-note" dialog-title="Notes" dialog-note="{{ section.note }}" href="#note">Notes</a>{% endif %}
+            </div>
+            <div class="section-note">
+              {% if section.note %}<strong>Note</strong> {{ section.note }}{% endif %}
             </div>
           </div>
           <div class="clear"></div>
         </div>
       {% endfor %}
       {% include "myschedule/dialogs/book.html" %}
-      {% include "myschedule/dialogs/show_note.html" %}
     </form>
   {% else %}
     <p>There are no sections currently available for this course.</p>

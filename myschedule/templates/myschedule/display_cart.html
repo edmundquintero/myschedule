@@ -42,7 +42,7 @@
                 <td class="section-seats-label">Seats Available</td>
               </tr>
               <tr>
-                <td class="section-seats-number">{{ item.seat_count }}</td>
+                <td class="section-seats-number">{{ item.seat_count }}10</td>
               </tr>  
             {% else %}
             <tr>
@@ -50,7 +50,9 @@
             </tr>
             {% endif %}
             <tr>
+            {% ifnotequal item.tuition "0.00" %}           
               <td class="section-tuition">Tuition ${{ item.tuition }}</td>
+            {% endifnotequal %}
             </tr>
           </table>
         </div>
@@ -67,8 +69,8 @@
               </tr>
             {% endfor %}
             <tr>
-              <td colspan="2"><strong>From</strong> {{ item.start_date|date:"n-j-Y" }} to {{ item.end_date|date:"n-j-Y" }}</td>
-              <td colspan="3"><strong>Session</strong> {{ item.session }}</td>
+              <td colspan="2"><strong>From</strong> {{ item.start_date|date:"n-j-Y" }} <strong>to</strong> {{ item.end_date|date:"n-j-Y" }}</td>
+              <td colspan="3"><strong>Term</strong> {{ item.term|format_term }} {{ item.year }} {% if item.session %}{{ item.session }}{% endif %}</td>
             </tr>
             <tr>
                 <td colspan="6">{{item.delivery_type }}</td>
@@ -78,12 +80,14 @@
         <div class="clear"></div>
       </div>
       <div class="section-bottom">
-        <div class="section-hours"><strong>Contact Hours</strong> {{ item.contact_hours }}</div>
+        <div class="section-synonym">Synonym {{ item.synonym }}</div>
         <div class="section-instructor"><strong>Instructor</strong> {% if item.instructor_link %}<a href="{{ item.instructor_link }}">{{ item.instructor_name }}</a><span class="print-only print-link instructor-link"> {{ item.instructor_link }}</span>{% else %}<span class="instructor-name">{{ item.instructor_name }}</span>{% endif %}
         </div>
         <div class="section-books do-not-print">
-          {% if item.book_link %} <a class="open-window" ref="book" dialog-title="Book Information" href= "#book" booklink="{{ item.book_link }}">Book Information</a> <img src="{% url appstatic "img/books_icon.png" %}" alt="Book" />{% endif %} <br/>
-          {% if item.note %}<a class="open-window" ref="show-note" dialog-title="Notes" dialog-note="{{ item.note }}" href="#note">Notes</a>{% endif %}
+          {% if item.book_link %} <a class="open-window" ref="book" dialog-title="Book Information" href= "#book" booklink="{{ item.book_link }}">Book Information</a> <img src="{% url appstatic "img/books_icon.png" %}" alt="Book" />{% endif %} 
+        </div>
+        <div class="section-note">
+          {% if item.note %}<strong>Note</strong> {{ item.note }}{% endif %}
         </div>
         <div class="clear"></div>
       </div>
@@ -96,6 +100,5 @@
 
   {% include "myschedule/dialogs/book.html" %}
   {% include "myschedule/dialogs/email.html" %}
-  {% include "myschedule/dialogs/show_note.html" %}
 {% endif %}
 {% endblock %}
