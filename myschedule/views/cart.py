@@ -19,7 +19,7 @@ from myschedule import models, forms
 """
 
 @login_required
-@groups_required(['Students'])
+#@groups_required(['Students'])
 def schedule_login(request, next):
     """
         Instead of sign in links calling login, pass the user through here
@@ -436,7 +436,6 @@ def get_calendar_data(request):
                 new_datetime = current_datetime + difference
                 # Reset value of temp_time.
                 temp_time = new_datetime.time()
-
     json_data = json.dumps(json_data, indent=2)
     return HttpResponse(json_data)
 
