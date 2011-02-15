@@ -130,7 +130,7 @@ remove_section = function()
     // and recheck conflicts.
     $.post(basePath + 'schedule/delete/', {section:$(this).attr('ref')});
     $.post(basePath + 'schedule/conflicts/', {}, function(conflicts){
-        $('.section-meeting td').removeClass('error'); 
+        $('.section-meeting tr').removeClass('error'); 
         if (conflicts.conflicts.conflicting_meetings.length > 0){
             for (var i=0; i<conflicts.conflicts.conflicting_meetings.length; i++){
                 $('#'+conflicts.conflicts.conflicting_meetings[i]).addClass('error');

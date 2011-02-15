@@ -364,13 +364,17 @@ li.schedule-li {
     width: 40%;
 }
 
-.section .section-content .section-meeting table td.error {
+.section .section-content .section-meeting table tr.error td {
     margin: 0;
-    border-style: solid;
-    border-color: #e5740e;
-    border-width: 2px;
+    border-top: 2px solid #e5740e;
+    border-bottom: 2px solid #e5740e;
 }
-
+.section .section-content .section-meeting table tr.error td.left-cell{
+    border-left: 2px solid #e5740e;
+}
+.section .section-content .section-meeting table tr.error td.right-cell{
+    border-right: 2px solid #e5740e;
+}
 .ui-icon-trash {
     display: inline-block;
 }

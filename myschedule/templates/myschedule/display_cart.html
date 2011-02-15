@@ -60,12 +60,12 @@
         <div class="section-meeting">
           <table>
             {% for meeting in item.meeting_set.all %}
-              <tr>
-                <td class="section-campus">{{ item.campus }}</td>
+              <tr {% if meeting.id in conflicts.conflicting_meetings %} class="error"{% endif %} id="{{ meeting.id }}">
+                <td class="section-campus left-cell">{{ item.campus }}</td>
                 <td class="section-room">Rm {{ meeting.building }} {{ meeting.room }}</td>
                 <td class="section-type">{{ meeting.meeting_type }}</td>
                 <td class="section-days">{{ meeting.days_of_week|days_of_week }}</td>
-                <td class="section-time{% if meeting.id in conflicts.conflicting_meetings %} error{% endif %}" id="{{ meeting.id }}">{{ meeting.start_time|time:"g:i A" }} - {{ meeting.end_time|time:"g:i A" }}</td>
+                <td class="section-time right-cell">{{ meeting.start_time|time:"g:i A" }} - {{ meeting.end_time|time:"g:i A" }}</td>
               </tr>
             {% endfor %}
             <tr>

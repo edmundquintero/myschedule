@@ -387,7 +387,7 @@ def get_calendar_data(request):
         sections = request.session['Cart']
     if sections != [] and sections != None:
         cart_items = models.Section.objects.filter(section_code__in=sections)
-        conflicting_sections = conflict_resolution(cart_items)
+        #conflicts = conflict_resolution(cart_items)
     else:
         cart_items = []
     json_data = []
