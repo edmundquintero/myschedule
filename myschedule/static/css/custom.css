@@ -148,9 +148,24 @@ div#body.sidebar div#content { width: 684px; }
     font-weight: bold;
     margin-top: 10px;
 }
+.course .course-content .course-description table
+{
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+.course .course-content .course-description table td
+{
+    border: none;
+    vertical-align: top;
+}
 .course .course-content .course-description .course-prerequisites
 {
-    font-style: italic;
+    width: 50%;
+}
+.course .course-content .course-description .course-corequisites
+{
+    width: 50%;
 }
 .course .course-bottom
 {
@@ -216,7 +231,7 @@ div#body.sidebar div#content { width: 684px; }
 }
 .section .section-content .section-seats .section-seats-label
 {
-    font-size: 14px;
+    font-size: 13px;
 }
 .section .section-content .section-seats .section-seats-number
 {
@@ -225,14 +240,14 @@ div#body.sidebar div#content { width: 684px; }
 }
 .section .section-content .section-seats .section-tuition
 {
-    font-size: 14px;
+    font-size: 13px;
 }
 .section .section-content .section-meeting
 {
     float: left;
     width: 495px;
     padding: 10px 15px;
-    font-size: 14px;
+    font-size: 13px;
 }
 .section .section-content .section-meeting table
 {
@@ -272,7 +287,7 @@ div#body.sidebar div#content { width: 684px; }
 {
     height: 52px;
     background: url('../img/section_bottom_background.png') no-repeat;
-    font-size: 14px;
+    font-size: 13px;
 }
 .section .section-bottom .section-synonym
 {
@@ -299,11 +314,7 @@ div#body.sidebar div#content { width: 684px; }
     float: right;
     padding: 3px 15px 0 0;
 }
-.section .section-bottom .section-note
-{
-    float: left;
-    padding: 2px 0 0 150px;
-}
+
 div.book {
     overflow-y: hidden;
     margin: 0;
@@ -356,8 +367,8 @@ li.schedule-li {
 .section .section-content .section-meeting table td.error {
     margin: 0;
     border-style: solid;
-    border-color: red;
-    border-width: 1px;
+    border-color: #e5740e;
+    border-width: 2px;
 }
 
 .ui-icon-trash {
@@ -403,7 +414,7 @@ table.calendar-table th {
 }
 
 .busy-with-conflict {
-    background-color: red;
+    background-color: #e5740e;
 }
 
 span.print-only, div.print-only {

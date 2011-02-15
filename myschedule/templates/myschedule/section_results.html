@@ -92,8 +92,13 @@
                 <td colspan="3"><strong>Term</strong> {{ section.term|format_term }} {{ section.year }} {% if section.session %}{{ section.session }}{% endif %}</td>
               </tr>
               <tr>
-                <td colspan="6">{{section.delivery_type }}</td>
+                <td colspan="5">{{section.delivery_type }}</td>
               </tr>
+              {% if section.note %}
+                <tr>
+                  <td colspan="5"><strong>Note</strong> {{ section.note }}</td>
+                </tr>
+              {% endif %}
               </table>
             </div>
             <div class="clear"></div>
@@ -103,11 +108,9 @@
             <div class="section-instructor"><strong>Instructor</strong> {% if section.instructor_link %}<a href="{{ section.instructor_link }}">{{ section.instructor_name }}</a>{% else %}{{ section.instructor_name }}{% endif %}
             </div>
             <div class="section-books">
-            {% if section.book_link %} <a class="open-window" ref="book" dialog-title="Book Information" href= "#book" booklink="{{ section.book_link }}">Book Information</a> <img src="{% url appstatic "img/books_icon.png" %}" alt="Book" />{% endif %}<br/>
+            {% if section.book_link %} <a class="open-window" ref="book" dialog-title="Book Information" href= "#book" booklink="{{ section.book_link }}">Book Information</a> <img src="{% url appstatic "img/book_icon.png" %}" alt="Book" />{% endif %}<br/>
             </div>
-            <div class="section-note">
-              {% if section.note %}<strong>Note</strong> {{ section.note }}{% endif %}
-            </div>
+
           </div>
           <div class="clear"></div>
         </div>

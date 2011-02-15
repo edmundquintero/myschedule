@@ -73,8 +73,13 @@
               <td colspan="3"><strong>Term</strong> {{ item.term|format_term }} {{ item.year }} {% if item.session %}{{ item.session }}{% endif %}</td>
             </tr>
             <tr>
-                <td colspan="6">{{item.delivery_type }}</td>
+                <td colspan="5">{{item.delivery_type }}</td>
             </tr>
+            {% if item.note %}
+              <tr>
+                <td colspan="5"><strong>Note</strong> {{ item.note }}</td>
+              </tr>
+            {% endif %}
           </table>
         </div>
         <div class="clear"></div>
@@ -84,11 +89,9 @@
         <div class="section-instructor"><strong>Instructor</strong> {% if item.instructor_link %}<a href="{{ item.instructor_link }}">{{ item.instructor_name }}</a><span class="print-only print-link instructor-link"> {{ item.instructor_link }}</span>{% else %}<span class="instructor-name">{{ item.instructor_name }}</span>{% endif %}
         </div>
         <div class="section-books do-not-print">
-          {% if item.book_link %} <a class="open-window" ref="book" dialog-title="Book Information" href= "#book" booklink="{{ item.book_link }}">Book Information</a> <img src="{% url appstatic "img/books_icon.png" %}" alt="Book" />{% endif %} 
+          {% if item.book_link %} <a class="open-window" ref="book" dialog-title="Book Information" href= "#book" booklink="{{ item.book_link }}">Book Information</a> <img src="{% url appstatic "img/book_icon.png" %}" alt="Book" />{% endif %} 
         </div>
-        <div class="section-note">
-          {% if item.note %}<strong>Note</strong> {{ item.note }}{% endif %}
-        </div>
+
         <div class="clear"></div>
       </div>
       <div class="print-only">
