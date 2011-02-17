@@ -93,7 +93,7 @@ def add_item(request):
                     'course_number': course.course.course_number,
                     'section_number': course.section_number,
                     'title': course.course.title}
-    print section_data
+
     json_data = {'section_data':section_data, 'errors':errors}
     json_data = json.dumps(json_data, indent=2)
     # return JSON object to browser
@@ -436,6 +436,36 @@ def get_calendar_data(request):
                 new_datetime = current_datetime + difference
                 # Reset value of temp_time.
                 temp_time = new_datetime.time()
+    json_data = json.dumps(json_data, indent=2)
+    return HttpResponse(json_data)
+
+def get_calendar_data_new(request):
+    from time import strftime
+    json_data={}
+    temp_data=[]
+    conflicts=[]
+    if request.session.has_key('Cart'):
+        sections = request.session['Cart']
+    if sections != [] and sections != None:
+        cart_items = models.Section.objects.filter(section_code__in=sections)
+        conflicts = conflict_resolution(cart_items)
+    else:
+        cart_items = []
+
+    for item in cart_items:
+        for meeting in item.meeting_set.all():
+            temp_data.append({'section':item.section_code,
+                              'weekdays':meeting.days_of_week.upper(),
+                              'start_date':item.start_date.strftime("%Y-%m-%d"),
+                              'end_date':item.end_date.strftime("%Y-%m-%d"),
+                              'start_hour':meeting.start_time.hour,
+                              'start_minute':meeting.start_time.minute,
+                              'end_hour':meeting.end_time.hour,
+                              'end_minute':meeting.end_time.minute}
+                            )
+
+    json_data = {"meetings":temp_data,"conflicts":conflicts}
+
     json_data = json.dumps(json_data, indent=2)
     return HttpResponse(json_data)
 

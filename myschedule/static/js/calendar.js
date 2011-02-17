@@ -5,8 +5,102 @@ $(function() {
 
 loadCalendar = function(){
     $.post(basePath + 'schedule/calendar/', {}, function(calendar_data){
-        createCalendar(calendar_data);    
+        createCalendarNew(calendar_data);    
     }, 'json');
+};
+
+createCalendarNew = function(c_data)
+{
+    var calendar_hours = [6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22];
+    var calendar_days = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+    var calendar_minutes = [0,5,10,15,20,25,30,35,40,45,50,55];
+
+
+    conflicts = String(c_data.conflicts.conflicting_sections);
+    calendar_data = c_data.meetings;
+
+    $('div[id^="min-div"]').removeClass('busy').removeClass('busy-with-conflict').attr('title','');
+    for (var i=0; i < calendar_data.length; i++){
+        var weekdays = [];
+        days = calendar_data[i].weekdays;
+        start_hour = calendar_data[i].start_hour;
+        start_minute = calendar_data[i].start_minute;
+        end_hour = calendar_data[i].end_hour;
+        end_minute = calendar_data[i].end_minute;
+        section = calendar_data[i].section;
+        start_date = new Date(calendar_data[i].start_date);
+        end_date = new Date(calendar_data[i].end_date);
+
+        if (days.indexOf('M')!=-1){
+            weekdays.push('Mo');
+        }
+        if (days.indexOf('T')!=-1){
+            weekdays.push('Tu');
+        }
+        if (days.indexOf('W')!=-1){
+            weekdays.push('We');
+        }
+        if (days.indexOf('R')!=-1){
+            weekdays.push('Th');
+        }
+        if (days.indexOf('F')!=-1){
+            weekdays.push('Fr');
+        }
+        if (days.indexOf('S')!=-1){
+            weekdays.push('Sa');
+        }
+        if (days.indexOf('U')!=-1){
+            weekdays.push('Su');
+        }
+        new_title = '';
+
+        temp_hour = start_hour;
+        temp_minute = start_minute;
+        
+        while (temp_hour <= end_hour){
+            while ((temp_hour<end_hour && (temp_minute <= end_minute || temp_minute<=55)) || (temp_hour == end_hour && temp_minute <= end_minute)){
+                for (var j=0; j<weekdays.length; j++){
+                    class_to_add = 'busy';
+                    if ($('#min-div-'+weekdays[j]+'-'+temp_hour+'-'+temp_minute).attr('title')){
+                        current_title = $('#min-div-'+weekdays[j]+'-'+temp_hour+'-'+temp_minute).attr('title');
+                        if (current_title.indexOf(section) == -1){
+                            new_title = current_title + ', ' + section;
+                            $('#min-div-'+weekdays[j]+'-'+temp_hour+'-'+temp_minute).removeClass('busy').removeClass('busy-with-conflict');
+                            if (conflicts.indexOf(section) != -1){
+                                temp_array = new_title.split(",");
+                                for (var k=0; k<temp_array.length; k++){
+                                    if (temp_array[k] != section){
+                                        for (var n=0; n<calendar_data.length; n++){
+                                            temp_start_date = new Date(calendar_data[n].start_date);
+                                            temp_end_date = new Date(calendar_data[n].end_date);
+                                            if ((start_date >= temp_start_date && start_date <= temp_end_date) || (end_date >= temp_start_date && end_date <= temp_end_date)){
+                                                class_to_add = 'busy-with-conflict';
+                                            }
+
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else{
+                            new_title = current_title;
+                        }
+                    }
+                    else{
+                        new_title = section;
+                    }
+       
+                    $('#min-div-'+weekdays[j]+'-'+temp_hour+'-'+temp_minute).addClass(class_to_add).attr('title',new_title);
+                    if (temp_minute == '0'){
+                        $('#min-div-'+weekdays[j]+'-'+temp_hour+'-0').parent().attr('title', new_title);
+                    }
+                }
+                temp_minute = temp_minute + 5;
+            }
+            temp_hour = temp_hour +1;
+            temp_minute = 0;
+        }
+    }
 };
 
 createCalendar = function(calendar_data)
