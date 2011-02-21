@@ -454,10 +454,13 @@ def get_calendar_data_new(request):
 
     for item in cart_items:
         for meeting in item.meeting_set.all():
+            # start date and end date must be sent in the format m/d/Y so IE can
+            # convert it to a date (of course the other browsers are not so
+            # picky)
             temp_data.append({'section':item.section_code,
                               'weekdays':meeting.days_of_week.upper(),
-                              'start_date':item.start_date.strftime("%Y-%m-%d"),
-                              'end_date':item.end_date.strftime("%Y-%m-%d"),
+                              'start_date':item.start_date.strftime("%m/%d/%Y"),
+                              'end_date':item.end_date.strftime("%m/%d/%Y"),
                               'start_hour':meeting.start_time.hour,
                               'start_minute':meeting.start_time.minute,
                               'end_hour':meeting.end_time.hour,
