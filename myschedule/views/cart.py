@@ -313,7 +313,8 @@ def display_cart(request, sections_url=None):
     sections = request.session['Cart']
 
     if sections != [] and sections != None:
-        cart_items = models.Section.objects.filter(section_code__in=sections)
+        cart_items = models.Section.objects.filter(
+                section_code__in=sections).order_by('end_date','section_code')
         conflicts = conflict_resolution(cart_items)
 
     return direct_to_template(request,
@@ -339,7 +340,8 @@ def email_schedule(request):
         sections = request.session['Cart']
         for item in sections:
             sections_url = sections_url + item + '/'
-    cart_items = models.Section.objects.filter(section_code__in=sections)
+    cart_items = models.Section.objects.filter(
+                section_code__in=sections).order_by('end_date','section_code')
     app_host = request.get_host()
     schedule_url = reverse('display_cart',args=[sections_url])
     email_message = "View this schedule online at http://%s%s.\n\n" % (app_host, schedule_url)
@@ -419,7 +421,8 @@ class SQSSearchView(SearchView):
         # know if need to display a warning message to user.
         if self.request.session.has_key('Cart'):
             cart_items = models.Section.objects.filter(
-                section_code__in=self.request.session['Cart'])
+                section_code__in=self.request.session['Cart']).order_by(
+                'end_date','section_code')
             conflicts = conflict_resolution(cart_items)
         else:
             cart_items = []
