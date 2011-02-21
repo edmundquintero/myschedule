@@ -28,6 +28,12 @@
         <a href="{% url show_schedule %}"><img src="{% url appstatic "img/view_full_schedule_button.png" %}" alt="View Full Schedule"/></a>
       </div>
     {% endblock %}
-
+    {% comment %}
+    If calendar.html needs to be updated, the easiest way to do so
+    is to load up firebug and copy out the html (of an empty calendar of course).
+    I was originally generating the html via javascript, but unfortunately IE7
+    seemed to make that an acutely slow process - hence the reason for dumping
+    it to a template file.
+    {% endcomment %}
     {% include "myschedule/calendar.html" %}
 {% endblock %}

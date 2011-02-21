@@ -29,7 +29,6 @@ urlpatterns += patterns('myschedule.views.cart',
     url(r'^schedule/calendar/$', 'get_calendar_data', name='get_calendar_data'),
     url(r'^schedule/conflicts/$', 'get_conflicts', name='get_conflicts'),
     url(r'^schedule_login/([-\w/]+)/$', 'schedule_login', name='schedule_login'),
-    url(r'^test_add/([\d]+)$', 'delete_this_before_production', name='dtbp'),
 )
 
 # if settings.DEBUG:

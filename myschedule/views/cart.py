@@ -438,25 +438,3 @@ class SQSSearchView(SearchView):
             request.session.modified = True
         return super(SQSSearchView, self).__call__(request)
 
-def delete_this_before_production(request, id):
-    if request.session.has_key('current_query'):
-        course = get_object_or_404(models.Course, id=id)
-        correlation = models.Correlation()
-        correlation.criterion = request.session['current_query']
-        if request.session.has_key('previous_query'):
-            if request.session['previous_query'] not in settings.BLACKLIST:
-                correlation.species = models.Correlation.WRONG_TERM
-                correlation.criterion = correlation.criterion + '|' + request.session['previous_query']
-            del request.session['previous_query']    
-        else:
-            correlation.species = models.Correlation.SUCCESSFUL_SEARCH
-        del request.session['current_query']
-        request.session.modified = True
-        correlation.course = course
-        correlation.save()
-        course.add_count = str(int(course.add_count) + 1)
-        course.save()
-        words = 'Good Jorb! Add Count for %s: %s' % (course.title, course.add_count)
-        return HttpResponse('Good Jorb! Add Count for %s: %s\nCorrelation: criterion - %s / species - %s' % (course.title, course.add_count, correlation.criterion, correlation.species))
-    else:
-        return HttpResponse('Well, that didn\'t work')
