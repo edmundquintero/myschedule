@@ -13,12 +13,12 @@ createCalendar = function(calendar_data)
 {
     // This function cycles through the meeting data passed to it and sets the
     // appropriate class on the time divs to indicate busy times and busy times
-    // that are in conflict to (due to multiple classes with the same time).
+    // that are in conflict (due to multiple classes with the same time).
     conflicts = String(calendar_data.conflicts.conflicting_sections);
     meetings = calendar_data.meetings;
 
-    // Clear out the calendar by removing any classes and title values currently assigned.
-    $('div[id^="min-div"]').removeClass('busy').removeClass('busy-with-conflict').attr('title','');
+    // Clear out the calendar by removing any classes and title/sections values currently assigned.
+    $('div[id^="min-div"]').removeClass('busy').removeClass('busy-with-conflict').attr('title','').attr('sections','');
 
 
     for (var i=0; i < meetings.length; i++){
@@ -54,6 +54,7 @@ createCalendar = function(calendar_data)
             weekdays.push('Su');
         }
         new_title = '';
+        new_sections = '';
 
         temp_hour = start_hour;
         temp_minute = start_minute;
@@ -67,12 +68,15 @@ createCalendar = function(calendar_data)
                 for (var j=0; j<weekdays.length; j++){
                     // default class is busy
                     class_to_add = 'busy';
-                    if ($('#min-div-'+weekdays[j]+'-'+temp_hour+'-'+temp_minute).attr('title')){
-                        // If the title has already been set for a time div, the potential for conflict exists -
-                        // it will depend upon whether or not the start and end dates of the classes overlap.
+                    if ($('#min-div-'+weekdays[j]+'-'+temp_hour+'-'+temp_minute).attr('sections')){
+                        // If the title and sections attributes have already been set for a time div,
+                        // the potential for conflict exists - it will depend upon whether or not the
+                        // start and end dates of the classes overlap.
                         current_title = $('#min-div-'+weekdays[j]+'-'+temp_hour+'-'+temp_minute).attr('title');
-                        if (current_title.indexOf(section) == -1){
-                            new_title = current_title + ', ' + section;
+                        current_sections = $('#min-div-'+weekdays[j]+'-'+temp_hour+'-'+temp_minute).attr('sections');
+                        if (current_sections.indexOf(section) == -1){
+                            new_title = current_title + ', ' + section.replace(/-/g,' ').replace('fa','Fall').replace('sp','Spring').replace('su','Summer');
+                            new_sections = current_sections + ',' +section;
                             // Remove any previous busy class that was set for this div (it may have been previously
                             // classified as busy and now it might need to be busy-with-conflict.
                             $('#min-div-'+weekdays[j]+'-'+temp_hour+'-'+temp_minute).removeClass('busy');
@@ -85,9 +89,9 @@ createCalendar = function(calendar_data)
                             if (conflicts.indexOf(section) != -1){
                                 // In order to determine which sections this one could potentially be in
                                 // a time conflict with, we compare the class start and end dates for this section
-                                // against the other sections that were already added to the title for this
+                                // against the other sections that were already added to the sections attribute for this
                                 // div.
-                                temp_sections = new_title.replace(" ","").split(",");
+                                temp_sections = new_sections.split(",");
                                 for (var k=0; k<temp_sections.length; k++){
                                     // Make sure we don't compare it to itself.
                                     if (temp_sections[k] != section && conflicts.indexOf(temp_sections[k]) != -1){
@@ -112,14 +116,16 @@ createCalendar = function(calendar_data)
                             // Shouldn't really have this situation - it was mean the section had already been
                             // processed.
                             new_title = current_title;
+                            new_sections = current_sections;
                         }
                     }
                     else{
                         // This would be the first (and possibly only) section in this time slot.
-                        new_title = section;
+                        new_title = section.replace(/-/g,' ').replace('fa','Fall').replace('sp','Spring').replace('su','Summer');
+                        new_sections = section;
                     }
-                    // Actually apply the class and title to the time div.
-                    $('#min-div-'+weekdays[j]+'-'+temp_hour+'-'+temp_minute).addClass(class_to_add).attr('title',new_title);
+                    // Actually apply the class plus title and sections attributes to the time div.
+                    $('#min-div-'+weekdays[j]+'-'+temp_hour+'-'+temp_minute).addClass(class_to_add).attr('title',new_title).attr('sections',new_sections);
                     if (temp_minute == '0'){
                         // Because of how the divs are laid out, if this happens to be the first
                         // min-div in the weekday-hour-div, also apply the same title to the
