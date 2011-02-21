@@ -379,67 +379,6 @@ def email_schedule(request):
     return HttpResponse(json_data)
 
 def get_calendar_data(request):
-    import datetime
-    current_date = datetime.date.today()
-    difference = datetime.timedelta(minutes=5)
-    sections = []
-    if request.session.has_key('Cart'):
-        sections = request.session['Cart']
-    if sections != [] and sections != None:
-        cart_items = models.Section.objects.filter(section_code__in=sections)
-        #conflicts = conflict_resolution(cart_items)
-    else:
-        cart_items = []
-    json_data = []
-    for item in cart_items:
-        meeting_data = item.meeting_set.all()
-        for meeting in meeting_data:
-            temp_section = (item.course.prefix + ' ' +
-                            item.course.course_number +' ' +
-                            item.section_number)
-            temp_time = meeting.start_time
-            while temp_time <= meeting.end_time:
-                if 'M' in meeting.days_of_week.upper():
-                    meeting_day = 'Mo'
-                    data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
-                    json_data.append(data)
-                if 'T' in meeting.days_of_week.upper():
-                    meeting_day = 'Tu'
-                    data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
-                    json_data.append(data)
-                if 'W' in meeting.days_of_week.upper():
-                    meeting_day = 'We'
-                    data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
-                    json_data.append(data)
-                if 'R' in meeting.days_of_week.upper():
-                    meeting_day = 'Th'
-                    data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
-                    json_data.append(data)
-                if 'F' in meeting.days_of_week.upper():
-                    meeting_day = 'Fr'
-                    data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
-                    json_data.append(data)
-                if 'S' in meeting.days_of_week.upper():
-                    meeting_day = 'Sa'
-                    data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
-                    json_data.append(data)
-                if 'U' in meeting.days_of_week.upper():
-                    meeting_day = 'Su'
-                    data = {'day':meeting_day, 'hour':temp_time.hour, 'minute':temp_time.minute, 'section':temp_section}
-                    json_data.append(data)
-                # Take existing time and convert into datetime object.
-                current_datetime = datetime.datetime(current_date.year,
-                                      current_date.month, current_date.day,
-                                      temp_time.hour, temp_time.minute,
-                                      temp_time.second)
-                # Increment time by 5 minutes.
-                new_datetime = current_datetime + difference
-                # Reset value of temp_time.
-                temp_time = new_datetime.time()
-    json_data = json.dumps(json_data, indent=2)
-    return HttpResponse(json_data)
-
-def get_calendar_data_new(request):
     from time import strftime
     json_data={}
     temp_data=[]
