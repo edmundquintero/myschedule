@@ -12,6 +12,8 @@ from cpsite.decorators import groups_required
 
 from myschedule import models, forms
 
+from time import strftime
+
 """
     What is a cart?
     The cart represents the schedule that is currently being edited
@@ -329,7 +331,7 @@ def email_schedule(request):
     """
     from django.core.mail import send_mail
     from datetime import date
-    from time import strftime
+
     email_addresses = request.POST['email_addresses']
     to_addressees = email_addresses.split(",")
     to_addressees.remove('')
@@ -381,18 +383,15 @@ def email_schedule(request):
     return HttpResponse(json_data)
 
 def get_calendar_data(request):
-    from time import strftime
-    json_data={}
-    temp_data=[]
-    conflicts=[]
+    json_data = {}
+    temp_data = []
+    conflicts = []
+    cart_items = []
     if request.session.has_key('Cart'):
         sections = request.session['Cart']
-    if sections != [] and sections != None:
-        cart_items = models.Section.objects.filter(section_code__in=sections)
-        conflicts = conflict_resolution(cart_items)
-    else:
-        cart_items = []
-
+        if sections != [] and sections != None:
+            cart_items = models.Section.objects.filter(section_code__in=sections)
+            conflicts = conflict_resolution(cart_items)
     for item in cart_items:
         for meeting in item.meeting_set.all():
             # start date and end date must be sent in the format m/d/Y so IE can
@@ -409,8 +408,8 @@ def get_calendar_data(request):
                             )
 
     json_data = {"meetings":temp_data,"conflicts":conflicts}
-
     json_data = json.dumps(json_data, indent=2)
+
     return HttpResponse(json_data)
 
 class SQSSearchView(SearchView):
