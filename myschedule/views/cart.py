@@ -352,10 +352,22 @@ def email_schedule(request):
             "%s %s - %s %s \n" % (item.course.prefix,
                                   item.course.course_number,
                                   item.section_number,
-                                  item.course.title) +
+                                  item.course.title)
+        )
+        if item.tuition != '' and item.tuition != '0.00':
+            message = message + (
+                "Tuition: $%s \n" % (item.tuition)
+            )
+        message = message + (
             "Synonym: %s \n" % (item.synonym) +
             "Instructor: %s \n" % (item.instructor_name) +
-            "Meets: %s \n" % (item.campus))
+            "Term: %s %s %s \n" % (item.term.upper().replace('FA','Fall').replace(
+                                    'SU','Summer').replace('SP','Spring'),
+                                    item.year, item.session) +
+            "Meets: From %s to %s at %s \n" % (item.start_date.strftime("%m/%d/%Y"),
+                                               item.end_date.strftime("%m/%d/%Y"),
+                                               item.campus)
+        )
         for meeting in item.meeting_set.all():
             message = message + (
                 "       %s - %s %s   %s %s - %s \n" % (
@@ -366,6 +378,10 @@ def email_schedule(request):
                 meeting.start_time.strftime("%I:%M %p"),
                 meeting.end_time.strftime("%I:%M %p"))
             )
+        message = message + ("Delivery type: %s \n" % (item.delivery_type))
+        if item.note:
+            message = message + (
+                "Note: %s \n" % (item.note))
         message = message + (
             "View book information at %s. \n" % (item.book_link)
         )
