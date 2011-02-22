@@ -326,11 +326,8 @@ def display_cart(request, sections_url=None):
                              )
 
 def email_schedule(request):
-    """
-        Processes javascript request to email schedule.
-    """
     from django.core.mail import send_mail
-    from datetime import date
+    from django.template import loader, Context
 
     email_addresses = request.POST['email_addresses']
     to_addressees = email_addresses.split(",")
@@ -346,46 +343,10 @@ def email_schedule(request):
                 section_code__in=sections).order_by('end_date','section_code')
     app_host = request.get_host()
     schedule_url = reverse('display_cart',args=[sections_url])
-    email_message = "View this schedule online at http://%s%s.\n\n" % (app_host, schedule_url)
-    for item in cart_items:
-        message = (
-            "%s %s - %s %s \n" % (item.course.prefix,
-                                  item.course.course_number,
-                                  item.section_number,
-                                  item.course.title)
-        )
-        if item.tuition != '' and item.tuition != '0.00':
-            message = message + (
-                "Tuition: $%s \n" % (item.tuition)
-            )
-        message = message + (
-            "Synonym: %s \n" % (item.synonym) +
-            "Instructor: %s \n" % (item.instructor_name) +
-            "Term: %s %s %s \n" % (item.term.upper().replace('FA','Fall').replace(
-                                    'SU','Summer').replace('SP','Spring'),
-                                    item.year, item.session) +
-            "Meets: From %s to %s at %s \n" % (item.start_date.strftime("%m/%d/%Y"),
-                                               item.end_date.strftime("%m/%d/%Y"),
-                                               item.campus)
-        )
-        for meeting in item.meeting_set.all():
-            message = message + (
-                "       %s - %s %s   %s %s - %s \n" % (
-                meeting.meeting_type,
-                meeting.building,
-                meeting.room,
-                meeting.days_of_week.upper().replace('R','Th').replace('U','Su'),
-                meeting.start_time.strftime("%I:%M %p"),
-                meeting.end_time.strftime("%I:%M %p"))
-            )
-        message = message + ("Delivery type: %s \n" % (item.delivery_type))
-        if item.note:
-            message = message + (
-                "Note: %s \n" % (item.note))
-        message = message + (
-            "View book information at %s. \n" % (item.book_link)
-        )
-        email_message = email_message + message + '\n'
+    schedule_url = "http://%s%s" % (app_host, schedule_url)
+    text_template = loader.get_template('myschedule/email.txt')
+    c = Context(dict({'schedule_url':schedule_url, 'cart_items':cart_items}))
+    email_message = text_template.render(c)
     if email_message != "":
         send_mail('CPCC schedule',
                   email_message,

@@ -1,0 +1,21 @@
+{% load myschedule_filters %}
+View this schedule online at {{ schedule_url }}.
+
+{% for item in cart_items %}
+
+  {{ item.course.prefix }} {{ item.course.course_number }} - {{ item.section_number }} {{ item.course.title }}
+  {% ifequal item.course.academic_level 'Corporate and Continuing Education' %}CEUs: {{ item.ceus }}{% endifequal %}{% ifequal item.course.academic_level 'Curriculum' %}Credit Hours: {{ item.credit_hours }}{% endifequal %} {% ifnotequal item.tuition "0.00" %}Tuition: ${{ item.tuition }}{% endifnotequal %}
+  Synonym: {{ item.synonym }}
+  Instructor: {{ item.instructor_name }}
+  Term: {{ item.term|format_term }} {{ item.year }} {% if item.session %}{{ item.session }}{% endif %}
+  Meets: From {{ item.start_date|date:"n-j-Y" }} to {{ item.end_date|date:"n-j-Y" }} at {{ item.campus }}
+  {% for meeting in item.meeting_set.all %}{{ meeting.meeting_type }} - {{ meeting.building }} {{ meeting.room }}   {{ meeting.days_of_week|days_of_week }} {{ meeting.start_time|time:"g:i A" }} - {{ meeting.end_time|time:"g:i A" }}
+  {% endfor %}
+  {{ item.delivery_type }}
+  {% if item.note %}Note: {{ item.note }}{% endif %}
+  View book information at {% autoescape off %}{{ item.book_link|iriencode }}{% endautoescape %}.
+
+____________
+{% endfor %}
+
+
