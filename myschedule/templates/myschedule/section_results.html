@@ -32,7 +32,7 @@
         <div class="course-content">
           <div class="course-metadata">
             <p class="course-number">{{ sections.0.course.prefix }} {{ sections.0.course.course_number }}</p>
-            <p class="course-hours">{% ifequal sections.0.course.academic_level 'Corporate and Continuing Education' %}CEUs<br/>{{ sections.0.ceus }}{% endifequal %}{% ifequal sections.0.course.academic_level 'Curriculum' %}Credit Hours<br/>{{ sections.0.credit_hours }}{% endifequal %}</p>
+            <p class="course-hours">{% if sections.0.ceus %}CEUs<br/>{{ sections.0.ceus }}{% else %}{% if sections.0.credit_hours %}Credit Hours<br/>{{ sections.0.credit_hours }}{% else %}No Credit{% endif %}{% endif %}</p>
           </div>
          <div class="course-description">
             <p class="course-name">{{ sections.0.course.title }}</p>
