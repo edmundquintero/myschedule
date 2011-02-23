@@ -73,7 +73,8 @@ closeDialog = function()
 sendEmail = function()
 {
     // Separate email addresses and validate they are properly formatted.
-    var emails = $('#id_email').val().replace(/ /g,''); // removes spaces
+    // Separate on commas, spaces, and carriage returns or line feeds.
+    var emails = $('#id_email').val().replace(/ /g,',').replace(/\r\n/g,',').replace(/\n/g,',');
     var email_list = emails.split(',');
     var invalid_emails = '';
     var valid_emails = '';

@@ -311,7 +311,7 @@ def display_cart(request, sections_url=None):
         sections.remove('')
         request.session['Cart'] = sections
     # TODO: get all the other information regarding a course section that
-    # needs to be displayed
+    # needs to be displayed (still need seat count and actual contact hours)
     sections = request.session['Cart']
 
     if sections != [] and sections != None:
@@ -326,40 +326,56 @@ def display_cart(request, sections_url=None):
                              )
 
 def email_schedule(request):
+    """
+        Called from javascript to email schedule to addressees passed from
+        javascript.
+    """
     from django.core.mail import send_mail
     from django.template import loader, Context
 
-    email_addresses = request.POST['email_addresses']
-    to_addressees = email_addresses.split(",")
-    to_addressees.remove('')
     errors = ''
     sections = []
     sections_url = ''
-    if 'Cart' in request.session:
-        sections = request.session['Cart']
-        for item in sections:
-            sections_url = sections_url + item + '/'
-    cart_items = models.Section.objects.filter(
-                section_code__in=sections).order_by('end_date','section_code')
-    app_host = request.get_host()
-    schedule_url = reverse('display_cart',args=[sections_url])
-    schedule_url = "http://%s%s" % (app_host, schedule_url)
-    text_template = loader.get_template('myschedule/email.txt')
-    c = Context(dict({'schedule_url':schedule_url, 'cart_items':cart_items}))
-    email_message = text_template.render(c)
-    if email_message != "":
-        send_mail('CPCC schedule',
-                  email_message,
-                  "myschedule@cpcc.edu",
-                  to_addressees,
-                  auth_user=None,
-                  auth_password=None)
+    try:
+        email_addresses = request.POST['email_addresses']
+        to_addressees = email_addresses.split(",")
+        to_addressees.remove('')
+
+        if 'Cart' in request.session:
+            sections = request.session['Cart']
+            for item in sections:
+                sections_url = sections_url + item + '/'
+            if sections != []:
+                cart_items = models.Section.objects.filter(
+                    section_code__in=sections).order_by('end_date','section_code')
+                app_host = request.get_host()
+                schedule_url = reverse('display_cart',args=[sections_url])
+                schedule_url = "http://%s%s" % (app_host, schedule_url)
+                text_template = loader.get_template('myschedule/email.txt')
+                c = Context(dict({'schedule_url':schedule_url, 'cart_items':cart_items}))
+                email_message = text_template.render(c)
+                if email_message != "":
+                    send_mail('CPCC schedule',
+                        email_message,
+                        "myschedule@cpcc.edu",
+                        to_addressees,
+                        auth_user=None,
+                        auth_password=None)
+            else:
+                raise ValueError("No classes in schedule.")
+    except Exception, e:
+        errors = 'Received error "%s" when trying to send email.' % (e)
+
     json_data = {'errors':errors}
     json_data = json.dumps(json_data)
     # return JSON object to browser
     return HttpResponse(json_data)
 
 def get_calendar_data(request):
+    """
+        Returns schedule data to calling javascript function which will use
+        the data to update the calendar display.
+    """
     json_data = {}
     temp_data = []
     conflicts = []
