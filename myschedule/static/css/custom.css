@@ -382,7 +382,7 @@ li.schedule-li {
 table.calendar-table {
     font-size: 10px;
     width: 95%;
-    margin-left: 4px;
+    margin-left: 5px;
     background-color: white;
 }
 
@@ -419,6 +419,10 @@ table.calendar-table th {
 
 .busy-with-conflict {
     background-color: #e5740e;
+}
+
+div.sidebar-message {
+    margin-left: 5px;
 }
 
 span.print-only, div.print-only {

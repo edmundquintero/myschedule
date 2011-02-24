@@ -17,9 +17,10 @@ createCalendar = function(calendar_data)
     conflicts = String(calendar_data.conflicts.conflicting_sections);
     meetings = calendar_data.meetings;
 
+    // Hide the sidebar conflict message.
+    $('.sidebar-message').hide();
     // Clear out the calendar by removing any classes and title/sections values currently assigned.
     $('div[id^="min-div"]').removeClass('busy').removeClass('busy-with-conflict').attr('title','').attr('sections','');
-
 
     for (var i=0; i < meetings.length; i++){
         var weekdays = [];
@@ -105,6 +106,7 @@ createCalendar = function(calendar_data)
                                                 if ((start_date >= temp_start_date && start_date <= temp_end_date) || (end_date >= temp_start_date && end_date <= temp_end_date)){
                                                     // This section is in conflict with another.
                                                     class_to_add = 'busy-with-conflict';
+                                                    $('.sidebar-message').show();
                                                 }
                                             }
                                         }

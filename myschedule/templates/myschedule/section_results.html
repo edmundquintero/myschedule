@@ -51,23 +51,29 @@
           <div class="section-top">
             <div class="section-number">Section {{ section.section_number }}</div>
             <div class="section-heading">Meets</div>
-            <a class="add-item" href="#add" ref="section_{{ section.section_code }}"><img src="{% url appstatic "img/add_button.png" %}" alt="Add" /></a>
+            {% ifnotequal section.status 'Cancelled' %}
+              <a class="add-item" href="#add" ref="section_{{ section.section_code }}"><img src="{% url appstatic "img/add_button.png" %}" alt="Add" /></a>
+            {% endifnotequal %}
           </div>
           <div class="section-content">
             <div class="section-seats">
               <table>
-                {% if section.seat_count != "Seat count unavailable" %}
-                  <tr>
-                    <td class="section-seats-label">Seats Available</td>
-                  </tr>
-                  <tr>
-                    <td class="section-seats-number">{{ section.seat_count }}10</td>
-                  </tr>
+                {% ifequal section.status 'Cancelled' %}
+                  <td class="section-seats-number">Cancelled</td>
                 {% else %}
-                  <tr>
-                    <td class="section-seats-label">{{ section.seat_count }}</td>
+                  {% if section.seat_count != "Seat count unavailable" %}
+                    <tr>
+                      <td class="section-seats-label">Seats Available</td>
                     </tr>
-                {% endif %}
+                    <tr>
+                      <td class="section-seats-number">{{ section.seat_count }}10</td>
+                    </tr>
+                  {% else %}
+                    <tr>
+                      <td class="section-seats-label">{{ section.seat_count }}</td>
+                    </tr>
+                  {% endif %}
+                {% endifequal %}
                 {% ifnotequal section.tuition "0.00" %}
                   <tr>
                     <td class="section-tuition">Tuition ${{ section.tuition }}</td>

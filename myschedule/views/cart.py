@@ -21,7 +21,6 @@ from time import strftime
 """
 
 @login_required
-#@groups_required(['Students'])
 def schedule_login(request, next):
     """
         Instead of sign in links calling login, pass the user through here
@@ -47,8 +46,6 @@ def schedule_login(request, next):
             if saved_sections:
                 # Compare previously saved items to the cart. Add any
                 # saved items that aren't already in it to the cart.
-                # Possible TODO: check to see if the section is still active
-                # before adding it to the cart.
                 for item in saved_sections:
                     if item not in cart_sections:
                         cart_sections.append(item)
