@@ -127,7 +127,10 @@ createCalendar = function(calendar_data)
                         new_sections = section;
                     }
                     // Actually apply the class plus title and sections attributes to the time div.
-                    $('#min-div-'+weekdays[j]+'-'+temp_hour+'-'+temp_minute).addClass(class_to_add).attr('title',new_title).attr('sections',new_sections);
+                    // (Don't apply if time is past 10:30 pm - otherwise it will overrun bottom of calendar.)
+                    if (parseInt(temp_hour) < 22 || (parseInt(temp_hour) == 22 && parseInt(temp_minute) <= 30)){
+                        $('#min-div-'+weekdays[j]+'-'+temp_hour+'-'+temp_minute).addClass(class_to_add).attr('title',new_title).attr('sections',new_sections);
+                    }
                     if (temp_minute == '0'){
                         // Because of how the divs are laid out, if this happens to be the first
                         // min-div in the weekday-hour-div, also apply the same title to the

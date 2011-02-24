@@ -90,7 +90,8 @@
                   <td class="section-room">Rm {{ meeting.building }} {{ meeting.room }}</td>
                   <td class="section-type">{{ meeting.meeting_type }}</td>
                   <td class="section-days">{{ meeting.days_of_week|days_of_week }}</td>
-                  <td class="section-time">{{ meeting.start_time|time:"g:i A" }} - {{ meeting.end_time|time:"g:i A" }}</td>
+                  
+                  <td class="section-time">{% if not meeting.is_online %}{{ meeting.start_time|time:"g:i A" }} - {{ meeting.end_time|time:"g:i A" }}{% endif %}</td>
                 </tr>
               {% endfor %}
               <tr>

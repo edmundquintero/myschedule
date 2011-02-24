@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
 
+from time import strftime
+
 class Schedule(models.Model):
     """
         Stores the user's saved schedules. Sections is a url parameter containing
@@ -176,6 +178,12 @@ class Meeting(MeetingAbstract):
         Meeting specific information, related to a Section, preformulated in the API
     """
     section = models.ForeignKey(Section, blank=False)
+
+    def is_online(self):
+        if (self.start_time.strftime("%H:%M:%S") == '00:00:00' and
+                self.end_time.strftime("%H:%M:%S") == '00:00:00'):
+            return True
+        return False
 
 
 class MeetingTemp(MeetingAbstract):

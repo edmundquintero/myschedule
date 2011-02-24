@@ -384,17 +384,22 @@ def get_calendar_data(request):
             conflicts = conflict_resolution(cart_items)
     for item in cart_items:
         for meeting in item.meeting_set.all():
-            # start date and end date must be sent in the format m/d/Y so IE can
+            # Start date and end date must be sent in the format m/d/Y so IE can
             # convert it to a date (of course the other browsers are not so
-            # picky)
+            # picky).
+            # The fancy math on the start minute and end minute are to ensure
+            # all the times are rounded to the nearest 5 minute increment
+            # (rounds down) since the calendar is laid out in five minute
+            # increments. Some classes seem  to have peculiar start and end
+            # times.
             temp_data.append({'section':item.section_code,
                               'weekdays':meeting.days_of_week.upper(),
                               'start_date':item.start_date.strftime("%m/%d/%Y"),
                               'end_date':item.end_date.strftime("%m/%d/%Y"),
                               'start_hour':meeting.start_time.hour,
-                              'start_minute':meeting.start_time.minute,
+                              'start_minute':round(meeting.start_time.minute/5)*5,
                               'end_hour':meeting.end_time.hour,
-                              'end_minute':meeting.end_time.minute}
+                              'end_minute':round(meeting.end_time.minute/5)*5}
                             )
 
     json_data = {"meetings":temp_data,"conflicts":conflicts}
