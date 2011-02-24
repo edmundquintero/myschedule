@@ -19,6 +19,7 @@ $(function() {
     });
 });
 
+// Additional processing when user selects an add link.
 function addItem(section)
 {
     $.post(basePath + 'cart/add/', {section: section}, function(data){
