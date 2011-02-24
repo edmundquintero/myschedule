@@ -1,5 +1,5 @@
 {% load myschedule_filters %}
-View this schedule online at {{ schedule_url }}.
+Current class status and seat availability can be viewed for this schedule online at {{ schedule_url }}.
 
 {% for item in cart_items %}
 
@@ -9,7 +9,7 @@ View this schedule online at {{ schedule_url }}.
   Instructor: {{ item.instructor_name }}
   Term: {{ item.term|format_term }} {{ item.year }} {% if item.session %}{{ item.session }}{% endif %}
   Meets: From {{ item.start_date|date:"n-j-Y" }} to {{ item.end_date|date:"n-j-Y" }} at {{ item.campus }}
-  {% for meeting in item.meeting_set.all %}{{ meeting.meeting_type }} - {{ meeting.building }} {{ meeting.room }}   {{ meeting.days_of_week|days_of_week }} {{ meeting.start_time|time:"g:i A" }} - {{ meeting.end_time|time:"g:i A" }}
+  {% for meeting in item.meeting_set.all %}{{ meeting.meeting_type }} - {{ meeting.building }} {{ meeting.room }}   {{ meeting.days_of_week|days_of_week }} {% if not meeting.is_online %}{{ meeting.start_time|time:"g:i A" }} - {{ meeting.end_time|time:"g:i A" }}{% endif %}
   {% endfor %}
   {{ item.delivery_type }}
   {% if item.note %}Note: {{ item.note }}{% endif %}
