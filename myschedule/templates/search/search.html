@@ -29,7 +29,7 @@
 			        <p class="course-hours">{% if result.object.section_set.all %}{% if result.object.section_set.all.0.ceus %}CEUs<br />{{ result.object.section_set.all.0.ceus }}{% else %}{% if result.object.section_set.all.0.credit_hours %}Credit Hours<br />{{ result.object.section_set.all.0.credit_hours }}{% else %}No Credit{% endif %}{% endif %}{% endif %}</p>
 		        </div>
 		        <div class="course-description">
-			        <p class="course-name"><a href="{% url show_sections result.object.id %}">{{ result.object.title }}</a></span>
+			        <p class="course-name">{% if result.object.section_set.all %}<a href="{% url show_sections result.object.id %}">{{ result.object.title }}</a>{% else %}{{ result.object.title }}{% endif %}</span>
 			        <p>{{ result.object.description|truncatewords:23 }}</p>
               <table>
                 <tr>

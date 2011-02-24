@@ -1,18 +1,19 @@
 $(function() {
     $('a.add-item').click(function() {
         section = $(this).attr('ref').replace('section_','');
-        $(this).parents('.section').hide();
+        // hide the add link so user will know they've already added the section.
+        $(this).hide();
         $('#view-full-schedule').show();
         addItem(section);
     });
 
     // Check each section listed - if it has already been added to the cart
-    // hide it from view (it will be shown later if the item is deleted from the cart).
+    // hide it's add link (it will be shown later if the item is deleted from the schedule).
     $('a.add-item').each(function(){
         section = $(this).attr('ref').replace('section_','');
         $('a.remove-link').each(function(){
             if (section = $(this).attr('ref')){
-                $('#' + section).hide();
+                $('a.add-item[ref="section_'+section+'"]').hide();
             }
         });
     });
@@ -44,9 +45,6 @@ function addItem(section)
                 $('#view-full-schedule').show();
                 $.post(basePath + 'schedule/conflicts/', {}, function(conflicts){ 
                     if (conflicts.conflicts.conflicting_meetings.length > 0){
-                        //for (var i=0; i<conflicts.conflicts.conflicting_meetings.length; i++){
-                        //    $('#'+conflicts.conflicts.conflicting_meetings[i]).addClass('error');
-                        //}
                         if ($('#conflict-message').length == 0){
                             $('#conflict-login-message').append('<p id="conflict-message">This schedule contains scheduling conflicts.</p>');
                         }

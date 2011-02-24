@@ -113,11 +113,11 @@ sendEmail = function()
 
 remove_section = function()
 {
-    // Remove item from sidebar and redisplay in section results (only applies if
-    // user deleted section via sidebar).
+    // Remove item from sidebar and redisplay add link in section results
+    // (only applies if user deleted section via sidebar).
     $(this).parent('li.remove-item').hide();
     section_code = $(this).attr('ref');
-    $('#'+section_code).show();
+    $('a.add-item[ref="section_'+section_code+'"]').show();
     // If all sections were removed from sidebar, hide view-full-schedule button.
     sidebar_section_count = $('li.remove-item').length;
     sidebar_hidden_count = $('li.remove-item:hidden').length;
