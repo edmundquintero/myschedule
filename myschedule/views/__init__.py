@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from cpsite import ods
 
 import string
+from datetime import datetime
 
 # from cpsite.decorators import groups_required
 
@@ -67,7 +68,7 @@ def show_sections(request, course_id):
              'conflicts':conflicts}
     )
 
-def update_courses(request):
+def update_courses_old(request):
     """
         Calls the ods api to get current course data (includes sections and
         meetings) and passes that data to the api that creates the records
@@ -108,11 +109,42 @@ def update_courses(request):
 
     return HttpResponse('true')
 
-def drop_tables():
+def update_courses(request):
+    from django.utils import simplejson as json
+
+    status = ''
+
+    if request.method == 'POST':
+        temp = request.raw_post_data
+
+        data = json.loads(temp)
+        #print data
+        #print len(data)
+
+        # Drop temporary tables
+        drop_temporary_tables()
+
+        # Re-create temporary tables
+        create_tables()
+
+        # Load data into temporary tables
+        load_temporary_tables(data)
+
+        # Drop production section and meeting tables
+        drop_production_tables()
+
+        # Re-create production section and meeting tables
+        create_tables()
+
+        # Load data into production tables (copying over from temporary tables)
+        load_production_tables()
+
+    return HttpResponse(status)
+
+def drop_temporary_tables():
     """
-        Drops the temp tables and the section and meeting table.
-        The course table does not get dropped. Course records will
-        be updated and new ones added.
+        Drops the temp tables - production tables won't be dropped
+        until after data is loaded into temp tables.
     """
     from django.db import connection
     cursor = connection.cursor()
@@ -121,10 +153,24 @@ def drop_tables():
         cursor.execute("drop table myschedule_coursetemp")
         cursor.execute("drop table myschedule_sectiontemp")
         cursor.execute("drop table myschedule_meetingtemp")
+    except:
+        errors = 'An error occurred with the temporary table drop.'
+    return errors
+
+def drop_production_tables():
+    """
+        Drops the production section and meeting tables.
+        The course table does not get dropped. Course records will
+        be updated and new ones added.
+    """
+    from django.db import connection
+    cursor = connection.cursor()
+    errors = ''
+    try:
         cursor.execute("drop table myschedule_section")
         cursor.execute("drop table myschedule_meeting")
     except:
-        errors = 'An error occurred with the table drop.'
+        errors = 'An error occurred with the production table drop.'
     return errors
 
 def create_tables():
@@ -136,10 +182,65 @@ def create_tables():
     try:
         management.call_command('syncdb')
     except:
-        errors = 'An error occurred with the sync.'
+        errors = 'An error occurred with the table sync.'
     return errors
 
-def load_courses():
+def load_temporary_tables(data):
+    import traceback
+    processed = 0
+    for item in data:
+        try:
+            course = models.CourseTemp(
+                        course_code=item['course_code'],
+                        prefix=item['prefix'],
+                        course_number=item['course_number'],
+                        title=item['title'],
+                        description=item['description'],
+                        academic_level=item['academic_level'],
+                        department=item['department'],
+                        note=item['note']
+                    )
+            course.save()
+            if item['sectiontemp_set'] != []:
+                for section in item['sectiontemp_set']:
+                    new_section = models.SectionTemp(course=course,
+                        section_code=section['section_code'],
+                        section_number=section['section_number'],
+                        term=section['term'],
+                        year=section['year'],
+                        campus=section['campus'],
+                        synonym=section['synonym'],
+                        start_date=datetime.strptime(section['start_date'], "%Y-%m-%d"),
+                        end_date=datetime.strptime(section['end_date'], "%Y-%m-%d"),
+                        contact_hours=section['contact_hours'],
+                        credit_hours=section['credit_hours'],
+                        ceus=section['ceus'],
+                        tuition=section['tuition'],
+                        delivery_type=section['delivery_type'],
+                        note=section['note'],
+                        book_link=section['book_link'],
+                        session=section['session'],
+                        status=section['status'],
+                        instructor_name=section['instructor_name'],
+                        instructor_link=section['instructor_link'])
+                    new_section.save()
+                    if section['meetingtemp_set'] != []:
+                        for meeting in section['meetingtemp_set']:
+                            new_meeting = models.MeetingTemp(section=new_section,
+                                start_time=format_time(meeting['start_time']),
+                                end_time=format_time(meeting['end_time']),
+                                meeting_type=meeting['meeting_type'],
+                                days_of_week=meeting['days_of_week'],
+                                building=meeting['building'],
+                                room=meeting['room'])
+                            new_meeting.save()
+            processed = processed + 1
+        except:
+            print item
+            traceback.print_exc()
+    return processed
+
+def load_production_tables():
     """
         Iterate through the latest data in the coursetemp model. If the course
         isn't in the course model, add it, otherwise update it. Add it's
@@ -200,4 +301,7 @@ def load_courses():
         count = count + 1
     return HttpResponse(str(count))
 
-
+def format_time(time_value):
+    if time_value == "":
+        time_value = "00:00"
+    return datetime.strptime(time_value,"%H:%M")
