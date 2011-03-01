@@ -8,7 +8,7 @@ from cpsite import ods
 
 import string
 from datetime import datetime
-
+import traceback
 # from cpsite.decorators import groups_required
 
 from myschedule import models, forms
@@ -111,35 +111,82 @@ def update_courses_old(request):
 
 def update_courses(request):
     from django.utils import simplejson as json
+    import base64
 
     status = ''
+    warnings = ''
 
     if request.method == 'POST':
-        temp = request.raw_post_data
+        try:
+            # Use the raw post data so that it's not in the form of a django querydict
+            # Read the post data first before attempting to check the authorization.
+            # If a large amount of data is sent, the connection gets reset if try
+            # to throw an error when checking authorization.
+            post_data = request.raw_post_data
 
-        data = json.loads(temp)
-        #print data
-        #print len(data)
+            if request.META.has_key('HTTP_AUTHORIZATION'):
+                # Calling function needs to make sure to remove extraneous line
+                # feed attached to encoded authorization string. Django does not
+                # like it - post data will be messed up.
 
-        # Drop temporary tables
-        drop_temporary_tables()
+                authorization = request.META['HTTP_AUTHORIZATION']
+                authorization = authorization.replace('Basic ','')
+                credentials = base64.decodestring(authorization)
+                credentials = credentials.split(':')
+                # Compare the credentials passed in through the header to
+                # those in the settings to verify calling application is
+                # authorized
+                if (credentials[0] != settings.DATA_CREDENTIALS[0] or
+                        credentials[1] != settings.DATA_CREDENTIALS[1]):
+                    raise ValueError("Invalid credentials")
+            else:
+                raise ValueError("Missing credentials")
 
-        # Re-create temporary tables
-        create_tables()
+        except:
+            status = traceback.format_exc()
+        else:
+            try:
+                # Decode the data
+                data = json.loads(post_data)
+                received_count = len(data)
+                if received_count == 0:
+                    raise ValueError("No data received")
 
-        # Load data into temporary tables
-        load_temporary_tables(data)
+                # Drop temporary tables
+                drop_temporary_tables()
 
-        # Drop production section and meeting tables
-        drop_production_tables()
+                # Re-create temporary tables
+                create_tables()
 
-        # Re-create production section and meeting tables
-        create_tables()
+                # Load data into temporary tables
+                warnings, processed = load_temporary_tables(data)
 
-        # Load data into production tables (copying over from temporary tables)
-        load_production_tables()
+                # Drop production section and meeting tables
+                drop_production_tables()
 
-    return HttpResponse(status)
+                # Re-create production section and meeting tables
+                create_tables()
+
+                # Load data into production tables (copying over from temporary
+                # tables)
+                prod_processed = load_production_tables()
+
+                # received_count, processed, and prod_processed should all be
+                # the same
+                if (received_count != processed or
+                    received_count != prod_processed or
+                    processed != prod_processed):
+                    status = "Received %s, processed into temp tables %s, processed into production tables %s" % (
+                            received_count, processed, prod_processed)
+            except:
+                status = traceback.format_exc()
+    else:
+        status = 'Invalid request'
+
+    if warnings != '':
+        status = status + '\n' + warnings
+
+    return HttpResponse(status, mimetype='text/plain')
 
 def drop_temporary_tables():
     """
@@ -147,15 +194,13 @@ def drop_temporary_tables():
         until after data is loaded into temp tables.
     """
     from django.db import connection
+
     cursor = connection.cursor()
-    errors = ''
-    try:
-        cursor.execute("drop table myschedule_coursetemp")
-        cursor.execute("drop table myschedule_sectiontemp")
-        cursor.execute("drop table myschedule_meetingtemp")
-    except:
-        errors = 'An error occurred with the temporary table drop.'
-    return errors
+    cursor.execute("drop table myschedule_coursetemp")
+    cursor.execute("drop table myschedule_sectiontemp")
+    cursor.execute("drop table myschedule_meetingtemp")
+
+    return
 
 def drop_production_tables():
     """
@@ -164,29 +209,25 @@ def drop_production_tables():
         be updated and new ones added.
     """
     from django.db import connection
+
     cursor = connection.cursor()
-    errors = ''
-    try:
-        cursor.execute("drop table myschedule_section")
-        cursor.execute("drop table myschedule_meeting")
-    except:
-        errors = 'An error occurred with the production table drop.'
-    return errors
+    cursor.execute("drop table myschedule_section")
+    cursor.execute("drop table myschedule_meeting")
+
+    return
 
 def create_tables():
     """
         Calls syncdb to recreate dropped tables.
     """
     from django.core import management
-    errors = ''
-    try:
-        management.call_command('syncdb')
-    except:
-        errors = 'An error occurred with the table sync.'
-    return errors
+
+    management.call_command('syncdb')
+
+    return
 
 def load_temporary_tables(data):
-    import traceback
+    warnings = ''
     processed = 0
     for item in data:
         try:
@@ -212,7 +253,6 @@ def load_temporary_tables(data):
                         synonym=section['synonym'],
                         start_date=datetime.strptime(section['start_date'], "%Y-%m-%d"),
                         end_date=datetime.strptime(section['end_date'], "%Y-%m-%d"),
-                        contact_hours=section['contact_hours'],
                         credit_hours=section['credit_hours'],
                         ceus=section['ceus'],
                         tuition=section['tuition'],
@@ -235,10 +275,15 @@ def load_temporary_tables(data):
                                 room=meeting['room'])
                             new_meeting.save()
             processed = processed + 1
-        except:
-            print item
-            traceback.print_exc()
-    return processed
+        except Warning:
+            # If a warning is triggered, it is most likely due to invalid
+            # characters in the data (i.e. copyright symbol).
+            warnings = "%s \n\n Course %s %s %s" % (warnings,
+                        item['course_code'], item['prefix'],
+                        item['course_number'])
+            warnings = warnings + '\n\n' + traceback.format_exc()
+
+    return warnings, processed
 
 def load_production_tables():
     """
@@ -246,7 +291,7 @@ def load_production_tables():
         isn't in the course model, add it, otherwise update it. Add it's
         associated sections and meetings to the section and meeting models.
     """
-    count=0
+    prod_processed = 0
     tempcourses = models.CourseTemp.objects.select_related().all()
     for tempcourse in tempcourses:
         try:
@@ -276,7 +321,6 @@ def load_production_tables():
                 synonym=tempsection.synonym,
                 start_date=tempsection.start_date,
                 end_date=tempsection.end_date,
-                contact_hours=tempsection.contact_hours,
                 credit_hours=tempsection.credit_hours,
                 ceus=tempsection.ceus,
                 tuition=tempsection.tuition,
@@ -298,8 +342,8 @@ def load_production_tables():
                     building=tempmeeting.building,
                     room=tempmeeting.room)
                 meeting.save()
-        count = count + 1
-    return HttpResponse(str(count))
+        prod_processed = prod_processed + 1
+    return prod_processed
 
 def format_time(time_value):
     if time_value == "":
