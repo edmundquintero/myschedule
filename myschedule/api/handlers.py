@@ -1,25 +1,15 @@
-from datetime import datetime
-
 from piston.handler import BaseHandler
 from piston.utils import rc, validate
 
-from myschedule.models import CourseTemp, SectionTemp, MeetingTemp
+from django.conf import settings
 
+from myschedule.models import Section
 
-def format_time(time_value):
-    if time_value == "":
-        time_value = "00:00"
-    return datetime.strptime(time_value,"%H:%M")
+import base64
 
 class MyScheduleHandler(BaseHandler):
     """
-        Handler for reading, deleting and creating course and associated
-        section and meeting data.
-
-        In order for piston to traverse foreign key relationships, you must use
-        the related name for the child.  Unless the related name is overridden
-        in the model, it should be modelname_set.  So in the case of the
-        section model, it is referred to as section_set.
+        Handler for reading and updating section seat counts and status.
 
         To test
         -------
@@ -27,141 +17,52 @@ class MyScheduleHandler(BaseHandler):
         following commands:
         from django.test import Client
         c=Client()
-        temp1=c.get('/myschedule/api/courseupdate/read')
-        temp2=c.delete('/myschedule/api/courseupdate/delete')
-        temp3=c.post('/myschedule/api/courseupdate/create',temp1.content,content_type='application/json')
+        temp1=c.get('/myschedule/api/seats/ART-288G-01-su-2011/')
+        temp2=c.put('/myschedule/api/seats/ART-288G-01-su-2011/2/Active/')
+
+        See test.py in views to see how to send put request with httplib.
+        The read can just be tested from the browser since it's a get request.
 
         Might need to eventually add piston to installed_apps in settings and
         run syncdb to create it's tables.  For now it's not needed (I think it
         may be needed if add in authorization support).
     """
 
-    allowed_methods = ('GET', 'POST', 'DELETE',)
-    fields = ('course_code',
-              'prefix',
-              'course_number',
-              'title',
-              'description',
-              'academic_level',
-              'department',
-              'note',
-              ('sectiontemp_set',
-                ('section_code',
-                 'section_number',
-                 'term',
-                 'year',
-                 'campus',
-                 'synonym',
-                 'start_date',
-                 'end_date',
-                 'contact_hours',
-                 'credit_hours',
-                 'ceus',
-                 'tuition',
-                 'delivery_type',
-                 'note',
-                 'book_link',
-                 'session',
-                 'status',
-                 'instructor_name',
-                 'instructor_link',
-                 ('meetingtemp_set',
-                    ('start_time',
-                     'end_time',
-                     'meeting_type',
-                     'days_of_week',
-                     'building',
-                     'room')
-                 )
-                )
-              )
-             )
-    model = CourseTemp
+    allowed_methods = ('GET', 'PUT',)
+    fields = ('id', 'section_code', 'available_seats', 'status')
+    model = Section
 
-    def read(self, request):
+    def read(self, request, section_code):
         """
-            Returns all records in course model formatted as json (follows
-            foreign key relationships and retrieves section and meeting
-            data as well).
+            Returns data for specified section.
         """
-        courses = self.model.objects.all()
-        return courses
+        section = self.model.objects.get(section_code=section_code)
+        return section
 
-
-
-    def create(self, request):
+    def update(self, request, section_code, available_seats, status):
         """
-            Creates course records and associated section and meeting records
-            based on json formatted data submitted via request.
+            Updates seat count and status for specified section.
         """
-        import traceback
-        if request.content_type:
-            if request.data:
-                data = request.data
-                for item in data:
-                    try:
-                        course = self.model(
-                            course_code=item['course_code'],
-                            prefix=item['prefix'],
-                            course_number=item['course_number'],
-                            title=item['title'],
-                            description=item['description'],
-                            academic_level=item['academic_level'],
-                            department=item['department'],
-                            note=item['note']
-                        )
-                        course.save()
-                        if item['sectiontemp_set'] != []:
-                            for section in item['sectiontemp_set']:
-                                new_section = SectionTemp(course=course,
-                                    section_code=section['section_code'],
-                                    section_number=section['section_number'],
-                                    term=section['term'],
-                                    year=section['year'],
-                                    campus=section['campus'],
-                                    synonym=section['synonym'],
-                                    start_date=datetime.strptime(section['start_date'], "%Y-%m-%d"),
-                                    end_date=datetime.strptime(section['end_date'], "%Y-%m-%d"),
-                                    contact_hours=section['contact_hours'],
-                                    credit_hours=section['credit_hours'],
-                                    ceus=section['ceus'],
-                                    tuition=section['tuition'],
-                                    delivery_type=section['delivery_type'],
-                                    note=section['note'],
-                                    book_link=section['book_link'],
-                                    session=section['session'],
-                                    status=section['status'],
-                                    instructor_name=section['instructor_name'],
-                                    instructor_link=section['instructor_link'])
-                                new_section.save()
-                                if section['meetingtemp_set'] != []:
-                                    for meeting in section['meetingtemp_set']:
-                                        new_meeting = MeetingTemp(section=new_section,
-                                            start_time=format_time(meeting['start_time']),
-                                            end_time=format_time(meeting['end_time']),
-                                            meeting_type=meeting['meeting_type'],
-                                            days_of_week=meeting['days_of_week'],
-                                            building=meeting['building'],
-                                            room=meeting['room'])
-                                        new_meeting.save()
-                    except:
-                        print item
-                        traceback.print_exc()
-
-
-            # TODO: check value of rc.CREATED in loop and then handle appropriately when it is not equal to CREATED
-            return rc.CREATED
+        if request.META.has_key('HTTP_AUTHORIZATION'):
+            # Calling function needs to make sure to remove extraneous line
+            # feed attached to encoded authorization string. Django does not
+            # like it - post data will be messed up.
+            authorization = request.META['HTTP_AUTHORIZATION']
+            authorization = authorization.replace('Basic ','')
+            credentials = base64.decodestring(authorization)
+            credentials = credentials.split(':')
+            # Compare the credentials passed in through the header to
+            # those in the settings to verify calling application is
+            # authorized
+            if (credentials[0] != settings.DATA_CREDENTIALS[0] or
+                    credentials[1] != settings.DATA_CREDENTIALS[1]):
+                raise ValueError("Invalid credentials")
         else:
-            super(CourseTemp, self).create(request)
-
-    def delete(self, request):
-        """
-            Deletes all existing records in the course, section, and meeting
-            models.
-        """
-        courses = self.model.objects.all()
-        courses.delete()
-        return rc.DELETED
-
+            raise ValueError("Missing credentials")
+        section = self.model.objects.get(section_code=section_code)
+        section.available_seats = available_seats
+        section.status = status
+        section.save()
+        return section
 
 
