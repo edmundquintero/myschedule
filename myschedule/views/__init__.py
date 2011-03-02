@@ -68,47 +68,6 @@ def show_sections(request, course_id):
              'conflicts':conflicts}
     )
 
-def update_courses_old(request):
-    """
-        Calls the ods api to get current course data (includes sections and
-        meetings) and passes that data to the api that creates the records
-        in the myschedule course, section, and meeting temporary tables.
-    """
-    # TODO: Error checking (here and in api)
-    # TODO: Authentication??
-    # TODO: Return something useful
-    import httplib
-    import urllib
-
-    from django.http import HttpResponse
-
-    ## Drop temporary tables, section, and meeting tables.
-    drop_tables()
-
-    ## Recreate dropped tables.
-    create_tables()
-
-    # Retrieve the ods data (formatted as json).
-    req = urllib.urlopen(settings.ODS_API_URL)
-    data = req.read()
-
-    # Open the connection to the myschedule api (has to be a different port
-    # from where the app is running).
-    conn = httplib.HTTPConnection(settings.MYSCHEDULE_API_HOST)
-
-    # Add the new data into the temp tables.
-    headers = {'Content-type':'application/json'}
-    req = conn.request('POST', '/myschedule/api/courseupdate/create', data, headers)
-    resp = conn.getresponse()   # expect resp.status=201
-
-    # Close the connection.
-    conn.close()
-
-    ## Update courses and create section and meeting records.
-    load_courses()
-
-    return HttpResponse('true')
-
 def update_courses(request):
     from django.utils import simplejson as json
     import base64
