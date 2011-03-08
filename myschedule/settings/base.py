@@ -22,8 +22,7 @@ SESSION_COOKIE_NAME = 'myschedule_sessionid'
 
 THEME = '3g'
 
-ODS_API_HOST = ''
-MYSCHEDULE_API_HOST = ''
+DATA_CREDENTIALS = []
 
 # Heuristic Search Data
 HIGH_THRESHOLD = 1000

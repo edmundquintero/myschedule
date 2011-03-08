@@ -133,7 +133,7 @@ class SectionAbstract(models.Model):
     status = models.CharField(max_length=255, blank=False)
     instructor_name = models.CharField(max_length=510, blank=True)
     instructor_link = models.CharField(max_length=255, blank=True)
-    available_seats = models.IntegerField()
+    available_seats = models.IntegerField(blank=True, null=True)
 
     class Meta:
         abstract = True

@@ -19,6 +19,9 @@ def update_courses_test():
     temp = resp.read()
     print temp
     conn.close()
+    f = open('temp.txt','w')
+    f.write(temp)
+    f.close()
 
 def seats_test():
     # For testing piston seat count api (PUT/update).

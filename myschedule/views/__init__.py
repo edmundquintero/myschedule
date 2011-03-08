@@ -72,8 +72,8 @@ def update_courses(request):
     from django.utils import simplejson as json
     import base64
 
-    status = ''
-    warnings = ''
+    status = 'Starting data load...\n'
+    messages = ''
 
     if request.method == 'POST':
         try:
@@ -102,7 +102,7 @@ def update_courses(request):
                 raise ValueError("Missing credentials")
 
         except:
-            status = traceback.format_exc()
+            status = status + '\n' + traceback.format_exc()
         else:
             try:
                 # Decode the data
@@ -118,7 +118,7 @@ def update_courses(request):
                 create_tables()
 
                 # Load data into temporary tables
-                warnings, processed = load_temporary_tables(data)
+                messages, processed = load_temporary_tables(data)
 
                 # Drop production section and meeting tables
                 drop_production_tables()
@@ -135,15 +135,16 @@ def update_courses(request):
                 if (received_count != processed or
                     received_count != prod_processed or
                     processed != prod_processed):
-                    status = "Received %s, processed into temp tables %s, processed into production tables %s" % (
-                            received_count, processed, prod_processed)
+                    status = "%s\nReceived %s, processed into temp tables %s, processed into production tables %s" % (
+                            status, received_count, processed, prod_processed)
             except:
-                status = traceback.format_exc()
+                status = status + '\n' + traceback.format_exc()
     else:
-        status = 'Invalid request'
+        status = status + '\nInvalid request'
 
-    if warnings != '':
-        status = status + '\n' + warnings
+    if messages != '':
+        status = status + '\n' + messages
+    status = status + '\n...Ending data load'
 
     return HttpResponse(status, mimetype='text/plain')
 
@@ -186,10 +187,13 @@ def create_tables():
     return
 
 def load_temporary_tables(data):
-    warnings = ''
+    messages = ''
     processed = 0
     for item in data:
         try:
+            messages = "%s \n\n Course %s %s %s" % (messages,
+                        item['course_code'], item['prefix'],
+                        item['course_number'])
             course = models.CourseTemp(
                         course_code=item['course_code'],
                         prefix=item['prefix'],
@@ -238,12 +242,9 @@ def load_temporary_tables(data):
         except Warning:
             # If a warning is triggered, it is most likely due to invalid
             # characters in the data (i.e. copyright symbol).
-            warnings = "%s \n\n Course %s %s %s" % (warnings,
-                        item['course_code'], item['prefix'],
-                        item['course_number'])
-            warnings = warnings + '\n\n' + traceback.format_exc()
+            messages = messages + '\n\n' + traceback.format_exc()
 
-    return warnings, processed
+    return messages, processed
 
 def load_production_tables():
     """

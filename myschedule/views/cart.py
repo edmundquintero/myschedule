@@ -115,9 +115,6 @@ def save_cart(request):
         except models.Schedule.DoesNotExist:
             cart = models.Schedule(owner=request.user,
                            sections=sections_url)
-        except:
-            #TODO: error handling
-            print 'failure'
         cart.save()
     return errors
 
@@ -149,7 +146,6 @@ def conflict_resolution(cart_items):
     """
         Checks for any conflicts between the sections on the schedule.
         Presently, just for classes with overlapping times.
-        TODO: Check section status??
     """
     conflicting_sections = []
     conflicting_meetings = []
@@ -308,7 +304,7 @@ def display_cart(request, sections_url=None):
         sections.remove('')
         request.session['Cart'] = sections
     # TODO: get all the other information regarding a course section that
-    # needs to be displayed (still need seat count and actual contact hours)
+    # needs to be displayed (still need seat count and actual contact hours and prereqs and coreqs)
     sections = request.session['Cart']
 
     if sections != [] and sections != None:
