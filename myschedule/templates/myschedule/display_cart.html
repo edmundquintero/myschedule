@@ -37,22 +37,30 @@
       <div class="section-content">
         <div class="section-seats">
           <table>
-            {% ifequal item.status 'Cancelled' %}
-              <td class="section-seats-number">Cancelled</td>
+            {% ifnotequal item.status 'Active' %}
+                <tr>
+                  <td class="section-seats-label">&nbsp;</td>
+                </tr>
+                <tr>
+                  <td class="section-seats-number">{{ item.status }}</td>
+                </tr>
             {% else %}
-              {% if item.seat_count != "Seat count unavailable" %}
+              {% if item.available_seats %}
                 <tr>
                   <td class="section-seats-label">Seats Available</td>
                 </tr>
                 <tr>
-                  <td class="section-seats-number">{{ item.seat_count }}10</td>
+                  <td class="section-seats-number">{{ item.available_seats }}</td>
                 </tr>
               {% else %}
                 <tr>
-                  <td class="section-seats-label">{{ item.seat_count }}</td>
+                  <td class="section-seats-label">Seat information not available</td>
+                </tr>
+                <tr>
+                  <td class="section-seats-number"></td>
                 </tr>
               {% endif %}
-            {% endifequal %}
+            {% endifnotequal %}
             {% ifnotequal item.tuition "0.00" %}
               <tr>
                 <td class="section-tuition">Tuition ${{ item.tuition }}</td>
