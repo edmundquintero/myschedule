@@ -311,3 +311,84 @@ def format_time(time_value):
     if time_value == "":
         time_value = "00:00"
     return datetime.strptime(time_value,"%H:%M")
+
+def update_seats(request):
+    from django.utils import simplejson as json
+    import base64
+
+    status = 'Starting data load...\n'
+    messages = ''
+
+    if request.method == 'POST':
+        try:
+            # Use the raw post data so that it's not in the form of a django querydict
+            # Read the post data first before attempting to check the authorization.
+            # If a large amount of data is sent, the connection gets reset if try
+            # to throw an error when checking authorization.
+            post_data = request.raw_post_data
+
+            if request.META.has_key('HTTP_AUTHORIZATION'):
+                # Calling function needs to make sure to remove extraneous line
+                # feed attached to encoded authorization string. Django does not
+                # like it - post data will be messed up.
+
+                authorization = request.META['HTTP_AUTHORIZATION']
+                authorization = authorization.replace('Basic ','')
+                credentials = base64.decodestring(authorization)
+                credentials = credentials.split(':')
+                # Compare the credentials passed in through the header to
+                # those in the settings to verify calling application is
+                # authorized
+                if (credentials[0] != settings.DATA_CREDENTIALS[0] or
+                        credentials[1] != settings.DATA_CREDENTIALS[1]):
+                    raise ValueError("Invalid credentials")
+            else:
+                raise ValueError("Missing credentials")
+
+        except:
+            status = status + '\n' + traceback.format_exc()
+        else:
+            try:
+                # Decode the data
+                data = json.loads(post_data)
+                received_count = len(data)
+                if received_count == 0:
+                    raise ValueError("No data received")
+
+                # Load data into temporary tables
+                messages, processed = load_seats(data)
+
+                # received_count, processed, and prod_processed should all be
+                # the same
+                if (received_count != processed):
+                    status = "%s\nReceived %s, processed into production tables %s" % (
+                            status, received_count, processed)
+            except:
+                status = status + '\n' + traceback.format_exc()
+    else:
+        status = status + '\nInvalid request'
+
+    if messages != '':
+        status = status + '\n' + messages
+    status = status + '\n\n...Ending data load'
+
+    return HttpResponse(status, mimetype='text/plain')
+
+def load_seats(data):
+    messages = ''
+    processed = 0
+    for item in data:
+        messages = "%s \n\n Section %s" % (messages, item['section_code'])
+        try:
+            section = models.Section.objects.get(section_code=item['section_code'])
+            section.available_seats = item['available_seats']
+            section.status = item['status']
+            section.save()
+            processed = processed + 1
+        except models.Section.DoesNotExist:
+            messages = '%s \n Section %s not found.' % (messages, item['section_code'])
+        except:
+            messages = messages + '\n\n' + traceback.format_exc()
+
+    return messages, processed
+
