@@ -392,3 +392,14 @@ def load_seats(data):
 
     return messages, processed
 
+def update_popularity(request):
+    """
+        Runs the update_popularity method against all courses to update
+        popularity based on add_count.
+
+        Update indexes after running this!
+    """
+    courses = models.Course.objects.all()
+    for course in courses:
+        course.update_popularity()
+    return HttpResponse()
