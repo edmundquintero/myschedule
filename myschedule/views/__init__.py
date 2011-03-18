@@ -46,7 +46,7 @@ def show_sections(request, course_id):
         request.session.modified = True
         correlation.course = course
         correlation.save()
-        course.add_count = str(int(course.add_count) + 1)
+        course.add_count = course.add_count + 1
         course.save()
 
     # Get the sections currently in the cart (for displaying in sidebar)

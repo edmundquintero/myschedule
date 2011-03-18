@@ -51,7 +51,7 @@ class Course(CourseAbstract):
         (MEDIUM, 'Medium'),
         (LOW, 'Low'),
     )
-    add_count = models.CharField(max_length=10, blank=False, default='0')
+    add_count = models.IntegerField(default=0)
     popularity = models.CharField(max_length=1, blank=False, default=LOW, choices=POPULARITY_CHOICES)
 
     def update_popularity(self):
@@ -71,7 +71,7 @@ class Course(CourseAbstract):
                 slug = slug + ' ' + correlation.easy_view()
         return slug
 
-def boost(self, species, weight, primary_criterion, secondary_criterion=None):
+    def boost(self, species, weight, primary_criterion, secondary_criterion=None):
         if int(weight) > 0:
             correlation = Correlation()
             correlation.course = self
@@ -96,7 +96,7 @@ def boost(self, species, weight, primary_criterion, secondary_criterion=None):
             while weight > 0:
                 correlation.clone()
                 weight = weight - 1
-        self.add_count = str(int(self.add_count) + weight)
+        self.add_count = self.add_count + weight
         self.save()
 
 
