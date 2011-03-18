@@ -7,11 +7,8 @@ from myschedule import models
 
 # admin.autodiscover()
 sqs = SearchQuerySet()
-urlpatterns = patterns('',
-    url(r'^api/', include('myschedule.api.urls')),
-)
 
-urlpatterns += patterns('myschedule.views',
+urlpatterns = patterns('myschedule.views',
     url(r'^$', 'index', name='index'),
     url(r'^search/', SQSSearchView(load_all=False, searchqueryset=sqs), name='haystack_search'),
     url(r'^show_sections/([\w]+)/$', 'show_sections', name='show_sections'),

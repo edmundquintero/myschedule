@@ -5,7 +5,6 @@ Dependencies:
 django_haystack 1.0.1 final
 apache solr 1.4.1
 pysolr 2.0.13
-django_piston 0.2.2
 
 Setup for Solr:
 Download version 1.4.1 here - http://ftp.wayne.edu/apache//lucene/solr/1.4.1/

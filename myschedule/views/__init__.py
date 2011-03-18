@@ -58,7 +58,7 @@ def show_sections(request, course_id):
         cart_items = []
         conflicts = {}
 
-    # Get the sections for the selected course TODO: What to do about term and year???
+    # Get the sections for the selected course
     sections = models.Section.objects.select_related().filter(course=course_id)
 
     return direct_to_template(request,

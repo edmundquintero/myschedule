@@ -23,22 +23,6 @@ def update_courses_test():
     f.write(temp)
     f.close()
 
-def seats_test():
-    # For testing piston seat count api (PUT/update).
-    import httplib
-    import base64
-    creds = base64.encodestring('%s:%s' % ('testuser','testpass'))
-    authstring = "Basic %s" % creds
-    authstring = authstring.replace("\n","")
-    headers = {'Content-type':'application/json','AUTHORIZATION':authstring}
-    data = '[{}]'
-    conn = httplib.HTTPConnection('te409-05.cpcc.edu:5000')
-    req2 = conn.request('PUT','/myschedule/api/seats/ART-288G-01-su-2011/2/Active/',data,headers)
-    resp = conn.getresponse()
-    temp = resp.read()
-    print temp
-    conn.close()
-
 def update_seats_test():
     # For testing update_seats view.
     import httplib
