@@ -21,6 +21,20 @@ def index(request):
     return direct_to_template(request,
                               'myschedule/index.html')
 
+def help(request):
+    """
+        Processes help link.
+    """
+    import os
+    from django.conf import settings
+    try:
+        files = os.listdir(os.path.join(settings.APP_STATIC_MEDIA, 'help'))
+    except OSError:
+        files = None
+    return direct_to_template(request, 'myschedule/help.html', {
+        'files': files
+    })
+
 def show_sections(request, course_id):
     """
         Display section results template for specified course.
