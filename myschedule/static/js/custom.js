@@ -44,10 +44,7 @@ $(function() {
     if ($('#id_query').val() == ''){
         $('#id_query').val('ex. math, bus 121, mec');
     }
-    $("#id_query").mouseup(function(e){
-        e.preventDefault();
-        });
-    $('#id_query').focus(function(){$(this).select();});
+
 });
 
 function createModalWindow(element, title, createCallback,
