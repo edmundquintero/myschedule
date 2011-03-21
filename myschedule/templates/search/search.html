@@ -1,7 +1,6 @@
 {% extends "myschedule/base-sidebar.html" %}
 
-{% block page_title %}Schedule Builder | Search Results{% endblock %}
-{% block title %}Schedule Builder{% endblock %}
+{% block page_title %}{{ block.super }} | Search Results{% endblock %}
 {% block buttons %} {% endblock %}
 {% block content %}
     <form method="get" action="." id="search">
