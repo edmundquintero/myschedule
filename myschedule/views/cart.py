@@ -189,92 +189,6 @@ def conflict_resolution(cart_items):
                       "conflicting_meetings":conflicting_meetings})
     return conflicts
 
-def get_seats(informer_url, term, year, course_prefix, course_number,
-              course_section=None):
-    """
-        Calls informer to retrieve the current seat counts for the specified
-        course (and optional section).  Returns data in json format.
-
-        TODOs: Make it a standalone api once we figure out where it needs to
-        reside.  Add caching???
-    """
-    import urllib2
-    from datetime import datetime
-
-    informer_url = (informer_url + '?prefix=' + course_prefix +
-                                   '&number=' + course_number +
-                                   '&term=' + term +
-                                   '&year=' + year)
-    if course_section:
-        informer_url = informer_url + '&section=' + course_section
-    json_list=[]
-    try:
-        resp = urllib2.urlopen(informer_url)
-        counts = resp.read()
-        counts_list = counts.split(';')
-        counts_list.remove('\r\n')
-        for item in counts_list:
-            temp_list = item.split(',')
-            json_list.append({'prefix':temp_list[0],
-                              'number':temp_list[1],
-                              'section':temp_list[2],
-                              'year':temp_list[3],
-                              'term':temp_list[4],
-                              'status':temp_list[5],
-                              'seats':temp_list[6]})
-    except:
-        # In the event it was unable to retrieve a seat count
-        # schedule builder will display a "seat count not available" message.
-        pass
-    json_data = json.dumps(json_list, indent=2)
-    return json_data
-
-def get_section_data(sections, include_seats=True):
-    """
-        Get the section, course, and meeting data for a list of sections.
-        Will optionally get the seat count information.
-    """
-    from django.core.cache import cache
-
-    cart_items=[]
-    for section in sections:
-        section_item={}
-        # Check to see if the data for this section has been cached. If not,
-        # query the model.
-        section_item = cache.get(section)
-        if section_item is None:
-            section_data = get_object_or_404(models.Section,
-                                  section_code=section)
-            course_data = section_data.course
-            meeting_data = section_data.meeting_set.all()
-            section_item = dict({"section_data":section_data,
-                            "course_data":course_data,
-                            "meeting_data":meeting_data})
-            cache.add(section, section_item, 60*settings.CACHE_REFRESH_RATE)
-        else:
-            section_data = section_item['section_data']
-            course_data = section_item['course_data']
-        seat_counts = []
-        # Seat count data isn't cached in this application (may be cached
-        # externally).
-        if include_seats:
-            # TODO: When get_seats is switched to external api, update this call.
-            seat_counts = get_seats('http://watrain.cpcc.edu/SeatCount/SeatCount',
-                                section_data.term.upper(),
-                                section_data.year,
-                                course_data.prefix,
-                                course_data.course_number,
-                                section_data.section_number)
-            seat_counts = json.loads(seat_counts)
-        if len(seat_counts) == 1:
-            for item in seat_counts:
-               seat_count = item['seats'] + ' seat(s) available'
-        else:
-            seat_count = 'Seat count unavailable'
-        section_item['seat_count'] = seat_count
-        cart_items.append(section_item)
-    return cart_items
-
 def show_schedule(request):
     """
         Processes selection of schedule tab.
@@ -304,7 +218,7 @@ def display_cart(request, sections_url=None):
         sections.remove('')
         request.session['Cart'] = sections
     # TODO: get all the other information regarding a course section that
-    # needs to be displayed (still need seat count and actual contact hours and prereqs and coreqs)
+    # needs to be displayed (still need prereqs and coreqs)
     sections = request.session['Cart']
 
     if sections != [] and sections != None:
