@@ -83,6 +83,9 @@ def show_sections(request, course_id):
     )
 
 def update_courses(request):
+    """
+        Receives and processes course data.
+    """
     from django.utils import simplejson as json
     import base64
 
@@ -327,6 +330,10 @@ def format_time(time_value):
     return datetime.strptime(time_value,"%H:%M")
 
 def update_seats(request):
+    """
+        Receives and processes data containing current seat count and
+        statuses for course sections.
+    """
     from django.utils import simplejson as json
     import base64
 

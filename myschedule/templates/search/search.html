@@ -30,12 +30,14 @@
 		        <div class="course-description">
 			        <p class="course-name">{% if result.object.section_set.all %}<a href="{% url show_sections result.object.id %}">{{ result.object.title }}</a>{% else %}{{ result.object.title }}{% endif %}</span>
 			        <p>{{ result.object.description|truncatewords:23 }}</p>
+              {% comment %}
               <table>
                 <tr>
                   <td class="course-prerequisites"><strong>Prerequisites</strong></td>
                   <td class="course-corequisites"><strong>Co-requisites</strong></td>
                 </tr>
               </table>
+              {% endcomment %}
               {% if result.object.note %}<p class="course-note"><strong>Note</strong> {{ result.object.note }}</p>{% endif %}
 		        </div>
 		        <div class="clear"></div>

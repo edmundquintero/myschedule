@@ -191,7 +191,7 @@ def conflict_resolution(cart_items):
 
 def show_schedule(request):
     """
-        Processes selection of schedule tab.
+        Processes selection of view full schedule button.
     """
     sections_url = ""
     if request.session.has_key('Cart'):
@@ -207,7 +207,7 @@ def show_schedule(request):
 
 def display_cart(request, sections_url=None):
     """
-        Displays shopping cart template.
+        Displays shopping cart template (schedule).
     """
     conflicts = {}
     cart_items = []
