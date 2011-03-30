@@ -3,11 +3,11 @@
 from setuptools import find_packages, setup
 
 setup(
-    #author='John Doe',
-    #author_email='john.doe@cpcc.edu',
-    #description='An app that does some stuff',
+    author='Julie Sparks',
+    author_email='julie.sparks@cpcc.edu',
+    description='Schedule builder application for current and prospective students',
     include_package_data=True,
     name='myschedule',
     packages=find_packages(),
-    version="1.0b"
+    version="0.9.0"
 )
