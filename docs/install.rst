@@ -1,5 +1,11 @@
 Initial Install
 ===============
+1. Install the application.
+2. Update DATA_CREDENTIALS setting with appropriate username and password.
+3. Populate course data (run cron jobs for course data and seat count data)
+4. Install/run haystack, solr, and pysolr (see dependencies and notes below)
+5. Update HAYSTACK_SOLR_URL setting to access solr.
+6. Run "python appmanage.py rebuild_index"
 
 Dependencies:
 django_haystack 1.0.1 final
