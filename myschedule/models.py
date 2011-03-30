@@ -116,6 +116,7 @@ class SectionAbstract(models.Model):
 
     section_code = models.CharField(max_length=25, blank=False)
     section_number = models.CharField(max_length=10, blank=False)
+    section_colleague_id = models.CharField(max_length=10, blank=False)
     term = models.CharField(max_length=4, blank=False)
     year = models.CharField(max_length=4, blank=False)
     campus = models.CharField(max_length=100, blank=False)
