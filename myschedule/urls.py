@@ -15,7 +15,6 @@ urlpatterns = patterns('myschedule.views',
     url(r'^show_sections/([\w]+)/$', 'show_sections', name='show_sections'),
     url(r'^update_courses/', 'update_courses', name='update_courses'),
     url(r'^update_seats/', 'update_seats', name='update_seats'),
-    url(r'^update_popularity/', 'update_popularity', name='update_popularity'),
     # url(r'^admin/', include(admin.site.urls)),
 )
 
