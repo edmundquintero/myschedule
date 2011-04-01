@@ -5,7 +5,7 @@ Initial Install
 3. Populate course data (run cron jobs for course data and seat count data)
 4. Install/run haystack, solr, and pysolr (see dependencies and notes below)
 5. Update HAYSTACK_SOLR_URL setting to access solr.
-6. Run "python appmanage.py rebuild_index"
+6. Run "python appmanage.py rebuild_index" or script rebuild_index.sh
 
 Dependencies:
 django_haystack 1.0.1 final
@@ -19,8 +19,19 @@ Unpack to somewhere convenient, and make sure Sun Java is installed and java is 
 Snag pysolr (easy_install or similar is suggested, as pysolr has plenty of dependencies itself)
 CD into your solr folder, then ./example/solr/conf/ and drop schema.xml and solrconfig.xml here
 CD back to ./example and run "java -jar start.jar"
-Update HAYSTACK_SOLR_URL in development.py to point to your machine. Port 8983 is the default, so you should not have to change that.
-You should be able to update/rebuild your search indexes at that point in myschedule root with "python appmanage.py update_index" or "python appmanage.py rebuild_index"
+Update HAYSTACK_SOLR_URL in development.py to point to your machine. Port 8983 is
+the default, so you should not have to change that.
+You should be able to update/rebuild your search indexes at that point in myschedule
+root with "python appmanage.py update_index" or "python appmanage.py rebuild_index"
 
 Note on installation of Solr:
-Presently, django-haystack supports solr versions 1.3+, and thus far there have been no issues in using 1.4.1. If we change to a 1.3.x release, you will need to run "python appmanage build_solr_schema" and replace the existing schema.xml. It will likely produce the same xml as before, but it is best to cover bases here.
+Presently, django-haystack supports solr versions 1.3+, and thus far there have
+been no issues in using 1.4.1. If we change to a 1.3.x release, you will need to
+run "python appmanage build_solr_schema" and replace the existing schema.xml. It
+will likely produce the same xml as before, but it is best to cover bases here.
+
+Schedule CRON jobs (production environment):
+1. course data bulk load
+2. seat count update
+3. scripts/popularity.py
+4. scripts/update_index.sh
