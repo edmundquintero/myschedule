@@ -21,6 +21,11 @@ $(function() {
             $('#' + $(this).attr('ref')).dialog('option','minHeight',850);
         }
 
+        if($(this).attr('ref') == 'register') {
+            buttons = { "Cancel": closeDialog,
+                        "Continue": beginRegistration }
+        }
+
         $('#' + $(this).attr('ref')).dialog('option','buttons', buttons);
         $('#' + $(this).attr('ref')).dialog('open');
 
@@ -150,3 +155,15 @@ remove_section = function()
     }, 'json');
     loadCalendar();
 }
+
+beginRegistration = function(){
+    $.post(basePath + 'schedule/register/', {}, function(messages){
+        if (messages.errors != ''){
+            alert(messages.errors);
+        }
+    }, 'json');
+
+    // Close dialog.
+    $(this).dialog('close');
+
+};

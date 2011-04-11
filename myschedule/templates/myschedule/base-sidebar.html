@@ -13,6 +13,13 @@
     {% block buttons %}
       <a class="open-window button" href="#email" ref="email" dialog-title="Email Schedule" title="Email this schedule to yourself or a friend">Email Schedule</a>
       <a href="#print" title="Print this page" class="print-schedule button">Print Schedule</a>   
+      {% if user.is_authenticated %}
+        {% for group in user.groups.all %}
+          {% ifequal group|stringformat:"s" "Students" %}
+            <a class="open-window button" href="#register" ref="register" dialog-title="Begin Registration" title="Submit this schedule to preferred list in MyCollege">Begin Registration</a>
+          {% endifequal %}
+        {% endfor %}
+      {% endif %}
     {% endblock %}
 
     {% block schedule %}

@@ -22,6 +22,9 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 # MEDIA_ROOT = j(app_root, 'media')
 # MEDIA_URL = APP_NAME + '/media/'
 
+CPAPI_URL_FORMAT = 'http://pas1-central.cpcc.edu/cpapi/?%s'
+CPAPI_KEY = "myschedule_key"
+
 DATA_CREDENTIALS = ['testuser', 'testpass']
 
 HAYSTACK_SITECONF = 'myschedule.search_sites'

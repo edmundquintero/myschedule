@@ -345,3 +345,44 @@ class SQSSearchView(SearchView):
             request.session.modified = True
         return super(SQSSearchView, self).__call__(request)
 
+def register(request):
+    student = []
+    student_id = ''
+    errors = ''
+    try:
+        ods_spec_dict = {"key": settings.CPAPI_KEY,
+                         "data": "student",
+                         "username": request.user.username}
+        student = ods.get_data(ods_spec_dict)
+        if student is None or len(student) == 0:
+            errors = ("Unable to retrieve student information - cannot submit. " +
+                      "Contact the help desk for assistance.")
+        else:
+            student_id = student['colleague']
+    except:
+        errors = ("An error occurred while retrieving student data - cannot submit. " +
+                  "Contact the help desk for assistance.")
+    if errors == '':
+        sections_to_register = ''
+        conflicts = []
+        cart_items = []
+        # separator will be the separator required by datatel (plan to place this in settings)
+        separator = ','
+        if request.session.has_key('Cart'):
+            sections = request.session['Cart']
+            if sections != [] and sections != None:
+                cart_items = models.Section.objects.filter(section_code__in=sections)
+                #conflicts = conflict_resolution(cart_items)
+        if cart_items != []:
+            for item in cart_items:
+                if sections_to_register != '':
+                    sections_to_register = sections_to_register + separator
+                sections_to_register= sections_to_register + item.section_colleague_id
+            errors = "No error - " + sections_to_register
+        else:
+            errors = ("No sections were found. Cannot submit to MyCollege.")
+    json_data = {'errors':errors}
+    json_data = json.dumps(json_data)
+    # return JSON object to browser
+    return HttpResponse(json_data)
+

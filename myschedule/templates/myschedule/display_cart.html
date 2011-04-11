@@ -115,5 +115,12 @@
 
   {% include "myschedule/dialogs/book.html" %}
   {% include "myschedule/dialogs/email.html" %}
+  {% if user.is_authenticated %}
+    {% for group in user.groups.all %}
+      {% ifequal group|stringformat:"s" "Students" %}
+        {% include "myschedule/dialogs/register.html" %}
+      {% endifequal %}
+    {% endfor %}
+  {% endif %}
 {% endif %}
 {% endblock %}
