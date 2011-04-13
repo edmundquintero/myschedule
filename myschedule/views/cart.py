@@ -346,9 +346,16 @@ class SQSSearchView(SearchView):
         return super(SQSSearchView, self).__call__(request)
 
 def register(request):
+    """
+        Called from javascript to submit the student's schedule to datatel.
+
+        The display_cart template does not show the option to begin registration
+        unless the user is authenticated and in the students group.
+    """
+    errors = ''
+    # Get their colleague ID.
     student = []
     student_id = ''
-    errors = ''
     try:
         ods_spec_dict = {"key": settings.CPAPI_KEY,
                          "data": "student",
@@ -362,6 +369,9 @@ def register(request):
     except:
         errors = ("An error occurred while retrieving student data - cannot submit. " +
                   "Contact the help desk for assistance.")
+
+    # Compose the string of sections to send to datatel (sending section
+    # colleague IDs)
     if errors == '':
         sections_to_register = ''
         conflicts = []
@@ -381,6 +391,9 @@ def register(request):
             errors = "No error - " + sections_to_register
         else:
             errors = ("No sections were found. Cannot submit to MyCollege.")
+
+    # Submit the user's schedule to their preferred list in datatel.
+
     json_data = {'errors':errors}
     json_data = json.dumps(json_data)
     # return JSON object to browser
