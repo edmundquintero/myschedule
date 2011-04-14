@@ -31,6 +31,8 @@ class CourseAbstract(models.Model):
     academic_level = models.CharField(max_length=255, blank=False)
     department = models.CharField(max_length=255, blank=False)
     note = models.TextField(max_length=1000, blank=True)
+    prerequisites = models.CharField(max_length=100, blank=True)
+    corequisites = models.CharField(max_length=100, blank=True)
 
     class Meta:
         abstract = True

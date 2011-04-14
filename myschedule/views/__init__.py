@@ -211,6 +211,18 @@ def load_temporary_tables(data):
             messages = "%s \n\n Course %s %s %s" % (messages,
                         item['course_code'], item['prefix'],
                         item['course_number'])
+            prereqs = ''
+            if item['prerequisites_set'] != []:
+                for prereq in item['prerequisites_set']:
+                    if prereqs != '':
+                        prereqs = prereqs + ','
+                    prereqs = prereqs + prereq
+            coreqs = ''
+            if item['corequisites_set'] != []:
+                for coreq in item['corequisites_set']:
+                    if coreqs != '':
+                        coreqs = coreqs + ','
+                    coreqs = coreqs + coreq
             course = models.CourseTemp(
                         course_code=item['course_code'],
                         prefix=item['prefix'],
@@ -219,7 +231,9 @@ def load_temporary_tables(data):
                         description=item['description'],
                         academic_level=item['academic_level'],
                         department=item['department'],
-                        note=item['note']
+                        note=item['note'],
+                        prerequisites=prereqs,
+                        corequisites=coreqs
                     )
             course.save()
             if item['sectiontemp_set'] != []:
@@ -256,6 +270,7 @@ def load_temporary_tables(data):
                                 building=meeting['building'],
                                 room=meeting['room'])
                             new_meeting.save()
+
             processed = processed + 1
         except Warning:
             # If a warning is triggered, it is most likely due to invalid
@@ -286,6 +301,8 @@ def load_production_tables():
         course.academic_level=tempcourse.academic_level
         course.department=tempcourse.department
         course.note=tempcourse.note
+        course.prerequisites=tempcourse.prerequisites
+        course.corequisites=tempcourse.corequisites
 
         course.save()
 
