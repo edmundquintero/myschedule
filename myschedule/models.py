@@ -56,6 +56,40 @@ class Course(CourseAbstract):
     add_count = models.IntegerField(default=0)
     popularity = models.CharField(max_length=1, blank=False, default=LOW, choices=POPULARITY_CHOICES)
 
+    def _get_prerequisites(self):
+        """
+            Returns a list of dictionaries containing prerequisite course objects.
+        """
+        course_codes = self.prerequisites.split(',')
+        prerequisite_courses = []
+        for course_code in course_codes:
+            try:
+                prereq_course = Course.objects.get(course_code=course_code)
+                prereq = {'course_code':course_code,
+                          'prereq_course':prereq_course}
+                prerequisite_courses.append(prereq)
+            except:
+                pass
+        return prerequisite_courses
+    prerequisite_courses = property(_get_prerequisites)
+
+    def _get_corequisites(self):
+        """
+            Returns a list of dictionaries containing corequisite course objects.
+        """
+        course_codes = self.corequisites.split(',')
+        corequisite_courses = []
+        for course_code in course_codes:
+            try:
+                coreq_course = Course.objects.get(course_code=course_code)
+                coreq = {'course_code':course_code,
+                         'coreq_course':coreq_course}
+                corequisite_courses.append(coreq)
+            except:
+                pass
+        return corequisite_courses
+    corequisite_courses = property(_get_corequisites)
+
     def update_popularity(self):
         if self.add_count > settings.HIGH_THRESHOLD:
             self.popularity = Course.HIGH

@@ -31,6 +31,14 @@
 			        <p class="course-name">{% if result.object.section_set.all %}<a href="{% url show_sections result.object.id %}">{{ result.object.title }}</a>{% else %}{{ result.object.title }}{% endif %}</span>
 			        <p>{{ result.object.description|truncatewords:23 }}</p>
               {% comment %}
+              {% if result.object.corequisite_courses %}
+                <strong>Co-requisites: </strong>
+                {% for coreq in result.object.corequisite_courses %}
+                  <a href="{% url show_sections coreq.coreq_course.id %}"> {{ coreq.coreq_course.prefix }} {{ coreq.coreq_course.course_number }}</a>
+                {% endfor %}
+              {% endif %}
+              {% endcomment %}
+              {% comment %}
               <table>
                 <tr>
                   <td class="course-prerequisites"><strong>Prerequisites</strong></td>
