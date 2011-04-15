@@ -352,6 +352,7 @@ def register(request):
         The display_cart template does not show the option to begin registration
         unless the user is authenticated and in the students group.
     """
+    from schedule2webadvisor import WebAdvisorCreator
     errors = ''
     # Get their colleague ID.
     student = []
@@ -362,13 +363,11 @@ def register(request):
                          "username": request.user.username}
         student = ods.get_data(ods_spec_dict)
         if student is None or len(student) == 0:
-            errors = ("Unable to retrieve student information - cannot submit. " +
-                      "Contact the help desk for assistance.")
+            errors = "Unable to retrieve student information. "
         else:
             student_id = student['colleague']
     except:
-        errors = ("An error occurred while retrieving student data - cannot submit. " +
-                  "Contact the help desk for assistance.")
+        errors = "An error occurred while retrieving student data. "
 
     # Compose the string of sections to send to datatel (sending section
     # colleague IDs)
@@ -377,7 +376,7 @@ def register(request):
         conflicts = []
         cart_items = []
         # separator will be the separator required by datatel (plan to place this in settings)
-        separator = ','
+        separator = settings.S2W_SEPARATOR
         if request.session.has_key('Cart'):
             sections = request.session['Cart']
             if sections != [] and sections != None:
@@ -388,12 +387,31 @@ def register(request):
                 if sections_to_register != '':
                     sections_to_register = sections_to_register + separator
                 sections_to_register= sections_to_register + item.section_colleague_id
-            errors = "No error - " + sections_to_register
         else:
-            errors = ("No sections were found. Cannot submit to MyCollege.")
+            errors = ("No sections were found. Cannot submit schedule.")
 
+    sections_to_register = '70359}69664'
     # Submit the user's schedule to their preferred list in datatel.
+    if errors == '':
+        web_ad = WebAdvisorCreator()
+        output = web_ad(student_id, sections_to_register)
+        output_list = output.split('\n')
+        message = ''
+        possible_return_values = settings.S2W_RETURN_VALUES
+        for return_value in possible_return_values:
+            try:
+                message = output_list[output_list.index(return_value)]
+                break
+            except ValueError:
+                # this message wasn't in the output - try the next one
+                pass
+        if message == '':
+            errors = 'A problem occurred with the schedule submission.'
+        print message
+        if 'Success' not in message:
+            errors = message
 
+    # Return the data to the calling javascript function.
     json_data = {'errors':errors}
     json_data = json.dumps(json_data)
     # return JSON object to browser

@@ -32,3 +32,9 @@ HAYSTACK_SEARCH_ENGINE = 'solr'
 # Change me before running update_index or rebuild_index
 HAYSTACK_SOLR_URL = 'http://te409-05.cpcc.edu:8983/solr'
 HAYSTACK_INCLUDE_SPELLING = True
+
+S2W_KEY_LOCATION = '/myschedule/schedule2webadvisor/privkey'
+S2W_USER_AT_SERVER = 'snap2webadvisor@cis.cpcc.edu'
+KNOWNHOSTS = '/myschedule/schedule2webadvisor/knownhosts'
+S2W_SEPARATOR = '}'
+S2W_RETURN_VALUES = ['Success', 'Empty Arguments' , 'already registered', 'valid student', 'Academic Level']
