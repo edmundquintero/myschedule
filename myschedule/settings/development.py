@@ -22,7 +22,8 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 # MEDIA_ROOT = j(app_root, 'media')
 # MEDIA_URL = APP_NAME + '/media/'
 
-CPAPI_URL_FORMAT = 'http://pas1-central.cpcc.edu/cpapi/?%s'
+CPAPI_URL_FORMAT = 'http://te409-05.cpcc.edu:5025/cpapi/?%s'
+#CPAPI_URL_FORMAT = 'http://pas1-central.cpcc.edu/cpapi/?%s'
 CPAPI_KEY = "myschedule_key"
 
 DATA_CREDENTIALS = ['testuser', 'testpass']
@@ -33,8 +34,14 @@ HAYSTACK_SEARCH_ENGINE = 'solr'
 HAYSTACK_SOLR_URL = 'http://te409-05.cpcc.edu:8983/solr'
 HAYSTACK_INCLUDE_SPELLING = True
 
-S2W_KEY_LOCATION = '/myschedule/schedule2webadvisor/privkey'
+# The following parameters are used to establish the connection to schedule2webadvisor
+# and submit the user's schedule to their preferred list in webadvisor.
+S2W_KEY_LOCATION = '/home/sje0388e/projects/django/myschedule/myschedule/schedule2webadvisor/privkey'
 S2W_USER_AT_SERVER = 'snap2webadvisor@cis.cpcc.edu'
-KNOWNHOSTS = '/myschedule/schedule2webadvisor/knownhosts'
+KNOWNHOSTS = '/home/sje0388e/projects/django/myschedule/myschedule/schedule2webadvisor/knownhosts'
 S2W_SEPARATOR = '}'
 S2W_RETURN_VALUES = ['Success', 'Empty Arguments' , 'already registered', 'valid student', 'Academic Level']
+S2W_DATATEL_URL = 'https://watest-central.cpcc.edu/WADEV/WADEV'
+# When finished testing, set S2W_TEST_SECTIONS to empty string
+S2W_TEST_SECTIONS = '70359}69664'
+# S2W_TEST_SECTIONS = ''

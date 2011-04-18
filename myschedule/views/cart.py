@@ -225,11 +225,11 @@ def display_cart(request, sections_url=None):
         cart_items = models.Section.objects.filter(
                 section_code__in=sections).order_by('end_date','section_code')
         conflicts = conflict_resolution(cart_items)
-
     return direct_to_template(request,
                               'myschedule/display_cart.html',
                               {'cart_items':cart_items,
-                               'conflicts':conflicts}
+                               'conflicts':conflicts,
+                               's2w_datatel_url':settings.S2W_DATATEL_URL}
                              )
 
 def email_schedule(request):
@@ -353,6 +353,8 @@ def register(request):
         unless the user is authenticated and in the students group.
     """
     from schedule2webadvisor import WebAdvisorCreator
+
+    status = 'error'
     errors = ''
     # Get their colleague ID.
     student = []
@@ -389,8 +391,9 @@ def register(request):
                 sections_to_register= sections_to_register + item.section_colleague_id
         else:
             errors = ("No sections were found. Cannot submit schedule.")
-
-    sections_to_register = '70359}69664'
+    # If there are test sections specified in settings, override value of sections_to_register.
+    if settings.S2W_TEST_SECTIONS != '':
+        sections_to_register = settings.S2W_TEST_SECTIONS
     # Submit the user's schedule to their preferred list in datatel.
     if errors == '':
         web_ad = WebAdvisorCreator()
@@ -406,13 +409,13 @@ def register(request):
                 # this message wasn't in the output - try the next one
                 pass
         if message == '':
-            errors = 'A problem occurred with the schedule submission.'
-        print message
+            message = 'A possible communications problem occurred with the schedule submission.'
         if 'Success' not in message:
             errors = message
-
+        else:
+            status = 'ok'
     # Return the data to the calling javascript function.
-    json_data = {'errors':errors}
+    json_data = {'errors':errors, 'status':status}
     json_data = json.dumps(json_data)
     # return JSON object to browser
     return HttpResponse(json_data)

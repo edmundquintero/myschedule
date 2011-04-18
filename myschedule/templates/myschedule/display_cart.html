@@ -119,6 +119,7 @@
     {% for group in user.groups.all %}
       {% ifequal group|stringformat:"s" "Students" %}
         {% include "myschedule/dialogs/register.html" %}
+        {% include "myschedule/dialogs/register_status.html" %}
       {% endifequal %}
     {% endfor %}
   {% endif %}

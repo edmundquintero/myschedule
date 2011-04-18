@@ -6,6 +6,8 @@ $(function() {
             closeDialog, closeDialog);
     });
 
+    createModalWindow('register-status', 'Status', closeDialog, closeDialog);
+
     // Override any dialog specific parameters and open appropriate selected
     // window.
     $('a.open-window').click(function(event) {
@@ -157,13 +159,39 @@ remove_section = function()
 }
 
 beginRegistration = function(){
+    // Call the register view to submit the user's schedule to datatel colleague.
+    $(".ui-button :contains('Continue')").addClass("ui-state-disabled").attr('disabled','disabled');
+
     $.post(basePath + 'schedule/register/', {}, function(messages){
-        if (messages.errors != ''){
-            alert(messages.errors);
+        if (messages.status == 'error' && messages.errors != ''){
+            message = 'The following message was received when your schedule was submitted to MyCollege:  ' + messages.errors + '<br /><br />Please contact the help desk if you need assistance with this error.';
+            buttons = { "Cancel": closeDialog}
         }
+        else {
+            if (messages.status =='ok'){
+                message = "Your schedule was successfully added to your preferred list in MyCollege.  Select Continue to load MyCollege and complete the registration process.";
+                buttons = { "Cancel": closeDialog,
+                            "Continue": loadColleague }
+            }
+            else{
+                message = 'An unidentified error occurred while attempting to submit your schedule to MyCollege. Please contact the help desk for assistance.';
+                buttons = { "Cancel": closeDialog}
+            }
+        }
+        // Close register dialog (and re-enable it's continue button).
+        $(".ui-button :contains('Continue')").removeClass('ui-state-disabled').removeAttr('disabled');
+        $('#register').dialog('close');
+        // Open the register-status dialog.
+        $('#register-message').html(message);
+        $('#register-status').dialog('option','buttons', buttons);
+        $('#register-status').dialog('open');
     }, 'json');
 
-    // Close dialog.
-    $(this).dialog('close');
+};
 
+loadColleague = function(){
+    // Close the register-status dialog and open datatel colleague
+    // in another window.
+    $('#register-status').dialog('close');
+    window.open(s2w_datatel_url);
 };

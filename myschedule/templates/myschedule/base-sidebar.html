@@ -1,8 +1,5 @@
 {% extends "myschedule/base.html" %}
 {% block scripts %}{{ block.super }}
-   <script type="text/javascript">
-     var basePath = '{% url index %}';
-   </script>
   <script type="text/javascript" src="{% url appstatic "js/calendar.js" %}"></script>
 {% endblock %}
 
