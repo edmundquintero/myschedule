@@ -36,9 +36,9 @@ HAYSTACK_INCLUDE_SPELLING = True
 
 # The following parameters are used to establish the connection to schedule2webadvisor
 # and submit the user's schedule to their preferred list in webadvisor.
-S2W_KEY_LOCATION = '/home/sje0388e/projects/django/myschedule/myschedule/schedule2webadvisor/privkey'
+S2W_KEY_LOCATION = '/home/sje0388e/projects/django/myschedule/.ssh/privkey'
 S2W_USER_AT_SERVER = 'snap2webadvisor@cis.cpcc.edu'
-KNOWNHOSTS = '/home/sje0388e/projects/django/myschedule/myschedule/schedule2webadvisor/knownhosts'
+KNOWNHOSTS = '/home/sje0388e/projects/django/myschedule/.ssh/knownhosts'
 S2W_SEPARATOR = '}'
 S2W_RETURN_VALUES = ['Success', 'Empty Arguments' , 'already registered', 'valid student', 'Academic Level']
 S2W_DATATEL_URL = 'https://watest-central.cpcc.edu/WADEV/WADEV'

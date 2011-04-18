@@ -37,3 +37,41 @@ Schedule CRON jobs (production environment):
 2. seat count update
 3. scripts/popularity.py
 4. scripts/update_index.sh
+
+SSH
+===
+
+In addition to the standard initial deploy process, you will also need to set up the ssh files
+used to submit schedule data to webadvisor (mycollege).
+
+Getting the files in place
+--------------------------
+
+Get the ssh files in one of your directories on the server, for example:
+scp ~/hg/myschedule/.ssh/* pas-staging.cpcc.edu:./deploy/myschedule/.ssh
+
+Create the ssh directory on the server:
+sudo mkdir -p /usr/local/etc/myschedule/.ssh/   # or whatever the settings.SSH_ROOT will be set to
+
+Copy the files into the ssh directory:
+sudo cp ~/deploy/myschedule/.ssh/*  /usr/local/etc/myschedule/.ssh/
+
+Replace the privkey file with actual (and current) private key files (myschedule will use
+the same one used by snap).
+
+If there aren't already files you can copy from a server get the privkey from CIS (Ben Diel)
+
+Make sure the appropriate knownhosts file is updated if the remote server also changed, (ie, webadvisor) -
+myschedule should be using the same one used by snap.
+
+Setting the permissions and ownership
+-------------------------------------
+
+The files need to be u+rw only, and owned by the user that runs the app.
+ sudo chown -R myschedule:myschedule /usr/local/etc/myschedule/
+ sudo chmod -R ugo-rwx /usr/local/etc/myschedule/.ssh/        # clear out all r/w/x permissions
+ sudo chmod -R u+rw /usr/local/etc/myschedule/.ssh/           # give r/w back only to user for this directory and its contents
+ sudo chmod  u+x /usr/local/etc/myschedule/.ssh/              # give x back only to user for directory only
+
+If these permissions are not set correctly, the schedule2webadvisor calls will not work
+and may prompt you for additional credentials or keys.
