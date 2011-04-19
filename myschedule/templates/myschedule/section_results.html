@@ -38,6 +38,54 @@
             <p class="course-name">{{ sections.0.course.title }}</p>
             <p>{{ sections.0.course.description }}</p>
             <p class="contact-hours">Contact Hours {{ section.0.contact_hours }}10</p>
+
+              {% if sections.0.course.prerequisites or sections.0.course.corequisites %}
+                <br />
+                <div class="group">
+                  <div class="half">
+                    {% if sections.0.course.prerequisites %}
+                      <strong>Prerequisites:  </strong>
+                      {% if sections.0.course.prerequisite_courses %}
+                        {% for prereq in sections.0.course.prerequisite_courses %}
+                          {% if not forloop.first %}, {% endif %}
+                          {% if prereq.prereq_course.section_set.all %}
+                            <a href="{% url show_sections prereq.prereq_course.id %}">{{ prereq.prereq_course.prefix }} {{ prereq.prereq_course.course_number }}</a>
+                          {% else %}
+                            {{ prereq.prereq_course.prefix }} {{ prereq.prereq_course.course_number }}
+                          {% endif %}
+                        {% endfor %}
+                      {% else %}
+                        Please check the <a href="{{ catalog_url }}" target="_blank">catalog</a> for prerequisite data.
+                      {% endif %}
+                    {% else %}
+                      &nbsp;
+                    {% endif %}
+                  </div>
+
+                  <div class="half">
+                    {% if sections.0.course.corequisites %}
+                      <strong>Co-requisites:  </strong>
+                      {% if sections.0.course.corequisite_courses %}
+
+                        {% for coreq in sections.0.course.corequisite_courses %}
+                          {% if not forloop.first %}, {% endif %}
+                            {% if coreq.coreq_course.section_set.all %}
+                              <a href="{% url show_sections coreq.coreq_course.id %}">{{ coreq.coreq_course.prefix }} {{ coreq.coreq_course.course_number }}</a>
+                            {% else %}
+                              {{ coreq.coreq_course.prefix }} {{ coreq.coreq_course.course_number }}
+                            {% endif %}
+                        {% endfor %}
+                      {% else %}
+                        Please check the <a href="{{ catalog_url }}" target="_blank">catalog</a> for co-requisite data.
+                      {% endif %}
+                    {% else %}
+                      &nbsp;
+                    {% endif %}
+                  </div>
+                </div>
+                <br /><br />
+              {% endif %}
+
             {% if sections.0.course.note %}<p class="course-note"><strong>Note</strong> {{ sections.0.course.note }}</p>{% endif %}
           </div>
           <div class="clear"></div>

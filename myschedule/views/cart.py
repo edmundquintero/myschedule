@@ -333,6 +333,7 @@ class SQSSearchView(SearchView):
             conflicts = {}
         extra['cart_items'] = cart_items
         extra['conflicts'] = conflicts
+        extra['catalog_url'] = settings.CATALOG_URL
         return extra
 
     def __call__(self, request):

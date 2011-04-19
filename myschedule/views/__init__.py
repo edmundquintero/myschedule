@@ -79,7 +79,8 @@ def show_sections(request, course_id):
             'myschedule/section_results.html',
             {'sections':sections,
              'cart_items':cart_items,
-             'conflicts':conflicts}
+             'conflicts':conflicts,
+             'catalog_url':settings.CATALOG_URL}
     )
 
 def update_courses(request):

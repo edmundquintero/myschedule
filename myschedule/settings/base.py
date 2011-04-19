@@ -24,6 +24,8 @@ THEME = '3g'
 
 DATA_CREDENTIALS = []
 
+CATALOG_URL = 'http://www.cpcc.edu/attending/catalog'
+
 # Heuristic Search Data
 HIGH_THRESHOLD = 1000
 MEDIUM_THRESHOLD = 300

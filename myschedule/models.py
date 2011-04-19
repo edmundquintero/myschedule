@@ -64,7 +64,7 @@ class Course(CourseAbstract):
         prerequisite_courses = []
         for course_code in course_codes:
             try:
-                prereq_course = Course.objects.get(course_code=course_code)
+                prereq_course = Course.objects.select_related().get(course_code=course_code)
                 prereq = {'course_code':course_code,
                           'prereq_course':prereq_course}
                 prerequisite_courses.append(prereq)
@@ -81,7 +81,7 @@ class Course(CourseAbstract):
         corequisite_courses = []
         for course_code in course_codes:
             try:
-                coreq_course = Course.objects.get(course_code=course_code)
+                coreq_course = Course.objects.select_related().get(course_code=course_code)
                 coreq = {'course_code':course_code,
                          'coreq_course':coreq_course}
                 corequisite_courses.append(coreq)
