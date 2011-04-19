@@ -30,10 +30,12 @@
 		        <div class="course-description">
 			        <p class="course-name">{% if result.object.section_set.all %}<a href="{% url show_sections result.object.id %}">{{ result.object.title }}</a>{% else %}{{ result.object.title }}{% endif %}</span>
 			        <p>{{ result.object.description|truncatewords:23 }}</p>
+
               {% if result.object.prerequisites or result.object.corequisites %}
-                <br />
-                <div class="group">
-                  <div class="half">
+                <table class="requisites">
+                <tbody>
+                  <tr>
+                    <td class="prereq">
                     {% if result.object.prerequisites %}
                       <strong>Prerequisites:  </strong>
                       {% if result.object.prerequisite_courses %}
@@ -46,14 +48,14 @@
                           {% endif %}
                         {% endfor %}
                       {% else %}
-                        Please check the <a href="{{ catalog_url }}" target="_blank">catalog</a> for prerequisite data.
+                        Please check the <a href="{{ catalog_url }}" target="_blank">catalog</a> for prerequisite information.
                       {% endif %}
                     {% else %}
                       &nbsp;
                     {% endif %}
-                  </div>
+                    </td>
 
-                  <div class="half">
+                    <td class="coreq">
                     {% if result.object.corequisites %}
                       <strong>Co-requisites:  </strong>
                       {% if result.object.corequisite_courses %}
@@ -67,14 +69,15 @@
                             {% endif %}
                         {% endfor %}
                       {% else %}
-                        Please check the <a href="{{ catalog_url }}" target="_blank">catalog</a> for co-requisite data.
+                        Please check the <a href="{{ catalog_url }}" target="_blank">catalog</a> for co-requisite information.
                       {% endif %}
                     {% else %}
                       &nbsp;
                     {% endif %}
-                  </div>
-                </div>
-                <br /><br />
+                    </td>
+                  </tr>
+                </tbody>
+                </table>
               {% endif %}
               {% if result.object.note %}<p class="course-note"><strong>Note</strong> {{ result.object.note }}</p>{% endif %}
 		        </div>

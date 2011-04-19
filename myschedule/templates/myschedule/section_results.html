@@ -40,9 +40,10 @@
             <p class="contact-hours">Contact Hours {{ section.0.contact_hours }}10</p>
 
               {% if sections.0.course.prerequisites or sections.0.course.corequisites %}
-                <br />
-                <div class="group">
-                  <div class="half">
+                <table class="requisites">
+                <tbody>
+                  <tr>
+                    <td class="prereq">
                     {% if sections.0.course.prerequisites %}
                       <strong>Prerequisites:  </strong>
                       {% if sections.0.course.prerequisite_courses %}
@@ -55,14 +56,14 @@
                           {% endif %}
                         {% endfor %}
                       {% else %}
-                        Please check the <a href="{{ catalog_url }}" target="_blank">catalog</a> for prerequisite data.
+                        Please check the <a href="{{ catalog_url }}" target="_blank">catalog</a> for prerequisite information.
                       {% endif %}
                     {% else %}
                       &nbsp;
                     {% endif %}
-                  </div>
+                    </td>
 
-                  <div class="half">
+                    <td class="coreq">
                     {% if sections.0.course.corequisites %}
                       <strong>Co-requisites:  </strong>
                       {% if sections.0.course.corequisite_courses %}
@@ -76,14 +77,15 @@
                             {% endif %}
                         {% endfor %}
                       {% else %}
-                        Please check the <a href="{{ catalog_url }}" target="_blank">catalog</a> for co-requisite data.
+                        Please check the <a href="{{ catalog_url }}" target="_blank">catalog</a> for co-requisite information.
                       {% endif %}
                     {% else %}
                       &nbsp;
                     {% endif %}
-                  </div>
-                </div>
-                <br /><br />
+                    </td>
+                  </tr>
+                </tbody>
+                </table>
               {% endif %}
 
             {% if sections.0.course.note %}<p class="course-note"><strong>Note</strong> {{ sections.0.course.note }}</p>{% endif %}
