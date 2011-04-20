@@ -13,6 +13,7 @@ apache solr 1.4.1
 pysolr 2.0.13
 cpsite 1.5.1+
 cpapi 1.4.4+
+scheduledata (integration scripts for course bulk data load and seat count availability update)
 
 Setup for Solr:
 Download version 1.4.1 here - http://ftp.wayne.edu/apache//lucene/solr/1.4.1/
