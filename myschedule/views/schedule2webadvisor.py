@@ -10,7 +10,7 @@ class WebAdvisorCreator(object):
     command = "ssh -i %s -o UserKnownHostsFile=%s %s 'schedule2webadvisor %s %s'"
     key_location = settings.S2W_KEY_LOCATION
     user_at_server = settings.S2W_USER_AT_SERVER
-    knownhosts = settings.KNOWNHOSTS
+    knownhosts = settings.S2W_KNOWNHOSTS
     def __call__(self, student_id, sections):
         s2w_command = self.command % (self.key_location,
                                       self.knownhosts,
