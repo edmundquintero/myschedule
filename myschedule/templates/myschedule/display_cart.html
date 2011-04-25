@@ -14,7 +14,7 @@
     <p>All classes have been removed from this schedule.</p>
   </div>
 {% else %}
-  {% if not user.is_authenticated or conflicts.conflicting_sections %}
+  {% if not user.is_authenticated or conflicts.conflicting_sections or downtime_message %}
     <br />
     <div class="message message-warning" id="conflict-login-message">
     {% if not user.is_authenticated %}
@@ -22,6 +22,9 @@
     {% endif %}
     {% if conflicts.conflicting_sections %}
       <p id="conflict-message">Scheduling conflicts are highlighted below.</p>
+    {% endif %}
+    {% if downtime_message %}
+      <p id "downtime-message">{{ downtime_message }}</p>
     {% endif %}
     </div>
   {% endif %}

@@ -41,7 +41,12 @@ S2W_USER_AT_SERVER = 'snap2webadvisor@cis.cpcc.edu'
 KNOWNHOSTS = '/home/sje0388e/projects/django/myschedule/.ssh/knownhosts'
 S2W_SEPARATOR = '}'
 S2W_RETURN_VALUES = ['Success', 'Empty Arguments' , 'already registered', 'valid student', 'Academic Level']
-S2W_DATATEL_URL = 'https://watest-central.cpcc.edu/WADEV/WADEV'
+#S2W_DATATEL_URL = 'https://watest-central.cpcc.edu/WADEV/WADEV'
+S2W_DATATEL_URL = 'http://mycollege.cpcc.edu/WATESTHR/WATESTHR'
+#S2W_DATATEL_URL = 'http://mycollege.cpcc.edu'
 # When finished testing, set S2W_TEST_SECTIONS to empty string
 S2W_TEST_SECTIONS = '70359}69664'
 # S2W_TEST_SECTIONS = ''
+S2W_UNAVAILABLE_BEGIN = '03:00:00'
+S2W_UNAVAILABLE_END = '07:30:00'
+DOWNTIME_MESSAGE = 'Class registration is unavailable between 3:00AM and 7:30AM.'

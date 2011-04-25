@@ -164,7 +164,7 @@ beginRegistration = function(){
 
     $.post(basePath + 'schedule/register/', {}, function(messages){
         if (messages.status == 'error' && messages.errors != ''){
-            message = 'The following message was received when your schedule was submitted to MyCollege:  ' + messages.errors + '<br /><br />Please contact the help desk if you need assistance with this error.';
+            message = 'The following message was received when your schedule was submitted to MyCollege: <br /><em> ' + messages.errors + '</em><br /><br />Please contact the help desk if you need assistance with this error.';
             buttons = { "Cancel": closeDialog}
         }
         else {

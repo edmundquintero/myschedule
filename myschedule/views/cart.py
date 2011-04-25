@@ -209,6 +209,8 @@ def display_cart(request, sections_url=None):
     """
         Displays shopping cart template (schedule).
     """
+    from datetime import datetime
+
     conflicts = {}
     cart_items = []
     if not request.session.has_key('Cart') and sections_url == None:
@@ -217,19 +219,27 @@ def display_cart(request, sections_url=None):
         sections = sections_url.split("/")
         sections.remove('')
         request.session['Cart'] = sections
-    # TODO: get all the other information regarding a course section that
-    # needs to be displayed (still need prereqs and coreqs)
     sections = request.session['Cart']
 
     if sections != [] and sections != None:
         cart_items = models.Section.objects.filter(
                 section_code__in=sections).order_by('end_date','section_code')
         conflicts = conflict_resolution(cart_items)
+
+    downtime_message = ''
+    if (settings.S2W_UNAVAILABLE_BEGIN != '' and settings.S2W_UNAVAILABLE_END != ''):
+        current_time = datetime.now()
+        downtime_begin = datetime.strptime(settings.S2W_UNAVAILABLE_BEGIN,'%H:%M:%S')
+        downtime_end = datetime.strptime(settings.S2W_UNAVAILABLE_END,'%H:%M:%S')
+        if (current_time.time() >= downtime_begin.time() and
+            current_time.time() <= downtime_end.time()):
+            downtime_message = settings.DOWNTIME_MESSAGE
     return direct_to_template(request,
                               'myschedule/display_cart.html',
                               {'cart_items':cart_items,
                                'conflicts':conflicts,
-                               's2w_datatel_url':settings.S2W_DATATEL_URL}
+                               's2w_datatel_url':settings.S2W_DATATEL_URL,
+                               'downtime_message':downtime_message}
                              )
 
 def email_schedule(request):
@@ -354,6 +364,7 @@ def register(request):
         unless the user is authenticated and in the students group.
     """
     from schedule2webadvisor import WebAdvisorCreator
+    from datetime import datetime
 
     status = 'error'
     errors = ''
@@ -371,6 +382,16 @@ def register(request):
             student_id = student['colleague']
     except:
         errors = "An error occurred while retrieving student data. "
+
+    # Verify registration is open.
+    if (errors == '' and settings.S2W_UNAVAILABLE_BEGIN != ''
+        and settings.S2W_UNAVAILABLE_END != ''):
+        current_time = datetime.now()
+        downtime_begin = datetime.strptime(settings.S2W_UNAVAILABLE_BEGIN,'%H:%M:%S')
+        downtime_end = datetime.strptime(settings.S2W_UNAVAILABLE_END,'%H:%M:%S')
+        if (current_time.time() >= downtime_begin.time() and
+            current_time.time() <= downtime_end.time()):
+            errors = settings.DOWNTIME_MESSAGE
 
     # Compose the string of sections to send to datatel (sending section
     # colleague IDs)
@@ -395,6 +416,7 @@ def register(request):
     # If there are test sections specified in settings, override value of sections_to_register.
     if settings.S2W_TEST_SECTIONS != '':
         sections_to_register = settings.S2W_TEST_SECTIONS
+
     # Submit the user's schedule to their preferred list in datatel.
     if errors == '':
         web_ad = WebAdvisorCreator()
