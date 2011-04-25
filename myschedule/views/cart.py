@@ -383,7 +383,7 @@ def register(request):
         if request.session.has_key('Cart'):
             sections = request.session['Cart']
             if sections != [] and sections != None:
-                cart_items = models.Section.objects.filter(section_code__in=sections)
+                cart_items = models.Section.objects.filter(section_code__in=sections,status='Active')
                 #conflicts = conflict_resolution(cart_items)
         if cart_items != []:
             for item in cart_items:
