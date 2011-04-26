@@ -28,3 +28,8 @@ S2W_DATATEL_URL = 'http://mycollege.cpcc.edu/WATESTHR/WATESTHR'
 #S2W_DATATEL_URL = 'http://mycollege.cpcc.edu'
 # When finished testing, set S2W_TEST_SECTIONS to empty string
 S2W_TEST_SECTIONS = '70359}69664'
+
+AUTH_IP_FOR_COURSE_UPDATE = ['10.9.4.25','10.9.4.26']
+AUTH_KEY_FOR_COURSE_UPDATE = 'test_key'
+AUTH_IP_FOR_SEAT_UPDATE = ['10.9.4.25','10.9.4.26']
+AUTH_KEY_FOR_SEAT_UPDATE = 'test_key'

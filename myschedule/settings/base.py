@@ -31,6 +31,10 @@ DATABASES = {
     }
 }
 
+CPAPI_URL_FORMAT = 'http://pas1-central.cpcc.edu/cpapi/?%s'
+CPAPI_KEY = ""
+
+## Haystack settings
 HAYSTACK_SITECONF = 'myschedule.search_sites'
 HAYSTACK_SEARCH_ENGINE = 'solr'
 # Change haystack_solr_url before running update_index or rebuild_index
@@ -43,17 +47,10 @@ CRITERION_THRESHOLD = 10
 HAYSTACK_SEARCH_RESULTS_PER_PAGE = 10
 BLACKLIST = ['fuck', 'shit']
 
-CPAPI_URL_FORMAT = 'http://pas1-central.cpcc.edu/cpapi/?%s'
-CPAPI_KEY = ""
-
-# data_credentials contains username and password expected to be received in
-# header of bulk data push and seat count api
-DATA_CREDENTIALS = []
-
+## Address to college catalog
 CATALOG_URL = 'http://www.cpcc.edu/attending/catalog'
 
-# The following parameters are used to establish the connection to schedule2webadvisor
-# to submit the user's schedule to their preferred list in webadvisor.
+## schedule2webadvisor settings
 S2W_KEY_LOCATION = ''
 S2W_USER_AT_SERVER = 'snap2webadvisor@cis.cpcc.edu'
 S2W_KNOWNHOSTS = ''
@@ -67,3 +64,9 @@ S2W_TEST_SECTIONS = ''
 S2W_UNAVAILABLE_BEGIN = '03:00:00'
 S2W_UNAVAILABLE_END = '07:30:00'
 DOWNTIME_MESSAGE = 'Class registration is unavailable between 3:00AM and 7:30AM.'
+
+## Authorization settings for course bulk data load and seat count updates
+AUTH_IP_FOR_COURSE_UPDATE = []
+AUTH_KEY_FOR_COURSE_UPDATE = ''
+AUTH_IP_FOR_SEAT_UPDATE = []
+AUTH_KEY_FOR_SEAT_UPDATE = ''

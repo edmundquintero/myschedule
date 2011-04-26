@@ -83,16 +83,35 @@ def show_sections(request, course_id):
              'catalog_url':settings.CATALOG_URL}
     )
 
+def validate_credentials(request, authorized_addresses, authorized_key, key_received):
+    """
+        Verifies the request was sent from an allowed IP address and that it
+        sent the appropriate top secret key.
+    """
+    address_received = ''
+    if request.META.has_key('HTTP_X_FORWARDED_FOR'):
+        address_received = request.META['HTTP_X_FORWARDED_FOR']
+    elif request.META.has_key('REMOTE_ADDR'):
+        address_received = request.META['REMOTE_ADDR']
+    else:
+        raise ValueError("Missing IP address")
+    if address_received.strip() in authorized_addresses:
+        print address_received
+        if authorized_key != key_received:
+            raise ValueError("Invalid authorization key")
+        return_status = True
+    else:
+        raise ValueError("Unauthorized IP address")
+    return
+
 def update_courses(request):
     """
         Receives and processes course data.
     """
     from django.utils import simplejson as json
-    import base64
 
     status = 'Starting data load...\n'
     messages = ''
-
     if request.method == 'POST':
         try:
             # Use the raw post data so that it's not in the form of a django querydict
@@ -101,30 +120,26 @@ def update_courses(request):
             # to throw an error when checking authorization.
             post_data = request.raw_post_data
 
-            if request.META.has_key('HTTP_AUTHORIZATION'):
-                # Calling function needs to make sure to remove extraneous line
-                # feed attached to encoded authorization string. Django does not
-                # like it - post data will be messed up.
+            # decode the data
+            data_received = json.loads(post_data)
 
-                authorization = request.META['HTTP_AUTHORIZATION']
-                authorization = authorization.replace('Basic ','')
-                credentials = base64.decodestring(authorization)
-                credentials = credentials.split(':')
-                # Compare the credentials passed in through the header to
-                # those in the settings to verify calling application is
-                # authorized
-                if (credentials[0] != settings.DATA_CREDENTIALS[0] or
-                        credentials[1] != settings.DATA_CREDENTIALS[1]):
-                    raise ValueError("Invalid credentials")
+            # validate IP address that sent the data and verify it sent
+            # proper authorization key
+            if data_received[0].has_key('auth_key'):
+                validate_credentials(request,
+                                     settings.AUTH_IP_FOR_COURSE_UPDATE,
+                                     settings.AUTH_KEY_FOR_COURSE_UPDATE,
+                                     data_received[0]['auth_key'])
             else:
-                raise ValueError("Missing credentials")
-
+                raise ValueError("Missing authorization key")
         except:
             status = status + '\n' + traceback.format_exc()
         else:
             try:
-                # Decode the data
-                data = json.loads(post_data)
+                if data_received[0].has_key('course_data'):
+                    data = data_received[0]['course_data']
+                else:
+                    data = []
                 received_count = len(data)
                 if received_count == 0:
                     raise ValueError("No data received")
@@ -355,7 +370,6 @@ def update_seats(request):
         statuses for course sections.
     """
     from django.utils import simplejson as json
-    import base64
 
     status = 'Starting data load...\n'
     messages = ''
@@ -368,30 +382,26 @@ def update_seats(request):
             # to throw an error when checking authorization.
             post_data = request.raw_post_data
 
-            if request.META.has_key('HTTP_AUTHORIZATION'):
-                # Calling function needs to make sure to remove extraneous line
-                # feed attached to encoded authorization string. Django does not
-                # like it - post data will be messed up.
+            # decode the data
+            data_received = json.loads(post_data)
 
-                authorization = request.META['HTTP_AUTHORIZATION']
-                authorization = authorization.replace('Basic ','')
-                credentials = base64.decodestring(authorization)
-                credentials = credentials.split(':')
-                # Compare the credentials passed in through the header to
-                # those in the settings to verify calling application is
-                # authorized
-                if (credentials[0] != settings.DATA_CREDENTIALS[0] or
-                        credentials[1] != settings.DATA_CREDENTIALS[1]):
-                    raise ValueError("Invalid credentials")
+            # validate IP address that sent the data and verify it sent
+            # proper authorization key
+            if data_received[0].has_key('auth_key'):
+                validate_credentials(request,
+                                     settings.AUTH_IP_FOR_SEAT_UPDATE,
+                                     settings.AUTH_KEY_FOR_SEAT_UPDATE,
+                                     data_received[0]['auth_key'])
             else:
-                raise ValueError("Missing credentials")
-
+                raise ValueError("Missing authorization key")
         except:
             status = status + '\n' + traceback.format_exc()
         else:
             try:
-                # Decode the data
-                data = json.loads(post_data)
+                if data_received[0].has_key('availability_data'):
+                    data = data_received[0]['availability_data']
+                else:
+                    data = []
                 received_count = len(data)
                 if received_count == 0:
                     raise ValueError("No data received")
