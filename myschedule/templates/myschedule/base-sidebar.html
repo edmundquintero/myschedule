@@ -13,9 +13,7 @@
       {% if user.is_authenticated %}
         {% for group in user.groups.all %}
           {% ifequal group|stringformat:"s" "Students" %}
-            {% if not downtime_message %}
-              <a class="open-window button" href="#register" ref="register" dialog-title="Begin Registration" title="Submit this schedule to preferred list in MyCollege">Begin Registration</a>
-            {% endif %}
+            <a class="open-window button" href="#register" ref="register" dialog-title="Begin Registration" title="Submit this schedule to preferred list in MyCollege">Begin Registration</a>
           {% endifequal %}
         {% endfor %}
       {% endif %}
