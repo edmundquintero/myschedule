@@ -96,7 +96,6 @@ def validate_credentials(request, authorized_addresses, authorized_key, key_rece
     else:
         raise ValueError("Missing IP address")
     if address_received.strip() in authorized_addresses:
-        print address_received
         if authorized_key != key_received:
             raise ValueError("Invalid authorization key")
         return_status = True
