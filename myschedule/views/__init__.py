@@ -18,6 +18,7 @@ def index(request):
     """
         Handles processing for the index template.
     """
+    request.session['next_view'] = request.path
     return direct_to_template(request,
                               'myschedule/index.html')
 
@@ -74,7 +75,7 @@ def show_sections(request, course_id):
 
     # Get the sections for the selected course
     sections = models.Section.objects.select_related().filter(course=course_id)
-
+    request.session['next_view'] = request.path
     return direct_to_template(request,
             'myschedule/section_results.html',
             {'sections':sections,

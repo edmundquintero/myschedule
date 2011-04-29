@@ -18,7 +18,7 @@
     <br />
     <div class="message message-warning" id="conflict-login-message">
     {% if not user.is_authenticated %}
-      <p id="login-message"><a href="{% url schedule_login request.path %}">Sign in</a> to save this schedule!</p>
+      <p id="login-message"><a href="{% url login %}">Sign in</a> to save this schedule!</p>
     {% endif %}
     {% if conflicts.conflicting_sections %}
       <p id="conflict-message">Scheduling conflicts are highlighted below.</p>

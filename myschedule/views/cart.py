@@ -20,11 +20,10 @@ from time import strftime
     (having courses added and removed).
 """
 
-@login_required
-def schedule_login(request, next):
+def schedule_login(request):
     """
-        Instead of sign in links calling login, pass the user through here
-        so can save a schedule they were working on before they signed in and
+        This view handles some post login processing.
+        Saves a schedule the user was working on before they signed in and
         can check for an existing saved schedule.
     """
     if request.user.is_authenticated():
@@ -52,6 +51,20 @@ def schedule_login(request, next):
             # Update the cart session variable
             request.session['Cart'] = cart_sections
             save_cart(request)
+        section_count = 0
+        if request.session.has_key('Cart'):
+            section_count = models.Section.objects.filter(section_code__in=request.session['Cart']).count()
+    # Return the user back to the page they were on prior to signing in unless
+    # they were on the index page. If they signed in on the index page and had
+    # a previously saved schedule (with current course sections), they will
+    # get redirected to the show_schedule view so they can see their schedule.
+    if request.session.has_key('next_view'):
+        if request.session['next_view'] == '/myschedule/' and section_count > 0:
+            next = '/myschedule/show_schedule/'
+        else:
+            next = request.session['next_view']
+    else:
+        next = '/myschedule/'
     return redirect(next)
 
 def add_item(request):
@@ -203,6 +216,7 @@ def show_schedule(request):
             sections_url = cart.sections
         except:
             return redirect('index')
+    request.session['next_view'] = request.path
     return redirect('display_cart', sections_url)
 
 def display_cart(request, sections_url=None):
@@ -234,6 +248,8 @@ def display_cart(request, sections_url=None):
         if (current_time.time() >= downtime_begin.time() and
             current_time.time() <= downtime_end.time()):
             downtime_message = settings.DOWNTIME_MESSAGE
+
+    request.session['next_view'] = '/myschedule/show_schedule/'
     return direct_to_template(request,
                               'myschedule/display_cart.html',
                               {'cart_items':cart_items,
@@ -328,6 +344,7 @@ def get_calendar_data(request):
     return HttpResponse(json_data)
 
 class SQSSearchView(SearchView):
+
     def extra_context(self):
         extra = super(SQSSearchView, self).extra_context()
         extra['spelling_suggestion'] = self.searchqueryset.spelling_suggestion()
@@ -354,6 +371,7 @@ class SQSSearchView(SearchView):
                 request.session['previous_query'] = request.session['current_query'].lower()
             request.session['current_query'] = request.GET['q'].lower()
             request.session.modified = True
+        request.session['next_view'] = request.get_full_path()
         return super(SQSSearchView, self).__call__(request)
 
 def register(request):

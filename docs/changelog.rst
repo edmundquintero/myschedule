@@ -1,3 +1,9 @@
+myschedule 1.0.2
+================
+Application update only, but has the following settings updates:
+ * Change value of CAS_REDIRECT_URL
+ * Remove setting CAS_IGNORE_REFERER 
+
 myschedule 1.0.1
 =======================
  Application update only, but has the following settings updates:
