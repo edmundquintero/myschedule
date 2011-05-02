@@ -10,12 +10,13 @@ class Schedule(models.Model):
         the sections for the schedule.
     """
 
-    owner = models.ForeignKey(User, blank=True, null=True)
+    owner = models.ForeignKey(User)
     description = models.CharField(max_length=50,
                 help_text='Brief description that identifies this schedule.')
-    sections = models.CharField(max_length=300)
+    sections = models.CharField(max_length=300, blank=True)
+
     def __unicode__(self):
-        return self.description
+        return "%s" % self.owner.username
 
 
 class CourseAbstract(models.Model):

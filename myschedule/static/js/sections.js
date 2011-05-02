@@ -39,8 +39,10 @@ function addItem(section)
                 if (exists == 0){
                     item_html = '<li class="remove-item"><a class="remove-link" href="#remove" ref="' + section + '" ><img src="' + buttonPath + '" alt="Remove"/></a>' + section_data.prefix + ' ' + section_data.course_number + ' - ' + section_data.section_number + '<br/>' + section_data.title.slice(0,19) +'</li>';
                     $('#cart').append(item_html);
-                    // Re-instantiate click event otherwise the delete won't work for item added to the sidebar.
-                    $('a.remove-link').click(remove_section);
+                    // Instantiate click event otherwise the delete won't work for item added to the sidebar.
+                    // Make sure to specify the section! Bad things (processes remove-section multiple times)
+                    // happen if the section isn't specified.
+                    $('a.remove-link[ref="'+section+'"]').click(remove_section);
                 }
                 // Show the view full schedule button in case it was previously hidden.
                 $('#view-full-schedule').show();

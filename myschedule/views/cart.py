@@ -120,15 +120,15 @@ def save_cart(request):
     if request.session.has_key('Cart'):
         for item in request.session['Cart']:
             sections_url = sections_url + item + '/'
-    if sections_url != '':
         try:
             # See if a schedule already exists for this user.
             cart = models.Schedule.objects.get(owner=request.user)
             cart.sections = sections_url
         except models.Schedule.DoesNotExist:
             cart = models.Schedule(owner=request.user,
-                           sections=sections_url)
-        cart.save()
+                       sections=sections_url)
+        finally:
+            cart.save()
     return errors
 
 def delete_cartitem(request):
@@ -138,7 +138,8 @@ def delete_cartitem(request):
     section = request.POST['section']
     if request.session.has_key('Cart'):
         sections = request.session['Cart']
-        sections.remove(section)
+        if section in sections:
+            sections.remove(section)
         request.session['Cart'] = sections
         if request.user.is_authenticated():
             save_cart(request)

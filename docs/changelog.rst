@@ -1,6 +1,8 @@
 myschedule 1.0.2
 ================
-Application update only, but has the following settings updates:
+Install application update.
+Drop table myschedule_schedule and run syncdb.
+Has the following settings updates:
  * Change value of CAS_REDIRECT_URL
  * Remove setting CAS_IGNORE_REFERER 
 
