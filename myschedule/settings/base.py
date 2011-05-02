@@ -62,7 +62,7 @@ S2W_TEST_SECTIONS = ''
 # is no downtime for webadvisor (24 hour time format otherwise)
 S2W_UNAVAILABLE_BEGIN = '03:00:00'
 S2W_UNAVAILABLE_END = '07:30:00'
-DOWNTIME_MESSAGE = 'Class registration is unavailable between 3:00AM and 7:30AM.'
+S2W_DOWNTIME_MESSAGE = 'Class registration is unavailable between 3:00AM and 7:30AM.'
 
 ## Authorization settings for course bulk data load and seat count updates
 AUTH_IP_FOR_COURSE_UPDATE = []

@@ -4,7 +4,8 @@ Install application update.
 Drop table myschedule_schedule and run syncdb.
 Has the following settings updates:
  * Change value of CAS_REDIRECT_URL
- * Remove setting CAS_IGNORE_REFERER 
+ * Remove setting CAS_IGNORE_REFERER
+ * Rename setting DOWNTIME_MESSAGE to S2W_DOWNTIME_MESSAGE
 
 myschedule 1.0.1
 =======================

@@ -248,7 +248,7 @@ def display_cart(request, sections_url=None):
         downtime_end = datetime.strptime(settings.S2W_UNAVAILABLE_END,'%H:%M:%S')
         if (current_time.time() >= downtime_begin.time() and
             current_time.time() <= downtime_end.time()):
-            downtime_message = settings.DOWNTIME_MESSAGE
+            downtime_message = settings.S2W_DOWNTIME_MESSAGE
 
     request.session['next_view'] = '/myschedule/show_schedule/'
     return direct_to_template(request,
@@ -410,7 +410,7 @@ def register(request):
         downtime_end = datetime.strptime(settings.S2W_UNAVAILABLE_END,'%H:%M:%S')
         if (current_time.time() >= downtime_begin.time() and
             current_time.time() <= downtime_end.time()):
-            errors = settings.DOWNTIME_MESSAGE
+            errors = settings.S2W_DOWNTIME_MESSAGE
 
     # Compose the string of sections to send to datatel (sending section
     # colleague IDs)
