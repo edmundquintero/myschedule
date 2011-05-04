@@ -139,23 +139,27 @@ remove_section = function()
     $(this).parents('.section').hide();
     // Actually remove section from session variable, user's saved schedule
     // and recheck conflicts.
-    $.post(basePath + 'schedule/delete/', {section:$(this).attr('ref')});
-    $.post(basePath + 'schedule/conflicts/', {}, function(conflicts){
-        $('.section-meeting tr').removeClass('error'); 
-        if (conflicts.conflicts.conflicting_meetings.length > 0){
-            for (var i=0; i<conflicts.conflicts.conflicting_meetings.length; i++){
-                $('#'+conflicts.conflicts.conflicting_meetings[i]).addClass('error');
+    $.post(basePath + 'schedule/delete/', {section:$(this).attr('ref')}, function(message){
+        // Note: since the delete process updates the session variable, we don't want it
+        // to recheck conflicts and reload the calendar until after the delete process ends.
+        // Hence the reason for placing those calls in here.
+        $.post(basePath + 'schedule/conflicts/', {}, function(conflicts){
+            $('.section-meeting tr').removeClass('error');
+            if (conflicts.conflicts.conflicting_meetings.length > 0){
+                for (var i=0; i<conflicts.conflicts.conflicting_meetings.length; i++){
+                    $('#'+conflicts.conflicts.conflicting_meetings[i]).addClass('error');
+                }
             }
-        }
-        else{
-            $('#conflict-message').hide();
-            $('#conflict-login-message').hide();
-            $('p[id="login-message"]').each(function(){
-                $('#conflict-login-message').show();
-            });
-        }
+            else{
+                $('#conflict-message').hide();
+                $('#conflict-login-message').hide();
+                $('p[id="login-message"]').each(function(){
+                    $('#conflict-login-message').show();
+                });
+            }
+        }, 'json');
+        loadCalendar();
     }, 'json');
-    loadCalendar();
 }
 
 beginRegistration = function(){

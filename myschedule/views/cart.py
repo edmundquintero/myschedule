@@ -143,7 +143,9 @@ def delete_cartitem(request):
         request.session['Cart'] = sections
         if request.user.is_authenticated():
             save_cart(request)
-    return HttpResponse()
+    json_data = {'message':'completed'}
+    json_data = json.dumps(json_data, indent=2)
+    return HttpResponse(json_data)
 
 def get_conflicts(request):
     """
