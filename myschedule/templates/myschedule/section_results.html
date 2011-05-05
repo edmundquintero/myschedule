@@ -116,7 +116,7 @@
                     <td class="section-seats-number">{{ section.status }}</td>
                   </tr>
                 {% else %}
-                  {% if section.available_seats %}
+                  {% if section.available_seats or section.available_seats == 0 %}
                     <tr>
                       <td class="section-seats-label">Seats Available</td>
                     </tr>
