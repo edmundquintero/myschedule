@@ -234,7 +234,8 @@ def display_cart(request, sections_url=None):
         return redirect('index')
     elif not request.session.has_key('Cart') and sections_url != None:
         sections = sections_url.split("/")
-        sections.remove('')
+        if '' in sections:
+            sections.remove('')
         request.session['Cart'] = sections
     sections = request.session['Cart']
 
