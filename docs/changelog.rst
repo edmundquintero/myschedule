@@ -1,3 +1,7 @@
+myschedule 1.0.4
+================
+Application update only.
+
 myschedule 1.0.3
 ================
 Application update only.
