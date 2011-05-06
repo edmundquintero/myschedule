@@ -103,7 +103,8 @@ createCalendar = function(calendar_data)
                                                 // in the format month/day/year).
                                                 temp_start_date = new Date(meetings[n].start_date);
                                                 temp_end_date = new Date(meetings[n].end_date);
-                                                if ((start_date >= temp_start_date && start_date <= temp_end_date) || (end_date >= temp_start_date && end_date <= temp_end_date)){
+                                                if ((start_date >= temp_start_date && start_date <= temp_end_date) || (end_date >= temp_start_date && end_date <= temp_end_date) ||
+                                                    (temp_start_date >= start_date && temp_start_date <= end_date) || (temp_end_date >= start_date && temp_end_date <= end_date)){
                                                     // This section is in conflict with another.
                                                     class_to_add = 'busy-with-conflict';
                                                     $('.sidebar-message').show();
