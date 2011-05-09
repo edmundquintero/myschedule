@@ -5,7 +5,7 @@ Initial Install
 3. Populate course data (run cron jobs for course data and seat count data)
 4. Install/run haystack, solr, and pysolr (see dependencies and notes below)
 5. Update HAYSTACK_SOLR_URL setting to access solr.
-6. Run "python appmanage.py rebuild_index" or script rebuild_index.sh
+6. Run "python appmanage.py rebuild_index"
 
 Dependencies:
 django_haystack 1.0.1 final
@@ -37,7 +37,7 @@ Schedule CRON jobs (production environment):
 1. course data bulk load
 2. seat count update
 3. scripts/popularity.py
-4. scripts/update_index.sh
+4. scripts/myschedule_update_index.py
 
 SSH
 ===
