@@ -63,7 +63,7 @@ S2W_TEST_SECTIONS = ''
 S2W_UNAVAILABLE_BEGIN = '03:00:00'
 S2W_UNAVAILABLE_END = '07:30:00'
 S2W_DOWNTIME_MESSAGE = 'Class registration is unavailable between 3:00AM and 7:30AM.'
-
+S2W_FAILURE_MESSAGE = 'Class registration is currently unavailable. This may be due to system maintenance. System maintenance occurs daily between 3:00AM and 7:30AM and on Fridays between 5:30PM and 8:00PM. Please contact the ITS Help Desk for assistance if you receive this message outside of a scheduled maintenance period.'
 ## Authorization settings for course bulk data load and seat count updates
 AUTH_IP_FOR_COURSE_UPDATE = []
 AUTH_KEY_FOR_COURSE_UPDATE = ''

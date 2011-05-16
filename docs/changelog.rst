@@ -1,3 +1,7 @@
+Myschedule 1.0.6
+================
+Application update only with one new setting, S2W_FAILURE_MESSAGE (see base.py).
+
 myschedule 1.0.5
 ================
 Application update only.

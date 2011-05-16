@@ -454,7 +454,7 @@ def register(request):
                 # this message wasn't in the output - try the next one
                 pass
         if message == '':
-            message = 'A possible communications problem occurred with the schedule submission.'
+            message = settings.S2W_FAILURE_MESSAGE
         if 'Success' not in message:
             errors = message
         else:
