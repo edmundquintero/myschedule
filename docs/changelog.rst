@@ -1,3 +1,8 @@
+Myschedule 1.0.7
+================
+Application update only with two new settings, S2W_SUCCESS_MESSAGE and
+SYSTEM_NOTIFICATION (see base.py).
+
 Myschedule 1.0.6
 ================
 Application update only with one new setting, S2W_FAILURE_MESSAGE (see base.py).
