@@ -173,7 +173,7 @@ beginRegistration = function(){
         }
         else {
             if (messages.status =='ok'){
-                message = "Your schedule was successfully added to your preferred list in MyCollege.  Select Continue to load MyCollege and complete the registration process.";
+                message = s2w_success_message;
                 buttons = { "Cancel": closeDialog,
                             "Continue": loadColleague }
             }

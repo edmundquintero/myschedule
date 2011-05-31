@@ -20,7 +20,8 @@ def index(request):
     """
     request.session['next_view'] = request.path
     return direct_to_template(request,
-                              'myschedule/index.html')
+                              'myschedule/index.html',
+                              {'system_notification': settings.SYSTEM_NOTIFICATION})
 
 def help(request):
     """

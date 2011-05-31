@@ -4,7 +4,12 @@
 {% block title %}{% endblock %}
 
 {% block content %}
-
+{% if system_notification %}
+  <br />
+  <div class="message message-warning">
+      <p id "system-notification">{{ system_notification }}</p>
+  </div>
+{% endif %}
 {% include "myschedule/search.html" %}
 <p id="headline">It's that simple.</p>
 <ul id="steps">

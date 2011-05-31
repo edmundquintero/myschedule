@@ -64,8 +64,13 @@ S2W_UNAVAILABLE_BEGIN = '03:00:00'
 S2W_UNAVAILABLE_END = '07:30:00'
 S2W_DOWNTIME_MESSAGE = 'Class registration is unavailable between 3:00AM and 7:30AM.'
 S2W_FAILURE_MESSAGE = 'Class registration is currently unavailable. This may be due to system maintenance. System maintenance occurs daily between 3:00AM and 7:30AM and on Fridays between 5:30PM and 8:00PM. Please contact the ITS Help Desk for assistance if you receive this message outside of a scheduled maintenance period.'
+S2W_SUCCESS_MESSAGE = 'Your schedule was successfully added to your preferred list in MyCollege.  Select Continue to sign in to MyCollege and complete the registration process. Once you sign in to MyCollege, your preferred list can be accessed under Students -> Register and Drop Sections.'
+
 ## Authorization settings for course bulk data load and seat count updates
 AUTH_IP_FOR_COURSE_UPDATE = []
 AUTH_KEY_FOR_COURSE_UPDATE = ''
 AUTH_IP_FOR_SEAT_UPDATE = []
 AUTH_KEY_FOR_SEAT_UPDATE = ''
+
+## Disclaimer or notification to be displayed on index page (typically for a non-production release).
+SYSTEM_NOTIFICATION = "This is a beta release of the Schedule Builder application.  Because this is a beta release, the application or some of it's features may periodically be unavailable.  While all current features are believed to be functional, you may still encounter problems.  Problems with this application should be reported to the ITS Help Desk."
