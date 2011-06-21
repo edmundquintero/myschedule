@@ -260,7 +260,8 @@ def display_cart(request, sections_url=None):
                                'conflicts':conflicts,
                                's2w_datatel_url':settings.S2W_DATATEL_URL,
                                'downtime_message':downtime_message,
-                               's2w_success_message':settings.S2W_SUCCESS_MESSAGE}
+                               's2w_success_message':settings.S2W_SUCCESS_MESSAGE,
+                               'allow_feedback':settings.ALLOW_FEEDBACK}
                              )
 
 def email_schedule(request):

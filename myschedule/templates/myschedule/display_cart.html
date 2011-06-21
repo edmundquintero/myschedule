@@ -14,7 +14,7 @@
     <p>All classes have been removed from this schedule.</p>
   </div>
 {% else %}
-  {% if not user.is_authenticated or conflicts.conflicting_sections or downtime_message %}
+  {% if not user.is_authenticated or conflicts.conflicting_sections or downtime_message or allow_feedback %}
     <br />
     <div class="message message-warning" id="conflict-login-message">
     {% if not user.is_authenticated %}
@@ -25,6 +25,9 @@
     {% endif %}
     {% if downtime_message %}
       <p id "downtime-message">{{ downtime_message }}</p>
+    {% endif %}
+    {% if allow_feedback %}
+      <p id "feedback-message">Would you like to <a href="#feedback" class="open-window" ref="feedback" dialog-title="Thank you for visiting">leave feedback</a>?</p>
     {% endif %}
     </div>
   {% endif %}
@@ -125,6 +128,9 @@
         {% include "myschedule/dialogs/register_status.html" %}
       {% endifequal %}
     {% endfor %}
+  {% endif %}
+  {% if allow_feedback %}
+    {% include "myschedule/dialogs/feedback.html" %}
   {% endif %}
 {% endif %}
 {% endblock %}
