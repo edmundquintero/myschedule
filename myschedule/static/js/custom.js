@@ -25,8 +25,7 @@ $(function() {
 
         if($(this).attr('ref') == 'feedback') {
             buttons = { "Close": closeDialog }
-            $('#' + $(this).attr('ref')).dialog('option','width',675);
-            $('#' + $(this).attr('ref')).dialog('option','minHeight',400);
+            $('#' + $(this).attr('ref')).dialog('option','width',600);
         }
 
         if($(this).attr('ref') == 'register') {
