@@ -158,7 +158,7 @@ remove_section = function()
             else{
                 $('#conflict-message').hide();
                 $('#conflict-login-message').hide();
-                $('p[id="login-message"]').each(function(){
+                $('p[id="login-message"],p[id="feedback-message"],p[id="downtime-message"]').each(function(){
                     $('#conflict-login-message').show();
                 });
             }
