@@ -1,3 +1,7 @@
+Myschedule 1.0.8
+================
+Application update with one new setting, ALLOW_FEEDBACK (see base.py).
+
 Myschedule 1.0.7
 ================
 Application update only with two new settings, S2W_SUCCESS_MESSAGE and
