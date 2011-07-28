@@ -1,3 +1,13 @@
+Myschedule 1.0.9
+================
+Application update and model update (to change book publisher from efolette to barnes and noble).
+# Issue the following sql statements to increase size of book_link field:
+    use myschedule;
+    alter table myschedule_section modify column book_link varchar(510) not null;
+# Deploy application update.
+# Update course data.
+# Update seat counts
+
 Myschedule 1.0.8
 ================
 Application update with one new setting, ALLOW_FEEDBACK (see base.py).
