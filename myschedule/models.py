@@ -166,7 +166,7 @@ class SectionAbstract(models.Model):
     tuition = models.CharField(max_length=10, blank=False)
     delivery_type = models.CharField(max_length=255, blank=False)
     note = models.TextField(max_length=7000, blank=True)
-    book_link = models.CharField(max_length=255, blank=False)
+    book_link = models.CharField(max_length=510, blank=False)
     session = models.CharField(max_length=255, blank=False)
     status = models.CharField(max_length=255, blank=False)
     instructor_name = models.CharField(max_length=510, blank=True)

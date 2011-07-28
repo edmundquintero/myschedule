@@ -107,7 +107,7 @@
         <div class="section-instructor"><strong>Instructor</strong> {% if item.instructor_link %}<a href="{{ item.instructor_link }}">{{ item.instructor_name }}</a><span class="print-only print-link instructor-link"> {{ item.instructor_link }}</span>{% else %}<span class="instructor-name">{{ item.instructor_name }}</span>{% endif %}
         </div>
         <div class="section-books do-not-print">
-          {% if item.book_link %} <a class="open-window" ref="book" dialog-title="Book Information" href= "#book" booklink="{{ item.book_link }}">Book Information</a> <img src="{% url appstatic "img/book_icon.png" %}" alt="Book" />{% endif %} 
+          {% if item.book_link %} <a href="{{ item.book_link }}" target="_blank">Book Information</a> <img src="{% url appstatic "img/book_icon.png" %}" alt="Book" />{% endif %} 
         </div>
 
         <div class="clear"></div>
@@ -119,7 +119,6 @@
     </div>
   {% endfor %}
 
-  {% include "myschedule/dialogs/book.html" %}
   {% include "myschedule/dialogs/email.html" %}
   {% if user.is_authenticated %}
     {% for group in user.groups.all %}

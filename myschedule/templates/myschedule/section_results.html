@@ -173,14 +173,13 @@
             <div class="section-instructor"><strong>Instructor</strong> {% if section.instructor_link %}<a href="{{ section.instructor_link }}">{{ section.instructor_name }}</a>{% else %}{{ section.instructor_name }}{% endif %}
             </div>
             <div class="section-books">
-            {% if section.book_link %} <a class="open-window" ref="book" dialog-title="Book Information" href= "#book" booklink="{{ section.book_link }}">Book Information</a> <img src="{% url appstatic "img/book_icon.png" %}" alt="Book" />{% endif %}<br/>
+            {% if section.book_link %} <a href="{{ section.book_link }}" target="_blank">Book Information</a> <img src="{% url appstatic "img/book_icon.png" %}" alt="Book" />{% endif %}<br/>
             </div>
 
           </div>
           <div class="clear"></div>
         </div>
       {% endfor %}
-      {% include "myschedule/dialogs/book.html" %}
     </form>
   {% else %}
     <p>There are no sections currently available for this course.</p>

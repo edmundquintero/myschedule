@@ -16,13 +16,6 @@ $(function() {
                         "Send": sendEmail }
         }
 
-        if($(this).attr('ref') == 'book') {
-            $('a.booklink').attr('href', $(this).attr('booklink'));
-            buttons = { "Close": closeDialog }
-            $('#' + $(this).attr('ref')).dialog('option','width',850);
-            $('#' + $(this).attr('ref')).dialog('option','minHeight',850);
-        }
-
         if($(this).attr('ref') == 'feedback') {
             buttons = { "Close": closeDialog }
             $('#' + $(this).attr('ref')).dialog('option','width',600);
@@ -36,12 +29,6 @@ $(function() {
         $('#' + $(this).attr('ref')).dialog('option','buttons', buttons);
         $('#' + $(this).attr('ref')).dialog('open');
 
-        if($(this).attr('ref') == 'book') {
-            // Have to load iframe containing book info after opening dialog
-            // (to make IE happy).
-            $('.book').empty();
-            $('.book').append('<iframe id="book-frame" frameBorder="1" width="99%" height="850" src="' + $(this).attr('booklink') + '"><p>Your browser does not support iframes. Book information can be viewed <a class="booklink" href="' + $(this).attr('booklink') + '">here</a></p></iframe>');
-        }
     });
 
     $("a.print-schedule").click(function() {window.print();});
