@@ -19,7 +19,7 @@ CPAPI_KEY = "myschedule_key"
 DATA_CREDENTIALS = ['testuser', 'testpass']
 
 # Change me before running update_index or rebuild_index
-HAYSTACK_SOLR_URL = 'http://te410-02:8983/solr'
+HAYSTACK_SOLR_URL = 'http://10.9.4.170:8983/solr'
 
 S2W_KEY_LOCATION = '/home/sje0388e/projects/django/myschedule/.ssh/privkey'
 S2W_KNOWNHOSTS = '/home/sje0388e/projects/django/myschedule/.ssh/knownhosts'

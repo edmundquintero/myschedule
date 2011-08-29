@@ -76,13 +76,18 @@ def show_sections(request, course_id):
 
     # Get the sections for the selected course
     sections = models.Section.objects.select_related().filter(course=course_id)
+    # Load filter criteria
+    distinct_campuses = sections.distinct('campus').values('campus')
+    distinct_start_dates = sections.distinct('start_date').values('start_date')
     request.session['next_view'] = request.path
     return direct_to_template(request,
             'myschedule/section_results.html',
             {'sections':sections,
              'cart_items':cart_items,
              'conflicts':conflicts,
-             'catalog_url':settings.CATALOG_URL}
+             'catalog_url':settings.CATALOG_URL,
+             'distinct_campuses':distinct_campuses,
+             'distinct_start_dates':distinct_start_dates}
     )
 
 def validate_credentials(request, authorized_addresses, authorized_key, key_received):

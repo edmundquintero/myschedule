@@ -1,4 +1,13 @@
 $(function() {
+    // Process section filter criteria.
+    $("#campus_filter")
+        .change(applyFilters)
+        .keyup(applyFilters);
+    $("#start_date_filter")
+        .change(applyFilters)
+        .keyup(applyFilters);
+
+    // Process add section button.
     $('a.add-item').click(function() {
         section = $(this).attr('ref').replace('section_','');
         // hide the add link so user will know they've already added the section.
@@ -68,3 +77,21 @@ function addItem(section)
             }
     }, 'json');
 };
+
+// Process selected filtering criteria.
+function applyFilters(){
+    campus_filter = $('#campus_filter :selected').val();
+    start_date_filter = $('#start_date_filter :selected').val();
+    $('div.section').each(function(){
+        section_campus = $(this).find('td.section-campus').html();
+        section_start_date = $(this).find('span.section-start-date').html();
+        if ((section_campus == campus_filter || campus_filter == 'all') &&
+            (section_start_date == start_date_filter || start_date_filter == 'all')){
+            $(this).show();
+        }
+        else{
+            $(this).hide();
+        }
+    });
+};
+

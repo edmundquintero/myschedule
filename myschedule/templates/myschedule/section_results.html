@@ -94,7 +94,35 @@
         </div>
         <div class="course-bottom"></div>
       </div>
-              
+
+      <fieldset>
+        <div class="filter-results">
+            <strong><p>Refine your section results:</p></strong>
+            <div class="third">
+              <div class="field">
+              <label>Location:</label><select id="campus_filter">
+                <option value="all">All locations</option>
+                {% for campus in distinct_campuses %}
+                  <option value="{{ campus.campus }}">{{ campus.campus }}</option>
+                {% endfor %}
+              </select>
+              </div>
+            </div>
+            <div class="third">
+              <div class="field">
+              <label>Starting on or after:</label><select id="start_date_filter">
+                <option value="all">All dates</option>
+                {% for start_date in distinct_start_dates %}
+                  <option value="{{ start_date.start_date|date:"n-j-Y" }}">{{ start_date.start_date|date:"n-j-Y" }}</option>
+                {% endfor %}
+              </select>
+              </div>
+            </div>
+            <div class="third">
+            </div>
+        </div>
+      </fieldset>
+
       {% for section in sections %}
         <div class="section" id="{{ section.section_code }}">
 
@@ -153,7 +181,7 @@
                 </tr>
               {% endfor %}
               <tr>
-                <td colspan="2"><strong>From</strong> {{ section.start_date|date:"n-j-Y" }} <strong>to</strong> {{ section.end_date|date:"n-j-Y" }}</td>
+                <td colspan="2"><strong>From</strong> <span class="section-start-date">{{ section.start_date|date:"n-j-Y" }}</span> <strong>to</strong> {{ section.end_date|date:"n-j-Y" }}</td>
                 <td colspan="3"><strong>Term</strong> {{ section.term|format_term }} {{ section.year }} {% if section.session %}{{ section.session }}{% endif %}</td>
               </tr>
               <tr>
