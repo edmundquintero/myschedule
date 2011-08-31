@@ -6,6 +6,9 @@ $(function() {
     $("#start_date_filter")
         .change(applyFilters)
         .keyup(applyFilters);
+    $("#delivery_type_filter")
+        .change(applyFilters)
+        .keyup(applyFilters);
 
     // Process add section button.
     $('a.add-item').click(function() {
@@ -82,11 +85,14 @@ function addItem(section)
 function applyFilters(){
     campus_filter = $('#campus_filter :selected').val();
     start_date_filter = $('#start_date_filter :selected').val();
+    delivery_type_filter = $('#delivery_type_filter :selected').val();
     $('div.section').each(function(){
         section_campus = $(this).find('td.section-campus').html();
         section_start_date = $(this).find('span.section-start-date').html();
+        section_delivery_type = $(this).find('td.section-delivery-type').html();
         if ((section_campus == campus_filter || campus_filter == 'all') &&
-            (section_start_date == start_date_filter || start_date_filter == 'all')){
+            (section_start_date == start_date_filter || start_date_filter == 'all') &&
+            (section_delivery_type == delivery_type_filter || delivery_type_filter == 'all')){
             $(this).show();
         }
         else{
