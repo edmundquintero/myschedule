@@ -25,6 +25,25 @@ div#body.sidebar div#content { width: 684px; }
     color: #929292;
 }
 
+a.advanced-search
+{
+    display: block;
+    text-align: center;
+    padding-top: 5px;
+}
+
+a.remove-filter
+{
+    display: block;
+    text-align: center;
+    padding-top: 5px;
+}
+
+span.filter-text
+{
+
+    font-weight: bold;
+}
 #headline
 {
     margin: 40px 0 25px;

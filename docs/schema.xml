@@ -65,8 +65,8 @@
   <fields>   
     <!-- general -->
     <field name="id"      type="string"   indexed="true"  stored="true"  multiValued="false" required="true"/>
-    <field name="django_ct" type="string"   indexed="true"  stored="true"  multiValued="false" />
-    <field name="django_id" type="string"   indexed="true"  stored="true"  multiValued="false" />
+    <field name="type"    type="string"   indexed="true"  stored="true"  multiValued="false" /> 
+    <field name="name"    type="string"   indexed="true"  stored="true"  multiValued="false" /> 
 
     <dynamicField name="*_i"  type="sint"    indexed="true"  stored="true"/>
     <dynamicField name="*_s"  type="string"  indexed="true"  stored="true"/>
@@ -77,18 +77,29 @@
     <dynamicField name="*_d"  type="sdouble" indexed="true"  stored="true"/>
     <dynamicField name="*_dt" type="date"    indexed="true"  stored="true"/>
     
+    <field name="django_ct" type="string"   indexed="true"  stored="true"  multiValued="false" />
+    <field name="django_id" type="string"   indexed="true"  stored="true"  multiValued="false" />
+    
+
+    <field name="end_dates" type="text" indexed="true" stored="true" multiValued="true" />
 
     <field name="description" type="text" indexed="true" stored="true" multiValued="false" />
 
-    <field name="title" type="text" indexed="true" stored="true" multiValued="false" />
+    <field name="campuses" type="text" indexed="true" stored="true" multiValued="true" />
 
     <field name="text" type="text" indexed="true" stored="true" multiValued="false" />
 
     <field name="popularity" type="text" indexed="true" stored="true" multiValued="false" />
 
+    <field name="delivery_types" type="text" indexed="true" stored="true" multiValued="true" />
+
     <field name="prefix" type="text" indexed="true" stored="true" multiValued="false" />
 
     <field name="course_number" type="text" indexed="true" stored="true" multiValued="false" />
+
+    <field name="title" type="text" indexed="true" stored="true" multiValued="false" />
+
+    <field name="start_dates" type="text" indexed="true" stored="true" multiValued="true" />
 
   </fields>
 
@@ -101,3 +112,4 @@
   <!-- SolrQueryParser configuration: defaultOperator="AND|OR" -->
   <solrQueryParser defaultOperator="AND" />
 </schema>
+

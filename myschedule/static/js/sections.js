@@ -1,15 +1,4 @@
 $(function() {
-    // Process section filter criteria.
-    $("#campus_filter")
-        .change(applyFilters)
-        .keyup(applyFilters);
-    $("#start_date_filter")
-        .change(applyFilters)
-        .keyup(applyFilters);
-    $("#delivery_type_filter")
-        .change(applyFilters)
-        .keyup(applyFilters);
-
     // Process add section button.
     $('a.add-item').click(function() {
         section = $(this).attr('ref').replace('section_','');
@@ -29,6 +18,9 @@ $(function() {
             }
         });
     });
+
+    //$("#search-filter").show();
+    applyFilters();
 });
 
 // Additional processing when user selects an add link.
@@ -83,15 +75,15 @@ function addItem(section)
 
 // Process selected filtering criteria.
 function applyFilters(){
-    campus_filter = $('#campus_filter :selected').val();
-    start_date_filter = $('#start_date_filter :selected').val();
-    delivery_type_filter = $('#delivery_type_filter :selected').val();
+    campus_filter = $('#id_campus :selected').val();
+    start_date_filter = $('#id_start_date').val();
+    end_date_filter = $('#id_end_date').val();
+    delivery_type_filter = $('#id_delivery_method :selected').val();
     $('div.section').each(function(){
         section_campus = $(this).find('td.section-campus').html();
-        section_start_date = $(this).find('span.section-start-date').html();
+        //section_start_date = $(this).find('span.section-start-date').html();
         section_delivery_type = $(this).find('td.section-delivery-type').html();
         if ((section_campus == campus_filter || campus_filter == 'all') &&
-            (section_start_date == start_date_filter || start_date_filter == 'all') &&
             (section_delivery_type == delivery_type_filter || delivery_type_filter == 'all')){
             $(this).show();
         }

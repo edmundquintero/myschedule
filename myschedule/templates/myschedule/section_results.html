@@ -26,43 +26,6 @@
     </div>
   {% endif %}
 
-  <div class="filter-results">
-    <fieldset>
-        <strong><p>Refine your section results:</p></strong>
-        <div class="third">
-          <div class="field">
-            <label>Location:</label><select id="campus_filter">
-              <option value="all">All locations</option>
-              {% for campus in distinct_campuses %}
-                <option value="{{ campus.campus }}">{{ campus.campus }}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-        <div class="third">
-          <div class="field">
-            <label>Starting on or after:</label><select id="start_date_filter">
-              <option value="all">All dates</option>
-              {% for start_date in distinct_start_dates %}
-                <option value="{{ start_date.start_date|date:"n-j-Y" }}">{{ start_date.start_date|date:"n-j-Y" }}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-        <div class="third">
-        </div>
-        <div class="clear">
-        </div>
-        <div class="field">
-          <label>Delivery method:</label><select id="delivery_type_filter">
-            <option value="all">All delivery methods</option>
-            {% for delivery_type in distinct_delivery_types %}
-               <option value="{{ delivery_type.delivery_type }}">{{ delivery_type.delivery_type }}</option>
-            {% endfor %}
-          </select>
-        </div>
-    </fieldset>
-  </div>
   {% if sections %}
     <form action="" method="POST" id="section-form">
       <div class="course">

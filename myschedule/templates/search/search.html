@@ -3,10 +3,11 @@
 {% block page_title %}{{ block.super }} | Search Results{% endblock %}
 {% block buttons %} {% endblock %}
 {% block content %}
-    <form method="get" action="." id="search">
+    <form method="get" action="/myschedule/search/" id="search">
         <input type="text" name="q" id="id_query" {% if form.q.initial %}value="{{ form.q.initial }}"{% else %}value="{{ query }}"{% endif %} />
         <input type="image" value="Search" name="submit" src="{% url appstatic "img/search_button.png" %}" />
-	</form>
+        {% include "myschedule/search_filters.html" %}
+    </form>
   {% if not user.is_authenticated or conflicts.conflicting_sections %}
     <br />
     <div class="message message-warning" id="conflict-login-message">
@@ -30,6 +31,7 @@
 		        <div class="course-description">
 			        <p class="course-name">{% if result.object.section_set.all %}<a href="{% url show_sections result.object.id %}">{{ result.object.title }}</a>{% else %}{{ result.object.title }}{% endif %}</span>
 			        <p>{{ result.object.description|truncatewords:23 }}</p>
+                                <p>{{ result.campuses }}</p>
 
               {% if result.object.prerequisites or result.object.corequisites %}
                 <table class="requisites">

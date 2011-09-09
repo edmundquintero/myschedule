@@ -4,6 +4,7 @@ from django.conf.urls.defaults import include, patterns, url
 from myschedule.views.cart import SQSSearchView
 from haystack.query import SearchQuerySet
 from myschedule import models
+from myschedule.forms import FilterSearchForm
 
 # admin.autodiscover()
 sqs = SearchQuerySet()
@@ -11,7 +12,7 @@ sqs = SearchQuerySet()
 urlpatterns = patterns('myschedule.views',
     url(r'^$', 'index', name='index'),
     url(r'^help/$', 'help', name='help'),
-    url(r'^search/', SQSSearchView(load_all=False, searchqueryset=sqs), name='haystack_search'),
+    url(r'^search/', SQSSearchView(load_all=False, searchqueryset=sqs, form_class=FilterSearchForm), name='haystack_search'),
     url(r'^show_sections/([\w]+)/$', 'show_sections', name='show_sections'),
     url(r'^update_courses/', 'update_courses', name='update_courses'),
     url(r'^update_seats/', 'update_seats', name='update_seats'),

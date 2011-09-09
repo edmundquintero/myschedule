@@ -12,16 +12,21 @@ import traceback
 # from cpsite.decorators import groups_required
 
 from myschedule import models, forms
-from myschedule.views.cart import conflict_resolution
+from myschedule.views.cart import conflict_resolution, SQSSearchView
 
 def index(request):
     """
         Handles processing for the index template.
     """
+    if request.method == 'GET':
+        search_form = forms.FilterSearchForm(request.GET)
+    else:
+        search_form = forms.FilterSearchForm()
     request.session['next_view'] = request.path
     return direct_to_template(request,
                               'myschedule/index.html',
-                              {'system_notification': settings.SYSTEM_NOTIFICATION})
+                              {'system_notification': settings.SYSTEM_NOTIFICATION,
+                               'form':search_form})
 
 def help(request):
     """
@@ -41,6 +46,19 @@ def show_sections(request, course_id):
     """
         Display section results template for specified course.
     """
+    # Initialize the search form.
+    initial_values = {}
+    if ('campus_filter' in request.session and
+        'delivery_method_filter' in request.session and
+        'start_date_filter' in request.session and
+        'end_date_filter' in request.session):
+        initial_values = {
+            'campus':request.session['campus_filter'],
+            'delivery_method':request.session['delivery_method_filter'],
+            'start_date':request.session['start_date_filter'],
+            'end_date':request.session['end_date_filter']}
+    search_form = forms.FilterSearchForm(initial=initial_values)
+
     # Help make future searches smarter - save query and update course add_count.
     if request.session.has_key('current_query'):
         course = get_object_or_404(models.Course, id=course_id)
@@ -76,10 +94,7 @@ def show_sections(request, course_id):
 
     # Get the sections for the selected course
     sections = models.Section.objects.select_related().filter(course=course_id)
-    # Load filter criteria
-    distinct_campuses = sections.distinct('campus').values('campus')
-    distinct_start_dates = sections.distinct('start_date').values('start_date')
-    distinct_delivery_types = sections.distinct('delivery_type').values('delivery_type')
+
     request.session['next_view'] = request.path
     return direct_to_template(request,
             'myschedule/section_results.html',
@@ -87,9 +102,7 @@ def show_sections(request, course_id):
              'cart_items':cart_items,
              'conflicts':conflicts,
              'catalog_url':settings.CATALOG_URL,
-             'distinct_campuses':distinct_campuses,
-             'distinct_start_dates':distinct_start_dates,
-             'distinct_delivery_types':distinct_delivery_types}
+             'form':search_form}
     )
 
 def validate_credentials(request, authorized_addresses, authorized_key, key_received):

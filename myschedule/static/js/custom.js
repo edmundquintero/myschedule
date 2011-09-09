@@ -44,6 +44,27 @@ $(function() {
         $('#id_query').val('ex. math, bus 121, mec');
     }
 
+    campus_filter = $('#id_campus :selected').val();
+    delivery_type_filter = $('#id_delivery_method :selected').val();
+    start_date_filter = $('#id_start_date').val();
+    end_date_filter = $('#id_end_date').val();
+    if (campus_filter != 'all' || delivery_type_filter != 'all' ||
+        start_date_filter != '' || end_date_filter != ''){       
+        $("#search-filter").show();
+    }
+    else {
+        $("#search-filter").hide();
+    }
+    $("a.advanced-search").click(function() {
+        $(this).toggle('fast');
+        $('#search-filter').slideToggle('slow');
+    });
+
+    $("a.remove-filter").click(function() {
+        $('#search-filter').slideToggle('slow', function() {
+            $('a.advanced-search').toggle('fast');   
+        });
+    });
 });
 
 function createModalWindow(element, title, createCallback,

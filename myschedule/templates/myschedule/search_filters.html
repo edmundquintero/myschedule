@@ -1,0 +1,25 @@
+<a class="advanced-search" href="#advancedsearch">Advanced Search</a>
+<fieldset id="search-filter">
+    <span class="filter-text">Filter course and section results by:</span>
+    <div class="filters">
+        <div class="field">
+            <label>Campus</label>{{ form.campus }}
+        </div>
+        <div class="field">
+            <label>Delivery method</label>{{ form.delivery_method }}
+        </div>
+        <div class="half">
+            <div class="field">
+
+                <label>Class begins on or after</label> {{ form.start_date }}
+            </div>
+         </div>
+         <div class="half">
+            <div class="field">
+                <label>Class ends on or before</label> {{ form.end_date }}
+            </div>
+        </div>
+    </div>
+    <a class="remove-filter" href="#removefilters">Remove filters</a>
+</fieldset>
+
