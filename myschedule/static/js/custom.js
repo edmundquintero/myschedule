@@ -44,6 +44,7 @@ $(function() {
         $('#id_query').val('ex. math, bus 121, mec');
     }
 
+    // Show advanced search if filter values were previously set.
     campus_filter = $('#id_campus :selected').val();
     delivery_type_filter = $('#id_delivery_method :selected').val();
     start_date_filter = $('#id_start_date').val();
@@ -51,18 +52,26 @@ $(function() {
     if (campus_filter != 'all' || delivery_type_filter != 'all' ||
         start_date_filter != '' || end_date_filter != ''){       
         $("#search-filter").show();
+        $('a.advanced-search').hide();
     }
     else {
         $("#search-filter").hide();
     }
+
+    // Process click function on advanced search link.
     $("a.advanced-search").click(function() {
-        $(this).toggle('fast');
-        $('#search-filter').slideToggle('slow');
+        $(this).hide('fast');
+        $('#search-filter').slideDown('slow');
     });
 
+    // Process click function on remove filter link.
     $("a.remove-filter").click(function() {
-        $('#search-filter').slideToggle('slow', function() {
-            $('a.advanced-search').toggle('fast');   
+        $('#id_campus option[value="all"]').attr('selected','selected');
+        $('#id_delivery_method option[value="all"]').attr('selected','selected');
+        $('#id_start_date').val('');
+        $('#id_end_date').val('');
+        $('#search-filter').slideUp('slow', function() {
+            $('a.advanced-search').show('fast');   
         });
     });
 });
