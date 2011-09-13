@@ -24,7 +24,31 @@ class FilterSearchForm(SearchForm):
         if self.cleaned_data['delivery_method']:
             if self.cleaned_data['delivery_method'] != 'all':
                 sqs = sqs.filter(delivery_types__exact=self.cleaned_data['delivery_method'])
+                if self.cleaned_data['delivery_method'] == 'Online':
+                    for item in sqs:
+                        remove_item = True
+                        for delivery_type in item.delivery_types:
+                            if delivery_type == 'Online':
+                                remove_item = False
+                                break
+                        if remove_item == True:
+                            sqs = sqs.exclude(primary_key=item.pk)
+                    
+                if self.cleaned_data['campus'] != 'all':
+                    for item in sqs:
+                        i = 0
+                        remove_item = True
+                        for campus in item.campuses:
+                            if campus == self.cleaned_data['campus'] and item.delivery_types[i] == self.cleaned_data['delivery_method']:
+                                remove_item = False
+                                break
+                            i = i + 1
+                        if remove_item == True:
+                            sqs = sqs.exclude(primary_key=item.pk)
+
         #if self.cleaned_data['start_date']:
         #    if self.cleaned_data['start_date'] != '':
-        #        sqs = sqs.filter(delivery_types__icontains=self.cleaned_data['delivery_method'])
+        #        print str(self.cleaned_data['start_date'])
+        #        print self.cleaned_data['start_date']
+        #        sqs = sqs.filter(section__start_date__gte=self.cleaned_data['start_date'])
         return sqs

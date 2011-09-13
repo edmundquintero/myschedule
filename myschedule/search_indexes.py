@@ -4,6 +4,7 @@ from myschedule import models
 
 class CourseIndex(SearchIndex):
     text = CharField(document=True, use_template=True)
+    primary_key = CharField(model_attr='pk')
     prefix = CharField(model_attr='prefix')
     course_number = CharField(model_attr='course_number')
     title = CharField(model_attr='title')
