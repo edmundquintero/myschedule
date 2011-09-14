@@ -154,7 +154,7 @@
                 </tr>
               {% endfor %}
               <tr>
-                <td colspan="2"><strong>From</strong> <span class="section-start-date">{{ section.start_date|date:"n-j-Y" }}</span> <strong>to</strong> {{ section.end_date|date:"n-j-Y" }}</td>
+                <td colspan="2"><strong>From</strong> <span class="section-start-date">{{ section.start_date|date:"n/j/Y" }}</span> <strong>to</strong> <span class="section-end-date">{{ section.end_date|date:"n/j/Y" }}</span></td>
                 <td colspan="3"><strong>Term</strong> {{ section.term|format_term }} {{ section.year }} {% if section.session %}{{ section.session }}{% endif %}</td>
               </tr>
               <tr>

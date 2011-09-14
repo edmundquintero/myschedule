@@ -73,18 +73,25 @@ function addItem(section)
     }, 'json');
 };
 
-// Process selected filtering criteria.
+// Process selected filtering (advanced search) criteria.
 function applyFilters(){
     campus_filter = $('#id_campus :selected').val();
-    start_date_filter = $('#id_start_date').val();
-    end_date_filter = $('#id_end_date').val();
+    start_date_filter = $('#id_start_date').val().replace(/-/g,'/');
+    sdf_date = new Date(start_date_filter);
+    end_date_filter = $('#id_end_date').val().replace(/-/g, '/');
+    edf_date = new Date(end_date_filter);
     delivery_type_filter = $('#id_delivery_method :selected').val();
     $('div.section').each(function(){
         section_campus = $(this).find('td.section-campus').html();
-        //section_start_date = $(this).find('span.section-start-date').html();
+        section_start_date = $(this).find('span.section-start-date').html();
+        ssd_date = new Date(section_start_date);
+        section_end_date = $(this).find('span.section-end-date').html();
+        sed_date = new Date(section_end_date);
         section_delivery_type = $(this).find('td.section-delivery-type').html();
         if ((section_campus == campus_filter || campus_filter == 'all') &&
-            (section_delivery_type == delivery_type_filter || delivery_type_filter == 'all')){
+            (section_delivery_type == delivery_type_filter || delivery_type_filter == 'all')&&
+            ((start_date_filter != '' && section_start_date != '' && ssd_date >= sdf_date) || (start_date_filter == '')) &&
+            ((end_date_filter != '' && section_end_date != '' && sed_date <= edf_date) || (end_date_filter == ''))){
             $(this).show();
         }
         else{

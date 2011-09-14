@@ -31,8 +31,6 @@
 		        <div class="course-description">
 			        <p class="course-name">{% if result.object.section_set.all %}<a href="{% url show_sections result.object.id %}">{{ result.object.title }}</a>{% else %}{{ result.object.title }}{% endif %}</span>
 			        <p>{{ result.object.description|truncatewords:23 }}</p>
-                                <p>{{ result.campuses }}</p>
-                                <p>{{ result.delivery_types }}</p>
 
               {% if result.object.prerequisites or result.object.corequisites %}
                 <table class="requisites">
