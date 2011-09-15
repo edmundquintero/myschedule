@@ -17,14 +17,10 @@
 {{ object.title }}
 {{ object.title }}
 {{ object.title }}
-{{ object.description }}
-{{ object.title }}
-{{ object.description }}
-{{ object.title }}
-{{ object.description }}
 {{ object.title }}
 {{ object.title }}
-{{ object.description }}
+{{ object.title }}
+{{ object.title }}
 {{ object.description }}
 {% endifequal %}
 {% ifequal object.popularity 'm' %}
@@ -46,10 +42,9 @@
 {{ object.title }}
 {{ object.title }}
 {{ object.title }}
-{{ object.description }}
+{{ object.title }}
 {{ object.title }}
 {{ object.description }}
-{{ object.title }}
 {% endifequal %}
 {% ifequal object.popularity 'z' %}
 {{ object.prefix }}{{ object.course_number }}
