@@ -254,6 +254,20 @@ def display_cart(request, sections_url=None):
             downtime_message = settings.S2W_DOWNTIME_MESSAGE
 
     request.session['next_view'] = '/myschedule/show_schedule/'
+
+    # Initialize the search form.
+    initial_values = {}
+    if ('campus_filter' in request.session and
+        'delivery_method_filter' in request.session and
+        'start_date_filter' in request.session and
+        'end_date_filter' in request.session):
+        initial_values = {
+            'campus':request.session['campus_filter'],
+            'delivery_method':request.session['delivery_method_filter'],
+            'start_date':request.session['start_date_filter'],
+            'end_date':request.session['end_date_filter']}
+    search_form = forms.FilterSearchForm(initial=initial_values)
+
     return direct_to_template(request,
                               'myschedule/display_cart.html',
                               {'cart_items':cart_items,
@@ -261,7 +275,8 @@ def display_cart(request, sections_url=None):
                                's2w_datatel_url':settings.S2W_DATATEL_URL,
                                'downtime_message':downtime_message,
                                's2w_success_message':settings.S2W_SUCCESS_MESSAGE,
-                               'allow_feedback':settings.ALLOW_FEEDBACK}
+                               'allow_feedback':settings.ALLOW_FEEDBACK,
+                               'form': search_form}
                              )
 
 def email_schedule(request):
@@ -380,6 +395,11 @@ class SQSSearchView(SearchView):
                     return super(SQSSearchView, self).__call__(request)
                 request.session['previous_query'] = request.session['current_query'].lower()
             request.session['current_query'] = request.GET['q'].lower()
+            # Also save current query in q_value session variable for use in
+            # initializing value in search box on non-course search results
+            # pages. Can't use current_query for that purpose as it gets
+            # deleted later. 
+            request.session['q_value'] = request.GET['q'].lower()
             request.session.modified = True
 
         request.session['next_view'] = request.get_full_path()
