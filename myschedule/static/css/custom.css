@@ -26,7 +26,7 @@ div#body.sidebar div#content { width: 684px; }
 }
 
 #id_query:focus {
-    color: #black;
+    color: #000;
 }
 
 a.advanced-search

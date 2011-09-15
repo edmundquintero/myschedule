@@ -386,10 +386,13 @@ class SQSSearchView(SearchView):
 
     def __call__(self, request):
         if 'q' in request.GET:
-            request.session['campus_filter'] = request.GET['campus']
-            request.session['delivery_method_filter'] = request.GET['delivery_method']
-            request.session['start_date_filter'] = request.GET['start_date']
-            request.session['end_date_filter'] = request.GET['end_date']
+            try:
+                request.session['campus_filter'] = request.GET['campus']
+                request.session['delivery_method_filter'] = request.GET['delivery_method']
+                request.session['start_date_filter'] = request.GET['start_date']
+                request.session['end_date_filter'] = request.GET['end_date']
+            except:
+                pass
             if 'current_query' in request.session:
                 if request.session['current_query'] == request.GET['q'].lower():
                     return super(SQSSearchView, self).__call__(request)
