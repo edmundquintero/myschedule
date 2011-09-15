@@ -32,14 +32,14 @@ div#body.sidebar div#content { width: 684px; }
 a.advanced-search
 {
     display: block;
-    text-align: center;
+    text-align: right;
     padding-top: 5px;
 }
 
 a.remove-filter
 {
     display: block;
-    text-align: center;
+    text-align: right;
     padding-top: 5px;
 }
 
@@ -457,6 +457,10 @@ div.sidebar-message {
 
 span.print-only, div.print-only {
     display: none;
+}
+
+span.error input {
+    color: red;
 }
 
 @media print

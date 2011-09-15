@@ -10,13 +10,18 @@
         </div>
         <div class="half">
             <div class="field">
-
-                <label>Class begins on or after</label> {{ form.start_date }}
+                <label>Class begins on or after</label> {% if form.start_date.errors %}<span class="error">{% endif %}{{ form.start_date }} {% if form.start_date.errors %}</span>{% endif %}
+                <div class="help-text">
+                   mm/dd/yyyy or mm-dd-yyyy 
+                </div>
             </div>
          </div>
          <div class="half">
             <div class="field">
-                <label>Class ends on or before</label> {{ form.end_date }}
+                <label>Class ends on or before</label> {% if form.end_date.errors %}<span class="error">{% endif %}{{ form.end_date }} {% if form.end_date.errors %}</span>{% endif %}
+                <div class="help-text">
+                    mm/dd/yyyy or mm-dd-yyyy
+                </div>
             </div>
         </div>
     </div>
