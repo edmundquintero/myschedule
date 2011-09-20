@@ -55,7 +55,7 @@ S2W_USER_AT_SERVER = 'snap2webadvisor@cis.cpcc.edu'
 S2W_KNOWNHOSTS = ''
 S2W_SEPARATOR = '}'
 S2W_RETURN_VALUES = ['Success', 'Empty Arguments' , 'already registered', 'valid student', 'Academic Level']
-S2W_DATATEL_URL = 'http://mycollege.cpcc.edu'
+S2W_DATATEL_URL = 'https://mycollege2.cpcc.edu/WebAdvisorST/WebAdvisor?CONSTITUENCY=WBST&type=P&pid=ST-WRGS'
 # When finished testing, set S2W_TEST_SECTIONS to empty string
 S2W_TEST_SECTIONS = ''
 # s2w_unavailable_begin and end time should both be empty string if there
@@ -64,7 +64,7 @@ S2W_UNAVAILABLE_BEGIN = '03:00:00'
 S2W_UNAVAILABLE_END = '07:30:00'
 S2W_DOWNTIME_MESSAGE = 'Class registration is unavailable between 3:00AM and 7:30AM.'
 S2W_FAILURE_MESSAGE = 'Class registration is currently unavailable. This may be due to system maintenance. System maintenance occurs daily between 3:00AM and 7:30AM and on Fridays between 5:30PM and 8:00PM. Please contact the ITS Help Desk for assistance if you receive this message outside of a scheduled maintenance period.'
-S2W_SUCCESS_MESSAGE = 'Your schedule was successfully added to your preferred list in MyCollege.  Select Continue to sign in to MyCollege and complete the registration process. Once you sign in to MyCollege, your preferred list can be accessed under Students -> Register and Drop Sections.'
+S2W_SUCCESS_MESSAGE = 'Your schedule was successfully added to your preferred list in MyCollege.  Select Continue to sign in to MyCollege and complete the registration process.'
 
 ## Authorization settings for course bulk data load and seat count updates
 AUTH_IP_FOR_COURSE_UPDATE = []

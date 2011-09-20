@@ -3,7 +3,7 @@
 {% block scripts %}{{ block.super }}
    <script type="text/javascript">
      var basePath = '{% url index %}';
-     var s2w_datatel_url = '{{ s2w_datatel_url }}';
+     var s2w_datatel_url = '{{ s2w_datatel_url|safe }}';
      var s2w_success_message = '{{ s2w_success_message }}';
    </script>
 {% endblock %}
