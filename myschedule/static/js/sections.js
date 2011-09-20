@@ -19,7 +19,6 @@ $(function() {
         });
     });
 
-    //$("#search-filter").show();
     applyFilters();
 });
 
