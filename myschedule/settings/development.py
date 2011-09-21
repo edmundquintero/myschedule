@@ -13,13 +13,13 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 # MEDIA_ROOT = j(app_root, 'media')
 # MEDIA_URL = APP_NAME + '/media/'
 
-CPAPI_URL_FORMAT = 'http://te409-05.cpcc.edu:5025/cpapi/?%s'
+CPAPI_URL_FORMAT = 'http://te410-02.cpcc.edu:5025/cpapi/?%s'
 CPAPI_KEY = "myschedule_key"
 
 DATA_CREDENTIALS = ['testuser', 'testpass']
 
 # Change me before running update_index or rebuild_index
-HAYSTACK_SOLR_URL = 'http://10.9.4.170:8983/solr'
+HAYSTACK_SOLR_URL = 'http://te410-02.cpcc.edu:8983/solr'
 
 S2W_KEY_LOCATION = '/home/sje0388e/projects/django/myschedule/.ssh/privkey'
 S2W_KNOWNHOSTS = '/home/sje0388e/projects/django/myschedule/.ssh/knownhosts'
@@ -29,7 +29,7 @@ S2W_DATATEL_URL = 'http://mycollege.cpcc.edu/WATESTHR/WATESTHR'
 # When finished testing, set S2W_TEST_SECTIONS to empty string
 S2W_TEST_SECTIONS = '70359}69664'
 
-AUTH_IP_FOR_COURSE_UPDATE = ['10.9.4.25','10.9.4.26']
+AUTH_IP_FOR_COURSE_UPDATE = ['10.9.4.25','10.9.4.56']
 AUTH_KEY_FOR_COURSE_UPDATE = 'test_key'
-AUTH_IP_FOR_SEAT_UPDATE = ['10.9.4.25','10.9.4.26']
+AUTH_IP_FOR_SEAT_UPDATE = ['10.9.4.25','10.9.4.56']
 AUTH_KEY_FOR_SEAT_UPDATE = 'test_key'
