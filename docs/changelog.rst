@@ -1,7 +1,7 @@
 Myschedule 1.0.10
 =================
 Application updates to add advanced search filter.
-  # Copy updated schema.xml and solrconfig.xml to solr conf folder.
+  # Copy updated schema.xml, solrconfig.xml, and synonyms.txt to solr conf folder.
   # Rebuild (not just update) solr indexes.
 Settings updates to deep link to preferred sections page in webadvisor.
   # Updated settings S2W_DATATEL_URL AND S2W_SUCCESS_MESSAGE (see base.py for new values)
