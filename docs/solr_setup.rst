@@ -1,13 +1,38 @@
-Solr is currently on mysq1-central.
+Production and staging instances of Solr are currently on mysq1-central, running under tomcat.
 
 ==========================
 Solr Configuration Updates
 ==========================
 
-Configuration updates typically will consist of changes to schema.xml, solrconfig.xml, and/or synonyms.txt.
+Solr config files are located in the myschedule/solr folder. Configuration updates typically will consist of changes to schema.xml, solrconfig.xml, and/or synonyms.txt.
 
-For staging, copy them into /vol1/solr-staging/conf.
-For production, copy them into /vol1/solr/conf.
+Note that for solronfig.xml, you must use the appropriate version of the file for the environment you are deploying to. (The difference is the data-dir path.):
+
+ * solrconfig.xml is for production 
+ * solrconfig.xml.staging is for staging 
+ * solrconfig.xml.dev is for development 
+
+1. Copy the files to the appropriate solr conf dir
+
+First backup the files you will be copying over!!!
+
+For staging, copy the new versions of the files into /vol1/solr-staging/conf:
+sudo cp solrconfig.xml.staging /vol1/solr-staging/conf/solrconfig.xml
+sudo cp schema.xml /vol1/solr-staging/conf/
+sudo cp synonyms.txt /vol1/solr-staging/conf/
+
+For production, copy them into /vol1/solr/conf:
+sudo cp solrconfig.xml /vol1/solr/conf/
+sudo cp schema.xml /vol1/solr/conf/
+sudo cp synonyms.txt /vol1/solr/conf/
+
+2. After copying the appropriate version of the files into the appropriate solr conf directory, restart tomcat:
+
+sudo service tomcat6 restart
+
+3. After restarting tomcat, the index may need to be rebuilt. If so, on one of the myschedule front-ends, (pas3 or pas4), run (WITH SUDO) the myschedule_rebuild_index.py script located in the myschedule/scripts folder:
+
+sudo python2.5 myschedule_rebuild_index.py
 
 
 ===========================================================
