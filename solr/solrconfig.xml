@@ -69,7 +69,6 @@
        that matches, it will be ignored
     -->
   <lib dir="../../contrib/clustering/lib/downloads/" />
-
   <lib dir="../../contrib/clustering/lib/" />
   <lib dir="/total/crap/dir/ignored" /> 
   <!-- an exact path can be used to specify a specific file.  This will cause
@@ -89,7 +88,6 @@
        in general. See also the <mainIndex> section after that when changing parameters
        for Solr's main Lucene index. -->
   <indexDefaults>
-
    <!-- Values here affect all index writers and act as a default unless overridden. -->
     <useCompoundFile>false</useCompoundFile>
 
@@ -102,7 +100,6 @@
       for buffering added documents and deletions before they are
       flushed to the Directory.  -->
     <ramBufferSizeMB>32</ramBufferSizeMB>
-
     <!-- <maxMergeDocs>2147483647</maxMergeDocs> -->
     <maxFieldLength>10000</maxFieldLength>
     <writeLockTimeout>1000</writeLockTimeout>
@@ -156,7 +153,6 @@
     <!--
      Expert:
     Controls how often Lucene loads terms into memory -->
-
     <!--<termIndexInterval>256</termIndexInterval>-->
   </indexDefaults>
 
@@ -165,7 +161,6 @@
     <useCompoundFile>false</useCompoundFile>
     <ramBufferSizeMB>32</ramBufferSizeMB>
     <mergeFactor>10</mergeFactor>
-
     <!-- Deprecated -->
     <!--<maxBufferedDocs>1000</maxBufferedDocs>-->
     <!--<maxMergeDocs>2147483647</maxMergeDocs>-->
@@ -182,7 +177,6 @@
     
     <!-- If true, IndexReaders will be reopened (often more efficient) instead
          of closed and then opened.  -->
-
     <reopenReaders>true</reopenReaders>
 
     <!--
@@ -206,7 +200,6 @@
     <deletionPolicy class="solr.SolrDeletionPolicy">
       <!-- The number of commit points to be kept -->
       <str name="maxCommitsToKeep">1</str>
-
       <!-- The number of optimized commit points to be kept -->
       <str name="maxOptimizedCommitsToKeep">0</str>
       <!--
@@ -266,7 +259,6 @@
          args - the arguments to pass to the program.  default=nothing
          env - environment variables to set.  default=nothing
       -->
-
     <!-- A postCommit event is fired after every commit or optimize command
     <listener event="postCommit" class="solr.RunExecutableListener">
       <str name="exe">solr/bin/snapshooter</str>
@@ -310,7 +302,6 @@
 
 
   <query>
-
     <!-- Maximum number of clauses in a boolean query... in the past, this affected
         range or prefix queries that expanded to big boolean queries - built in Solr 
         query parsers no longer create queries with this limitation. 
@@ -384,7 +375,6 @@
          The purpose is to enable easy caching of user/application level data.
          The regenerator argument should be specified as an implementation
          of solr.search.CacheRegenerator if autowarming is desired.  -->
-
     <!--
     <cache name="myUserCache"
       class="solr.LRUCache"
@@ -435,11 +425,10 @@
     <!-- a firstSearcher event is fired whenever a new searcher is being
          prepared but there is no current registered searcher to handle
          requests or to gain autowarming data from. -->
-
     <listener event="firstSearcher" class="solr.QuerySenderListener">
       <arr name="queries">
-        <lst> <str name="q">solr rocks</str><str name="start">0</str><str name="rows">10</str></lst>
-        <lst><str name="q">static firstSearcher warming query from solrconfig.xml</str></lst>
+        <lst> <str name="q">mat</str><str name="start">0</str><str name="rows">10</str></lst>
+        <lst><str name="q">eng</str></lst>
       </arr>
     </listener>
 
@@ -461,7 +450,6 @@
     handleSelect=true will use consistent error handling for /select and /update
     handleSelect=false will use solr1.1 style error formatting
     -->
-
   <requestDispatcher handleSelect="true" >
     <!--Make sure your system has some authentication before enabling remote streaming!  -->
     <requestParsers enableRemoteStreaming="true" multipartUploadLimitInKB="2048000" />
@@ -499,7 +487,6 @@
             You can use the <cacheControl> option even if you have set
             never304="true"
        -->
-
        <!-- <cacheControl>max-age=30, public</cacheControl> -->
     </httpCaching>
   </requestDispatcher>
@@ -517,7 +504,6 @@
     <!-- default values for query parameters -->
      <lst name="defaults">
        <str name="echoParams">explicit</str>
-
        <!--
        <int name="rows">10</int>
        <str name="fl">*</str>
@@ -529,7 +515,6 @@
 	   <str name="spellcheck.extendedResults">false</str>
 	   <!--  The number of suggestions to return -->
 	   <str name="spellcheck.count">1</str>
-
 	   <str name="spellcheck.accuracy">0.5</str>
      </lst>
      <arr name="last-components">
@@ -538,7 +523,6 @@
   </requestHandler>
 
   <requestHandler name="/spell" class="solr.SearchHandler" lazy="true">
-
     <lst name="defaults">
       <!-- omp = Only More Popular -->
       <str name="spellcheck.onlyMorePopular">false</str>
@@ -546,7 +530,6 @@
       <str name="spellcheck.extendedResults">false</str>
       <!--  The number of suggestions to return -->
       <str name="spellcheck.count">1</str>
-
     </lst>
     <arr name="last-components">
       <str>spellcheck</str>
@@ -581,7 +564,6 @@
      <str name="echoParams">explicit</str>
      <float name="tie">0.01</float>
      <str name="qf">
-
         text^0.5 features^1.0 name^1.2 sku^1.5 id^10.0 manu^1.1 cat^1.4
      </str>
      <str name="pf">
@@ -593,7 +575,6 @@
      <str name="fl">
         id,name,price,score
      </str>
-
      <str name="mm">
         2&lt;-1 5&lt;-2 6&lt;90%
      </str>
@@ -601,7 +582,6 @@
      <str name="q.alt">*:*</str>
      <!-- example highlighter config, enable per-query with hl=true -->
      <str name="hl.fl">text features name</str>
-
      <!-- for this field, we want no fragmenting, just highlighting -->
      <str name="f.name.hl.fragsize">0</str>
      <!-- instructs Solr to return the field itself if no query terms are
@@ -620,7 +600,6 @@
      <str name="echoParams">explicit</str>
      <str name="qf">text^0.5 features^1.0 name^1.2 sku^1.5 id^10.0</str>
      <str name="mm">2&lt;-1 5&lt;-2 6&lt;90%</str>
-
      <!-- This is an example of using Date Math to specify a constantly
           moving date range in a config...
        -->
@@ -658,7 +637,6 @@
          "invariants" values from being used, so don't use this mechanism
          unless you are sure you always want it.
       -->
-
     <lst name="invariants">
       <str name="facet.field">cat</str>
       <str name="facet.field">manu_exact</str>
@@ -710,7 +688,6 @@
 
     <lst name="spellchecker">
       <str name="name">default</str>
-
       <str name="field">name</str>
       <str name="spellcheckIndexDir">./spellchecker</str>
     </lst>
@@ -755,7 +732,6 @@
       <bool name="tv">true</bool>
     </lst>
     <arr name="last-components">
-
       <str>tvComponent</str>
     </arr>
   </requestHandler>
@@ -775,7 +751,6 @@
     <!-- Declare an engine -->
     <lst name="engine">
       <!-- The name, only one can be named "default" -->
-
       <str name="name">default</str>
       <!-- 
            Class name of Carrot2 clustering algorithm. Currently available algorithms are:
@@ -796,7 +771,6 @@
       <str name="LingoClusteringAlgorithm.desiredClusterCountBase">20</str>
     </lst>
     <lst name="engine">
-
       <str name="name">stc</str>
       <str name="carrot.algorithm">org.carrot2.clustering.stc.STCClusteringAlgorithm</str>
     </lst>
@@ -806,7 +780,6 @@
                   class="solr.SearchHandler">
      <lst name="defaults">
        <bool name="clustering">true</bool>
-
        <str name="clustering.engine">default</str>
        <bool name="clustering.results">true</bool>
        <!-- The title field -->
@@ -814,7 +787,6 @@
        <str name="carrot.url">id</str>
        <!-- The field to cluster on -->
        <str name="carrot.snippet">features</str>
-
        <!-- produce summaries -->
        <bool name="carrot.produceSummary">true</bool>
        <!-- the maximum number of labels per cluster -->
@@ -823,7 +795,6 @@
        <bool name="carrot.outputSubClusters">false</bool>
     </lst>     
     <arr name="last-components">
-
       <str>clusteringComponent</str>
     </arr>
   </requestHandler>
@@ -834,7 +805,6 @@
       <!-- All the main content goes into "text"... if you need to return
            the extracted text or do highlighting, use a stored field. -->
       <str name="fmap.content">text</str>
-
       <str name="lowernames">true</str>
       <str name="uprefix">ignored_</str>
 
@@ -842,7 +812,6 @@
       <str name="captureAttr">true</str>
       <str name="fmap.a">links</str>
       <str name="fmap.div">ignored_</str>
-
     </lst>
   </requestHandler>
 
@@ -854,7 +823,6 @@
   <requestHandler name="/terms" class="org.apache.solr.handler.component.SearchHandler">
      <lst name="defaults">
       <bool name="terms">true</bool>
-
     </lst>     
     <arr name="components">
       <str>termsComponent</str>
@@ -866,7 +834,6 @@
        a given query regardless of the normal lucene scoring.-->
   <searchComponent name="elevator" class="solr.QueryElevationComponent" >
     <!-- pick a fieldType to analyze queries -->
-
     <str name="queryFieldType">string</str>
     <str name="config-file">elevate.xml</str>
   </searchComponent>
@@ -875,7 +842,6 @@
   <requestHandler name="/elevate" class="solr.SearchHandler" startup="lazy">
     <lst name="defaults">
       <str name="echoParams">explicit</str>
-
     </lst>
     <arr name="last-components">
       <str>elevator</str>
@@ -973,7 +939,6 @@
 
   <!-- ping/healthcheck -->
   <requestHandler name="/admin/ping" class="PingRequestHandler">
-
     <lst name="defaults">
       <str name="qt">standard</str>
       <str name="q">solrpingquery</str>
@@ -982,7 +947,6 @@
   </requestHandler>
 
   <!-- Echo the request contents back to the client -->
-
   <requestHandler name="/debug/dump" class="solr.DumpRequestHandler" >
     <lst name="defaults">
      <str name="echoParams">explicit</str> <!-- for all params (including the default etc) use: 'all' -->
@@ -991,7 +955,6 @@
   </requestHandler>
 
   <highlighting>
-
    <!-- Configure the standard fragmenter -->
    <!-- This could most likely be commented out in the "default" case -->
    <fragmenter name="gap" class="org.apache.solr.highlight.GapFragmenter" default="true">
@@ -1001,7 +964,6 @@
    </fragmenter>
 
    <!-- A regular-expression-based fragmenter (f.i., for sentence extraction) -->
-
    <fragmenter name="regex" class="org.apache.solr.highlight.RegexFragmenter">
     <lst name="defaults">
       <!-- slightly smaller fragsizes work better because of slop -->
@@ -1010,7 +972,6 @@
       <float name="hl.regex.slop">0.5</float>
       <!-- a basic sentence pattern -->
       <str name="hl.regex.pattern">[-\w ,/\n\"']{20,200}</str>
-
     </lst>
    </fragmenter>
 
@@ -1020,7 +981,6 @@
      <str name="hl.simple.pre"><![CDATA[<em>]]></str>
      <str name="hl.simple.post"><![CDATA[</em>]]></str>
     </lst>
-
    </formatter>
   </highlighting>
 
@@ -1073,7 +1033,6 @@
        every xsltCacheLifetimeSeconds.  
    -->
   <queryResponseWriter name="xslt" class="org.apache.solr.request.XSLTResponseWriter">
-
     <int name="xsltCacheLifetimeSeconds">5</int>
   </queryResponseWriter>
 
@@ -1088,7 +1047,6 @@
 
   <!-- config for the admin interface -->
   <requestHandler name="standard" class="solr.StandardRequestHandler" default="true">
-
     <arr name="last-components">
       <str>spellcheck</str>
     </arr>
@@ -1100,8 +1058,6 @@
     <!-- configure a healthcheck file for servers behind a loadbalancer
     <healthcheck type="file">server-enabled</healthcheck>
     -->
-
   </admin>
 
 </config>
-
