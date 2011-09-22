@@ -18,7 +18,10 @@ def index(request):
     """
         Handles processing for the index template.
     """
-    search_form = forms.FilterSearchForm()
+    initial_values = {
+        'campus':'all',
+        'delivery_method':'all'}
+    search_form = forms.FilterSearchForm(initial=initial_values)
     request.session['next_view'] = request.path
     return direct_to_template(request,
                               'myschedule/index.html',
