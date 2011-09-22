@@ -1,3 +1,8 @@
+Myschedule 1.0.11
+=================
+Application update with one setting change (set SYSTEM_NOTIFICATION="").
+- Explicitly defaults campus and delivery_method advanced search filter fields to "all".
+
 Myschedule 1.0.10
 =================
 Application updates to add advanced search filter.

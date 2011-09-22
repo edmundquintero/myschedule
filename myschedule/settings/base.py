@@ -73,7 +73,7 @@ AUTH_IP_FOR_SEAT_UPDATE = []
 AUTH_KEY_FOR_SEAT_UPDATE = ''
 
 ## Disclaimer or notification to be displayed on index page (typically for a non-production release).
-SYSTEM_NOTIFICATION = "This is a beta release of the Schedule Builder application.  Because this is a beta release, the application or some of it's features may periodically be unavailable.  While all current features are believed to be functional, you may still encounter problems.  Problems with this application should be reported to the ITS Help Desk."
+SYSTEM_NOTIFICATION = ""
 
 ## Determines if link to feedback form should be displayed.
 ALLOW_FEEDBACK = 'False'
