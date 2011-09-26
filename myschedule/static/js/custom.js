@@ -66,7 +66,7 @@ $(function() {
     // Process click function on advanced search link.
     $("a.advanced-search").click(function() {
         $(this).hide('fast');
-        $('#search-filter').slideDown('slow');
+        $('#search-filter').show('fast','linear');
     });
 
     // Process click function on remove filter link.
@@ -75,7 +75,7 @@ $(function() {
         $('#id_delivery_method option[value="all"]').attr('selected','selected');
         $('#id_start_date').val('');
         $('#id_end_date').val('');
-        $('#search-filter').slideUp('slow', function() {
+        $('#search-filter').hide('fast','linear', function() {
             $('a.advanced-search').show('fast');   
         });
     });
