@@ -1,3 +1,7 @@
+Myschedule 1.0.12
+=================
+Application update only.
+
 Myschedule 1.0.11
 =================
 Application update with one setting change (set SYSTEM_NOTIFICATION="").
