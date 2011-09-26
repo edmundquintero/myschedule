@@ -10,10 +10,12 @@ class FilterSearchForm(SearchForm):
     distinct_delivery_types = Section.objects.distinct('delivery_type').values('delivery_type')
     campuses = [('all','All campuses')]
     for campus in distinct_campuses:
-        campuses.append((campus['campus'],campus['campus']))
+        if campus['campus'] != '':
+            campuses.append((campus['campus'],campus['campus']))
     delivery_types = [('all','All delivery methods')]
     for delivery_type in distinct_delivery_types:
-        delivery_types.append((delivery_type['delivery_type'],delivery_type['delivery_type']))
+        if delivery_type['delivery_type'] != '':
+            delivery_types.append((delivery_type['delivery_type'],delivery_type['delivery_type']))
     date_formats =['%m/%d/%Y', # 10/25/2006'
                    '%m-%d-%Y' # '10-25-2006'
     ]

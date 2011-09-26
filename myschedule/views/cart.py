@@ -84,6 +84,10 @@ def add_item(request):
     # Need course info to return to javascript and need to save
     # search data.
     course = get_object_or_404(models.Section, section_code=section)
+    section_data = {'prefix': course.course.prefix,
+                    'course_number': course.course.course_number,
+                    'section_number': course.section_number,
+                    'title': course.course.title}
     if request.session.has_key('current_query'):
         course = course.course
         correlation = models.Correlation()
@@ -101,10 +105,6 @@ def add_item(request):
         correlation.save()
         course.add_count = course.add_count + 1
         course.save()
-    section_data = {'prefix': course.course.prefix,
-                    'course_number': course.course.course_number,
-                    'section_number': course.section_number,
-                    'title': course.course.title}
 
     json_data = {'section_data':section_data, 'errors':errors}
     json_data = json.dumps(json_data, indent=2)
@@ -151,8 +151,10 @@ def get_conflicts(request):
     """
         Called from javascript to recheck conflicts.
     """
-    sections = request.session['Cart']
-    cart_items = models.Section.objects.filter(section_code__in=sections)
+    cart_items = []
+    if request.session.has_key('Cart'):
+        sections = request.session['Cart']
+        cart_items = models.Section.objects.filter(section_code__in=sections)
     conflicts = conflict_resolution(cart_items)
     json_data = {'conflicts':conflicts}
     json_data = json.dumps(json_data, indent=2)
