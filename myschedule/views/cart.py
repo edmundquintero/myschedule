@@ -151,8 +151,10 @@ def get_conflicts(request):
     """
         Called from javascript to recheck conflicts.
     """
-    sections = request.session['Cart']
-    cart_items = models.Section.objects.filter(section_code__in=sections)
+    cart_items = []
+    if request.session.has_key('Cart'):
+        sections = request.session['Cart']
+        cart_items = models.Section.objects.filter(section_code__in=sections)
     conflicts = conflict_resolution(cart_items)
     json_data = {'conflicts':conflicts}
     json_data = json.dumps(json_data, indent=2)
