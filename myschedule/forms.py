@@ -94,7 +94,7 @@ class FilterSearchForm(SearchForm):
                                                 if (self.cleaned_data['delivery_method'] == 'all' or 
                                                        (self.cleaned_data['delivery_method'] != 'all' and 
                                                         item.delivery_types and
-                                                        item.delivery_types[i] == self.cleaned_data['delivery_method'])): 
+                                                        item.delivery_types[i] == self.cleaned_data['delivery_method'])):
                                                     remove_item = False
                                                     break    
                                 else:
@@ -105,7 +105,7 @@ class FilterSearchForm(SearchForm):
                                         if (self.cleaned_data['delivery_method'] == 'all' or 
                                                (self.cleaned_data['delivery_method'] != 'all' and 
                                                 item.delivery_types and
-                                                item.delivery_types[i] == self.cleaned_data['delivery_method'])): 
+                                                item.delivery_types[i] == self.cleaned_data['delivery_method'])):
                                             remove_item = False
                                             break
                             i = i + 1
@@ -113,6 +113,7 @@ class FilterSearchForm(SearchForm):
                     if self.cleaned_data['end_date'] != None:
                         remove_item = True
                         if item.end_dates:
+                            i=0
                             for end_date in item.end_dates:
                                 temp_date = datetime.strptime(end_date.strip('T00:00:00Z'), '%Y-%m-%d').date()
                                 if temp_date <= self.cleaned_data['end_date']:
@@ -123,9 +124,10 @@ class FilterSearchForm(SearchForm):
                                         if (self.cleaned_data['delivery_method'] == 'all' or 
                                                (self.cleaned_data['delivery_method'] != 'all' and 
                                                 item.delivery_types and
-                                                item.delivery_types[i] == self.cleaned_data['delivery_method'])): 
+                                                item.delivery_types[i] == self.cleaned_data['delivery_method'])):
                                             remove_item = False
                                             break
+                                i = i + 1
                 if remove_item == True:
                     sqs = sqs.exclude(primary_key=item.pk)
         return sqs
