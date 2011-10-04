@@ -14,7 +14,7 @@ class CourseIndex(SearchIndex):
     start_dates = MultiValueField()
     end_dates = MultiValueField()
     popularity = CharField(model_attr='popularity')
-
+    
     def prepare_campuses(self, obj):
         return [section.campus for section in obj.section_set.all()]
     def prepare_delivery_types(self, obj):

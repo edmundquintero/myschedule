@@ -1,27 +1,29 @@
 from django import forms
 from haystack.forms import SearchForm
 from myschedule.models import Section
+from django.conf import settings
 
 class FilterSearchForm(SearchForm):
     """
        Form used by search to further filter query results.
     """
-    distinct_campuses = Section.objects.distinct('campus').values('campus').order_by('campus')
-    distinct_delivery_types = Section.objects.distinct('delivery_type').values('delivery_type')
+    distinct_campuses = Section.objects.exclude(campus='').order_by('campus').values('campus').distinct()
+    distinct_delivery_types = Section.objects.exclude(delivery_type='').order_by('delivery_type').values('delivery_type').distinct()
     campuses = [('all','All campuses')]
     for campus in distinct_campuses:
-        if campus['campus'] != '':
-            campuses.append((campus['campus'],campus['campus']))
+        campuses.append((campus['campus'],campus['campus']))
     delivery_types = [('all','All delivery methods')]
     for delivery_type in distinct_delivery_types:
-        if delivery_type['delivery_type'] != '':
-            delivery_types.append((delivery_type['delivery_type'],delivery_type['delivery_type']))
-    date_formats =['%m/%d/%Y', # 10/25/2006'
-                   '%m-%d-%Y' # '10-25-2006'
+        delivery_types.append((delivery_type['delivery_type'],delivery_type['delivery_type']))
+    date_formats =['%m/%d/%Y', # 10/25/2006
+                   '%m-%d-%Y' # 10-25-2006
     ]
- 
+    terms = [('all','All terms')]
+    for term in settings.AVAILABLE_TERMS:
+        terms.append((term['display_term'], term['display_term']))
     campus = forms.ChoiceField(choices=campuses, required=False)
     delivery_method = forms.ChoiceField(choices=delivery_types, required=False)
+    term = forms.ChoiceField(choices=terms, required=False)
     start_date = forms.DateField(input_formats=date_formats, required=False)
     end_date = forms.DateField(input_formats=date_formats, required=False)
 

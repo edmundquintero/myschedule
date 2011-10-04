@@ -30,6 +30,7 @@ urlpatterns += patterns('myschedule.views.cart',
     url(r'^schedule/calendar/$', 'get_calendar_data', name='get_calendar_data'),
     url(r'^schedule/conflicts/$', 'get_conflicts', name='get_conflicts'),
     url(r'^schedule_login/$', 'schedule_login', name='schedule_login'),
+    url(r'^schedule/terms/$', 'get_terms', name='get_terms'),
 )
 
 # if settings.DEBUG:

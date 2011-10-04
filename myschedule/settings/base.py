@@ -77,3 +77,10 @@ SYSTEM_NOTIFICATION = ""
 
 ## Determines if link to feedback form should be displayed.
 ALLOW_FEEDBACK = 'False'
+
+## If available_terms should appear in a certain order, specify them in that order.
+AVAILABLE_TERMS = [{'term':'fa', 
+                    'year': '2011',
+                    'display_term': 'Fall 2011',
+                    'start_date': '08/15/2011',
+                    'end_date': '12/15/2011'}]

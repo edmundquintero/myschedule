@@ -67,6 +67,21 @@ def schedule_login(request):
         next = '/myschedule/'
     return redirect(next)
 
+def get_terms(request):
+    """
+        Called from javascript to get term start and end dates
+        for selected term.
+    """
+    json_data = {'start_date':'', 'end_date':''}
+    filter_term = request.POST['term']
+    for term in settings.AVAILABLE_TERMS:
+        if term['display_term'] == filter_term:
+            json_data = {'start_date':term['start_date'],
+                         'end_date':term['end_date']}
+            break
+    json_data = json.dumps(json_data, indent=2)
+    return HttpResponse(json_data)
+
 def add_item(request):
     """
         Adds the selected course section to the cart session variable.

@@ -52,10 +52,12 @@ $(function() {
     // Show advanced search if filter values were previously set.
     campus_filter = $('#id_campus :selected').val();
     delivery_type_filter = $('#id_delivery_method :selected').val();
+    term_filter = $('#id_term :selected').val();
     start_date_filter = $('#id_start_date').val();
     end_date_filter = $('#id_end_date').val();
     if (campus_filter != 'all' || delivery_type_filter != 'all' ||
-        start_date_filter != '' || end_date_filter != ''){       
+        start_date_filter != '' || end_date_filter != '' ||
+        term_filter != 'all'){       
         $("#search-filter").show();
         $('a.advanced-search').hide();
     }
@@ -78,6 +80,22 @@ $(function() {
         $('#search-filter').hide('fast','linear', function() {
             $('a.advanced-search').show('fast');   
         });
+    });
+
+    // Process change on term filter.
+    $("#id_term").change(function() {
+        if ($(this).val() == 'all'){
+            $('#id_start_date').val('');
+            $('#id_end_date').val('');
+        }
+        else {
+            // retrieve start and end dates for this term
+            // and set start and end date filters accordingly
+            $.post(basePath + 'schedule/terms/', {term: $(this).val()}, function(term_dates){
+                $('#id_start_date').val(term_dates.start_date);
+                $('#id_end_date').val(term_dates.end_date);
+            }, 'json');
+        } 
     });
 });
 

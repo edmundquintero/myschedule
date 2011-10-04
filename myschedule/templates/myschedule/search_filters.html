@@ -8,6 +8,9 @@
         <div class="field">
             <label>Delivery method</label>{{ form.delivery_method }}
         </div>
+        <div class="field">
+            <label>Term</label> {{ form.term }}
+        </div>
         <div class="half">
             <div class="field">
                 <label>Class begins on or after</label> {% if form.start_date.errors %}<span class="error">{% endif %}{{ form.start_date }} {% if form.start_date.errors %}</span>{% endif %}
