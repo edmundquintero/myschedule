@@ -2,10 +2,10 @@
 <fieldset id="search-filter">
     <span class="filter-text">Sort course results by:</span>
     <div class="field radio">
-        <label class="radio">Prefix and course number</label><input type="radio" name="sort_order" value="prefix"/>
+        <label class="radio">Prefix and course number</label><input type="radio" name="sort_order" value="prefix" {% ifequal request.session.sort_order "prefix" %}checked{% endifequal %}/>
     </div>
     <div class="field radio">
-        <label>Title (alphabetical)</label><input type="radio" name="sort_order" value="title"/>
+        <label>Title (alphabetical)</label><input type="radio" name="sort_order" value="title" {% ifequal request.session.sort_order "title" %}checked{% endifequal %}/>
     </div>
 
     <span class="filter-text">Filter course and section results by:</span>

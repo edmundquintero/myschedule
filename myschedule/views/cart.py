@@ -408,14 +408,6 @@ class SQSSearchView(SearchView):
                     searchqueryset = searchqueryset.order_by('prefix','course_number')
                 elif self.request.GET['sort_order'] == 'title':
                     searchqueryset = searchqueryset.order_by('title_slug')
-            if 'sort_order' in self.request.session:
-                print self.request.session['sort_order']
-                if self.request.session['sort_order'] == 'prefix':
-                    searchqueryset = searchqueryset.order_by('prefix','course_number')
-                elif self.request.session['sort_order'] == 'title':
-                    searchqueryset = searchqueryset.order_by('title_slug')
-            #for item in searchqueryset:
-            #    print item.prefix, item.course_number, item.title_slug                   
             return searchqueryset
 
     def __call__(self, request):
@@ -427,14 +419,9 @@ class SQSSearchView(SearchView):
                 request.session['start_date_filter'] = request.GET['start_date']
                 request.session['end_date_filter'] = request.GET['end_date']
                 if 'sort_order' in request.GET:
-                    if request.GET['sort_order'] == 'prefix':
-                        print 'here'
-                        request.session['sort_order'] = 'prefix'
-                    elif request.GET['sort_order'] == 'title':
-                        request.session['sort_order'] = 'title'
-                #else:
-                #    request.session['sort_order'] = ''
-                print request.session['sort_order']
+                    request.session['sort_order'] = request.GET['sort_order']
+                else:
+                    request.session['sort_order'] = ''
             except:
                 pass
             if 'current_query' in request.session:

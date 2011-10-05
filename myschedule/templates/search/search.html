@@ -95,9 +95,9 @@
       {% endfor %}
       {% if page.has_previous or page.has_next %}
           <div>
-              {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}&amp;campus={{ request.session.campus_filter }}&amp;delivery_method={{ request.session.delivery_method_filter }}&amp;start_date={{ request.session.start_date_filter }}&amp;end_date={{ request.session.end_date_filter }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
+              {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}&amp;campus={{ request.session.campus_filter }}&amp;delivery_method={{ request.session.delivery_method_filter }}&amp;start_date={{ request.session.start_date_filter }}&amp;end_date={{ request.session.end_date_filter }}&amp;sort_order={{ request.session.sort_order }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
                     |
-              {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}&amp;campus={{ request.session.campus_filter }}&amp;delivery_method={{ request.session.delivery_method_filter }}&amp;start_date={{ request.session.start_date_filter }}&amp;end_date={{ request.session.end_date_filter }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+              {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}&amp;campus={{ request.session.campus_filter }}&amp;delivery_method={{ request.session.delivery_method_filter }}&amp;start_date={{ request.session.start_date_filter }}&amp;end_date={{ request.session.end_date_filter }}&amp;sort_order={{ request.session.sort_order }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
           </div>
       {% endif %}
   {% else %}

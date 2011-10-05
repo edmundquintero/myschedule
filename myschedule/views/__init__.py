@@ -23,6 +23,7 @@ def index(request):
         'delivery_method':'all'}
     search_form = forms.FilterSearchForm(initial=initial_values)
     request.session['next_view'] = request.path
+    request.session['sort_order'] = ''
     return direct_to_template(request,
                               'myschedule/index.html',
                               {'system_notification': settings.SYSTEM_NOTIFICATION,

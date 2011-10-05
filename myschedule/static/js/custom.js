@@ -49,15 +49,16 @@ $(function() {
         $(this).val('').html('');
     });
 
-    // Show advanced search if filter values were previously set.
+    // Show advanced search if filter or sort values were previously set.
     campus_filter = $('#id_campus :selected').val();
     delivery_type_filter = $('#id_delivery_method :selected').val();
     term_filter = $('#id_term :selected').val();
     start_date_filter = $('#id_start_date').val();
     end_date_filter = $('#id_end_date').val();
+    sort_order = $('input[name="sort_order"]:checked').val();
     if (campus_filter != 'all' || delivery_type_filter != 'all' ||
         start_date_filter != '' || end_date_filter != '' ||
-        term_filter != 'all'){       
+        term_filter != 'all' || (sort_order && sort_order != '')){       
         $("#search-filter").show();
         $('a.advanced-search').hide();
     }
@@ -77,6 +78,7 @@ $(function() {
         $('#id_delivery_method option[value="all"]').attr('selected','selected');
         $('#id_start_date').val('');
         $('#id_end_date').val('');
+        $('input[name="sort_order"]:checked').removeAttr('checked');
         $('#search-filter').hide('fast','linear', function() {
             $('a.advanced-search').show('fast');   
         });
