@@ -1,3 +1,9 @@
+Myschedule 1.0.13
+================
+Application updated to allow sorting and to add filter by term.
+# New setting in base.py - AVAILABLE_TERMS
+# Updated schema.xml (copy to appropriate solr/conf and rebuild index after deploying application update).
+
 Myschedule 1.0.12
 =================
 Application update only.
