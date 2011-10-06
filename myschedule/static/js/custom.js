@@ -74,6 +74,7 @@ $(function() {
 
     // Process click function on remove filter link.
     $("a.remove-filter").click(function() {
+        $('#id_term option[value="all"]').attr('selected','selected');
         $('#id_campus option[value="all"]').attr('selected','selected');
         $('#id_delivery_method option[value="all"]').attr('selected','selected');
         $('#id_start_date').val('');

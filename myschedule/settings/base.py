@@ -79,8 +79,13 @@ SYSTEM_NOTIFICATION = ""
 ALLOW_FEEDBACK = 'False'
 
 ## If available_terms should appear in a certain order, specify them in that order.
-AVAILABLE_TERMS = [{'term':'fa', 
+AVAILABLE_TERMS = [{'term':'sp', 
+                    'year': '2012',
+                    'display_term': 'Spring 2012',
+                    'start_date': '01/07/2012',
+                    'end_date': '05/08/2012'},
+                   {'term':'fa', 
                     'year': '2011',
                     'display_term': 'Fall 2011',
                     'start_date': '08/15/2011',
-                    'end_date': '12/15/2011'}]
+                    'end_date': '12/11/2011'}]

@@ -1,13 +1,12 @@
 <a class="advanced-search" href="#advancedsearch">Advanced Search</a>
 <fieldset id="search-filter">
-    <span class="filter-text">Sort course results by:</span>
+    <span class="sort-text">Sort course results by:</span>
     <div class="field radio">
         <label class="radio">Prefix and course number</label><input type="radio" name="sort_order" value="prefix" {% ifequal request.session.sort_order "prefix" %}checked{% endifequal %}/>
     </div>
-    <div class="field radio">
+    <div class="field radio sort-title">
         <label>Title (alphabetical)</label><input type="radio" name="sort_order" value="title" {% ifequal request.session.sort_order "title" %}checked{% endifequal %}/>
     </div>
-
     <span class="filter-text">Filter course and section results by:</span>
     <div class="filters">
         <div class="field">
@@ -16,10 +15,12 @@
         <div class="field">
             <label>Delivery method</label>{{ form.delivery_method }}
         </div>
-        <div class="field">
-            <label>Term</label> {{ form.term }}
+        <div class="one-third">
+            <div class="field">
+                <label>Term</label> {{ form.term }}
+            </div>
         </div>
-        <div class="half">
+        <div class="two-third">
             <div class="field">
                 <label>Class begins on or after</label> {% if form.start_date.errors %}<span class="error">{% endif %}{{ form.start_date }} {% if form.start_date.errors %}</span>{% endif %}
                 <div class="help-text">
@@ -27,7 +28,7 @@
                 </div>
             </div>
          </div>
-         <div class="half">
+         <div class="three-third">
             <div class="field">
                 <label>Class ends on or before</label> {% if form.end_date.errors %}<span class="error">{% endif %}{{ form.end_date }} {% if form.end_date.errors %}</span>{% endif %}
                 <div class="help-text">
@@ -36,6 +37,8 @@
             </div>
         </div>
     </div>
-    <a class="remove-filter" href="#removefilters">Remove filters</a>
+    <div class="close-advanced-search">
+        <a class="remove-filter" href="#removefilters">Remove filters / sorting</a>
+    </div>
 </fieldset>
 
