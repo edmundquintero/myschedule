@@ -405,13 +405,12 @@ class SQSSearchView(SearchView):
             searchqueryset = super(SQSSearchView, self).get_results()
             if 'sort_order' in self.request.GET:
                 if self.request.GET['sort_order'] == 'prefix':
-                    searchqueryset = searchqueryset.order_by('prefix','course_number')
+                    searchqueryset = searchqueryset.order_by('prefix','course_number_sort')
                 elif self.request.GET['sort_order'] == 'title':
-                    searchqueryset = searchqueryset.order_by('title_slug')
+                    searchqueryset = searchqueryset.order_by('title_sort')
             return searchqueryset
 
     def __call__(self, request):
-        print request.GET
         if 'q' in request.GET:
             try:
                 request.session['campus_filter'] = request.GET['campus']

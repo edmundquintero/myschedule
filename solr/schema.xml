@@ -83,23 +83,25 @@
 
     <field name="end_dates" type="text" indexed="true" stored="true" multiValued="true" />
 
+    <field name="popularity" type="text" indexed="true" stored="true" multiValued="false" />
+
     <field name="primary_key" type="text" indexed="true" stored="true" multiValued="false" />
-
-    <field name="title_slug" type="string" indexed="true" stored="true" multiValued="false" />
-
-    <field name="title" type="text" indexed="true" stored="true" multiValued="false" />
 
     <field name="campuses" type="text" indexed="true" stored="true" multiValued="true" />
 
     <field name="text" type="text" indexed="true" stored="true" multiValued="false" />
-
-    <field name="popularity" type="text" indexed="true" stored="true" multiValued="false" />
 
     <field name="delivery_types" type="text" indexed="true" stored="true" multiValued="true" />
 
     <field name="prefix" type="text" indexed="true" stored="true" multiValued="false" />
 
     <field name="course_number" type="text" indexed="true" stored="true" multiValued="false" />
+
+    <field name="title_sort" type="string" indexed="true" stored="true" multiValued="false" />
+
+    <field name="title" type="text" indexed="true" stored="true" multiValued="false" />
+
+    <field name="course_number_sort" type="string" indexed="true" stored="true" multiValued="false" />
 
     <field name="start_dates" type="text" indexed="true" stored="true" multiValued="true" />
 
