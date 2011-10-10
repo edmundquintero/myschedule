@@ -402,7 +402,14 @@ class SQSSearchView(SearchView):
         return extra
 
     def get_results(self):
-        searchqueryset = super(SQSSearchView, self).get_results()
+        """
+           Replaces django haystack SearchView.getresults(). Do not subclass with
+           searchqueryset = super(SQSSearchView, self).get_results(), because it
+           does not allow the query (q) to be blank.  If the q is blank, we want it
+           to return all courses.  It was only making the call to self.form.search()
+           if a value for q was specified.
+        """
+        searchqueryset = self.form.search()
         if searchqueryset != []:
             if 'sort_order' in self.request.GET:
                 if self.request.GET['sort_order'] == 'prefix':
