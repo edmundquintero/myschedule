@@ -86,21 +86,25 @@ $(function() {
     });
 
     // Process change on term filter.
-    $("#id_term").change(function() {
-        if ($(this).val() == 'all'){
-            $('#id_start_date').val('');
-            $('#id_end_date').val('');
-        }
-        else {
-            // retrieve start and end dates for this term
-            // and set start and end date filters accordingly
-            $.post(basePath + 'schedule/terms/', {term: $(this).val()}, function(term_dates){
-                $('#id_start_date').val(term_dates.start_date);
-                $('#id_end_date').val(term_dates.end_date);
-            }, 'json');
-        } 
-    });
+    $("#id_term").keyup(updateTerm)
+                 .click(updateTerm);
+
 });
+
+updateTerm = function(){
+    if ($(this).val() == 'all'){
+        $('#id_start_date').val('');
+        $('#id_end_date').val('');
+    }
+    else {
+        // retrieve start and end dates for this term
+        // and set start and end date filters accordingly
+        $.post(basePath + 'schedule/terms/', {term: $(this).val()}, function(term_dates){
+            $('#id_start_date').val(term_dates.start_date);
+            $('#id_end_date').val(term_dates.end_date);
+        }, 'json');
+    } 
+};
 
 function createModalWindow(element, title, createCallback,
                                cancelCallback)
