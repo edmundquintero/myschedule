@@ -39,11 +39,6 @@ $(function() {
         $('#view-full-schedule').hide();
     }
 
-    // Set a sample value for the query input field when on the index page.
-    if ($('#id_query').val() == ''){
-        $('#id_query').val('ex. math, bus 121, mec');
-    }
-
     // Clear out query input field when it receives focus.
     $('#id_query').focus(function(){
         $(this).val('').html('');
@@ -88,8 +83,20 @@ $(function() {
     // Process change on term filter.
     $("#id_term").keyup(updateTerm)
                  .click(updateTerm);
+    //Process search button.
+    $('#search').submit(processSubmit);
 
 });
+
+
+function processSubmit()
+{
+    // If user didn't specify a search query, clear out help text
+    // and set it to empty string so all courses will be returned
+    if ($('#id_query').val() == 'ex. math, bus 121, mec'){
+        $('#id_query').val('');
+    }
+};
 
 updateTerm = function(){
     if ($(this).val() == 'all'){
