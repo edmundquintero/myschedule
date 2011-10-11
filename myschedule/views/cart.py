@@ -295,7 +295,8 @@ def display_cart(request, sections_url=None):
                                'downtime_message':downtime_message,
                                's2w_success_message':settings.S2W_SUCCESS_MESSAGE,
                                'allow_feedback':settings.ALLOW_FEEDBACK,
-                               'form': search_form}
+                               'form': search_form,
+                               'filters_set':filter_check(request)}
                              )
 
 def email_schedule(request):
@@ -401,6 +402,7 @@ class SQSSearchView(SearchView):
         extra['cart_items'] = cart_items
         extra['conflicts'] = conflicts
         extra['catalog_url'] = settings.CATALOG_URL
+        extra['filters_set'] = filter_check(self.request)
         return extra
 
     def get_results(self):
@@ -423,15 +425,18 @@ class SQSSearchView(SearchView):
     def __call__(self, request):
         if 'q' in request.GET:
             try:
-                request.session['campus_filter'] = request.GET['campus']
-                request.session['delivery_method_filter'] = request.GET['delivery_method']
-                request.session['start_date_filter'] = request.GET['start_date']
-                request.session['end_date_filter'] = request.GET['end_date']
-                request.session['all_courses'] = request.GET['all_courses']
+                if 'all_courses' in request.GET:
+                    request.session['all_courses'] = request.GET['all_courses']
+                else:
+                    request.session['all_courses'] = ''
                 if 'sort_order' in request.GET:
                     request.session['sort_order'] = request.GET['sort_order']
                 else:
                     request.session['sort_order'] = ''
+                request.session['campus_filter'] = request.GET['campus']
+                request.session['delivery_method_filter'] = request.GET['delivery_method']
+                request.session['start_date_filter'] = request.GET['start_date']
+                request.session['end_date_filter'] = request.GET['end_date']
             except:
                 pass
             if 'current_query' in request.session:
@@ -535,4 +540,21 @@ def register(request):
     json_data = json.dumps(json_data)
     # return JSON object to browser
     return HttpResponse(json_data)
+
+def filter_check(request):
+    """
+       Checks to see if any search filters, sorting, etc. were applied
+    """
+    try:
+        if ((request.session.has_key('campus_filter') and request.session['campus_filter'] != 'all') or
+            (request.session.has_key('delivery_method_filter') and request.session['delivery_method_filter'] != 'all') or
+            (request.session.has_key('start_date_filter') and request.session['start_date_filter'] != '') or
+            (request.session.has_key('end_date_filter') and request.session['end_date_filter'] != '') or
+            (request.session.has_key('all_courses') and request.session['all_courses'] == 'on') or
+            (request.session.has_key('sort_order') and request.session['sort_order'] != '')):
+            return True
+    except:
+        pass
+    return False
+
 

@@ -12,7 +12,7 @@ import traceback
 # from cpsite.decorators import groups_required
 
 from myschedule import models, forms
-from myschedule.views.cart import conflict_resolution, SQSSearchView
+from myschedule.views.cart import conflict_resolution, SQSSearchView, filter_check
 
 def index(request):
     """
@@ -100,7 +100,8 @@ def show_sections(request, course_id):
              'cart_items':cart_items,
              'conflicts':conflicts,
              'catalog_url':settings.CATALOG_URL,
-             'form':search_form}
+             'form':search_form,
+             'filters_set':filter_check(request)}
     )
 
 def validate_credentials(request, authorized_addresses, authorized_key, key_received):
