@@ -26,6 +26,7 @@ class FilterSearchForm(SearchForm):
     term = forms.ChoiceField(choices=terms, required=False)
     start_date = forms.DateField(input_formats=date_formats, required=False)
     end_date = forms.DateField(input_formats=date_formats, required=False)
+    all_courses = forms.BooleanField(required=False)
 
     def search(self):
         from datetime import datetime

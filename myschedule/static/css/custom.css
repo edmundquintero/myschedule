@@ -71,9 +71,18 @@ a.advanced-search
     padding-top: 5px;
 }
 
+div.advanced-footer {
+    display: block;
+}
+
+div.show-all {
+    float: left;
+    height: 25px;
+}
+
 div.close-advanced-search {
     float: right;
-    padding-top: 5px;
+    padding-top: 10px;
 }
 
 #headline

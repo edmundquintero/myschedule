@@ -52,12 +52,14 @@ def show_sections(request, course_id):
     if ('campus_filter' in request.session and
         'delivery_method_filter' in request.session and
         'start_date_filter' in request.session and
-        'end_date_filter' in request.session):
+        'end_date_filter' in request.session and
+        'all_courses' in request.session):
         initial_values = {
             'campus':request.session['campus_filter'],
             'delivery_method':request.session['delivery_method_filter'],
             'start_date':request.session['start_date_filter'],
-            'end_date':request.session['end_date_filter']}
+            'end_date':request.session['end_date_filter'],
+            'all_courses':request.session['all_courses']}
     search_form = forms.FilterSearchForm(initial=initial_values)
 
     # Help make future searches smarter - save query and update course add_count.

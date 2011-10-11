@@ -96,6 +96,11 @@ function processSubmit()
     if ($('#id_query').val() == 'ex. math, bus 121, mec'){
         $('#id_query').val('');
     }
+    // Likewise, if show all courses checkbox is checked, clear
+    // out any value in the query so it will return all courses
+    if ($('#id_all_courses:checked').val() == 'on'){
+        $('#id_query').val('');
+    }
 };
 
 updateTerm = function(){
