@@ -65,6 +65,7 @@ $(function() {
         $('#id_start_date').val('');
         $('#id_end_date').val('');
         $('input[name="sort_order"]:checked').removeAttr('checked');
+        $('input[name="all_courses"]:checked').removeAttr('checked').val('');
         $('#search-filter').hide('fast','linear', function() {
             $('a.advanced-search').show('fast');   
         });
@@ -90,6 +91,12 @@ function processSubmit()
     // out any value in the query so it will return all courses
     if ($('#id_all_courses:checked').val() == 'on'){
         $('#id_query').val('');
+    }
+    // If no query specified but user did not set show all
+    // courses checkbox, set it to checked for them (so
+    // it will appear checked on subsequent pages
+    if ($('#id_query').val() == ''){
+        $('#id_all_courses').attr('checked',true).val('on');
     }
 };
 

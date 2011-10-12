@@ -73,12 +73,15 @@ def get_terms(request):
         for selected term.
     """
     json_data = {'start_date':'', 'end_date':''}
-    filter_term = request.POST['term']
-    for term in settings.AVAILABLE_TERMS:
-        if term['display_term'] == filter_term:
-            json_data = {'start_date':term['start_date'],
+    try:
+        filter_term = request.POST['term']
+        for term in settings.AVAILABLE_TERMS:
+            if term['display_term'] == filter_term:
+                json_data = {'start_date':term['start_date'],
                          'end_date':term['end_date']}
-            break
+                break
+    except:
+        pass
     json_data = json.dumps(json_data, indent=2)
     return HttpResponse(json_data)
 
