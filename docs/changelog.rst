@@ -1,3 +1,7 @@
+Myschedule 1.0.15
+================
+Application update only.
+
 Myschedule 1.0.14
 =================
 Application updated to allow viewing of all courses.
