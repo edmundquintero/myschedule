@@ -1,3 +1,9 @@
+Myschedule 1.0.14
+=================
+Application updated to allow viewing of all courses.
+# Update application.
+# Updated schema.xml and synonyms.txt (copy to appropriate solr/conf, stop and restart solr, run update_index)
+
 Myschedule 1.0.13
 ================
 Application updated to allow sorting and to add filter by term.

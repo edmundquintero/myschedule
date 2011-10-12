@@ -9,5 +9,5 @@ setup(
     include_package_data=True,
     name='myschedule',
     packages=find_packages(),
-    version="1.0.13"
+    version="1.0.14"
 )
