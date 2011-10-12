@@ -276,20 +276,14 @@ def display_cart(request, sections_url=None):
     request.session['next_view'] = '/myschedule/show_schedule/'
 
     # Initialize the search form.
-    initial_values = {}
-    if ('campus_filter' in request.session and
-        'delivery_method_filter' in request.session and
-        'start_date_filter' in request.session and
-        'end_date_filter' in request.session and
-        'all_courses' in request.session):
-        initial_values = {
-            'campus':request.session['campus_filter'],
-            'delivery_method':request.session['delivery_method_filter'],
-            'start_date':request.session['start_date_filter'],
-            'end_date':request.session['end_date_filter'],
-            'all_courses':request.session['all_courses']}
+    current_time = datetime.now()
+    initial_values = {
+        'campus':'all',
+        'delivery_method':'all',
+        'start_date':current_time.date().strftime("%m/%d/%Y")}
+    current_time = datetime.now()
+    request.session['sort_order'] = ''
     search_form = forms.FilterSearchForm(initial=initial_values)
-
     return direct_to_template(request,
                               'myschedule/display_cart.html',
                               {'cart_items':cart_items,
