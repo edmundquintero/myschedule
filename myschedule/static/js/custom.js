@@ -69,6 +69,8 @@ $(function() {
         $('#search-filter').hide('fast','linear', function() {
             $('a.advanced-search').show('fast');   
         });
+        $('#form-errors-message').hide('fast');
+        $('span.error').removeClass('error');
     });
 
     // Process change on term filter.
@@ -76,6 +78,12 @@ $(function() {
                  .click(updateTerm);
     //Process search button.
     $('#search').submit(processSubmit);
+
+    //If there are errors on the advanced search forms, show the form.
+    $('#form-errors-message').each(function(){
+	$('a.advanced-search').hide('fast');
+        $('#search-filter').show('fast','linear');
+    });
 
 });
 

@@ -410,14 +410,16 @@ class SQSSearchView(SearchView):
            to return all courses.  It was only making the call to self.form.search()
            if a value for q was specified.
         """
-        searchqueryset = self.form.search()
-        if searchqueryset != []:
-            if 'sort_order' in self.request.GET:
-                if self.request.GET['sort_order'] == 'prefix':
-                    searchqueryset = searchqueryset.order_by('prefix','course_number_sort')
-                elif self.request.GET['sort_order'] == 'title':
-                    searchqueryset = searchqueryset.order_by('title_sort')
-        return searchqueryset
+        if self.form.is_valid():
+            searchqueryset = self.form.search()
+            if searchqueryset != []:
+                if 'sort_order' in self.request.GET:
+                    if self.request.GET['sort_order'] == 'prefix':
+                        searchqueryset = searchqueryset.order_by('prefix','course_number_sort')
+                    elif self.request.GET['sort_order'] == 'title':
+                        searchqueryset = searchqueryset.order_by('title_sort')
+            return searchqueryset
+        return []
 
     def __call__(self, request):
         if 'q' in request.GET:
