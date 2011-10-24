@@ -83,8 +83,8 @@ class FilterSearchForm(SearchForm):
                     if ((campus == '' or (item.campuses and item.campuses[i] == campus)) and
                         (delivery_method == '' or (item.delivery_types and item.delivery_types[i] == delivery_method)) and
                         (start_date == None or (item.start_dates and 
-                                                datetime.strptime(item.start_dates[i].strip('T00:00:00Z'), '%Y-%m-%d').date() >= start_date)) and
-                        (end_date == None or (item.end_dates and datetime.strptime(item.end_dates[i].strip('T00:00:00Z'), '%Y-%m-%d').date() <= end_date))):
+                                                datetime.strptime(item.start_dates[i].replace('T00:00:00Z',''), '%Y-%m-%d').date() >= start_date)) and
+                        (end_date == None or (item.end_dates and datetime.strptime(item.end_dates[i].replace('T00:00:00Z',''), '%Y-%m-%d').date() <= end_date))):
                         remove_item = False
                         break
                     i = i + 1
