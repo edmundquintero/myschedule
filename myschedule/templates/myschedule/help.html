@@ -5,12 +5,15 @@
 
 {% block content %}
 {% include "help_text.html" %}
-{% if files %}
 <h2>Helpful Documents</h2>
 <ul>
-  {% for file in files %}
-  <li><a href="{% url appstatic "help" %}/{{ file }}">{{ file }}</a></li>
-  {% endfor %}
+  <li><a href="http://www.youtube.com/watch?v=IKN4l1GxI3M">Schedule Builder Overview</a>
+
+  {% if files %}
+    {% for file in files %}
+    <li><a href="{% url appstatic "help" %}/{{ file }}">{{ file }}</a></li>
+    {% endfor %}
+  {% endif %}
+
 </ul>
-{% endif %}
 {% endblock %}
