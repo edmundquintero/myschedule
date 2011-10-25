@@ -89,41 +89,44 @@ def add_item(request):
     """
         Adds the selected course section to the cart session variable.
     """
-    section = request.POST['section']
-    errors = ''
-    sections = []
-    if request.session.has_key('Cart'):
-        sections = request.session['Cart']
-    if section not in sections:
-        sections.append(section)
-        request.session['Cart'] = sections
-    if request.user.is_authenticated():
-        save_cart(request)
-    # Need course info to return to javascript and need to save
-    # search data.
-    course = get_object_or_404(models.Section, section_code=section)
-    section_data = {'prefix': course.course.prefix,
-                    'course_number': course.course.course_number,
-                    'section_number': course.section_number,
-                    'title': course.course.title}
-    if request.session.has_key('current_query'):
-        course = course.course
-        correlation = models.Correlation()
-        correlation.criterion = request.session['current_query']
-        if request.session.has_key('previous_query'):
-            if request.session['previous_query'] not in settings.BLACKLIST:
-                correlation.species = models.Correlation.WRONG_TERM
-                correlation.criterion = correlation.criterion + '|' + request.session['previous_query']
-            del request.session['previous_query']
-            del request.session['current_query']
-            request.session.modified = True
-        else:
-            correlation.species = models.Correlation.SUCCESSFUL_SEARCH
-        correlation.course = course
-        correlation.save()
-        course.add_count = course.add_count + 1
-        course.save()
-
+    try:
+        section = request.POST['section']
+        errors = ''
+        sections = []
+        if request.session.has_key('Cart'):
+            sections = request.session['Cart']
+        if section not in sections:
+            sections.append(section)
+            request.session['Cart'] = sections
+        if request.user.is_authenticated():
+            save_cart(request)
+        # Need course info to return to javascript and need to save
+        # search data.
+        course = get_object_or_404(models.Section, section_code=section)
+        section_data = {'prefix': course.course.prefix,
+                        'course_number': course.course.course_number,
+                        'section_number': course.section_number,
+                        'title': course.course.title}
+        if request.session.has_key('current_query'):
+            course = course.course
+            correlation = models.Correlation()
+            correlation.criterion = request.session['current_query']
+            if request.session.has_key('previous_query'):
+                if request.session['previous_query'] not in settings.BLACKLIST:
+                    correlation.species = models.Correlation.WRONG_TERM
+                    correlation.criterion = correlation.criterion + '|' + request.session['previous_query']
+                del request.session['previous_query']
+                del request.session['current_query']
+                request.session.modified = True
+            else:
+                correlation.species = models.Correlation.SUCCESSFUL_SEARCH
+            correlation.course = course
+            correlation.save()
+            course.add_count = course.add_count + 1
+            course.save()
+    except:
+        section_data = {}
+        errors = "The application was unable to add this section to your schedule.  Reload the page and try again.  If the problem persists, please contact the help desk."
     json_data = {'section_data':section_data, 'errors':errors}
     json_data = json.dumps(json_data, indent=2)
     # return JSON object to browser

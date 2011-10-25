@@ -8,12 +8,6 @@
         <input type="image" value="Search" name="submit" src="{% url appstatic "img/search_button.png" %}" />
         {% include "myschedule/search_filters.html" %}
     </form>
-  {% if form.errors %}
-    <br />
-    <div class="message message-error" id="form-errors-message">
-        <p>Date(s) specified for Advanced Search are improperly formatted.</p>
-    </div>
-  {% endif %}
   {% if not user.is_authenticated or conflicts.conflicting_sections or filters_set %}
     <br />
     <div class="message message-warning" id="conflict-login-message">
@@ -24,7 +18,7 @@
         <p id="conflict-message">This schedule contains scheduling conflicts.</p>
       {% endif %}
       {% if filters_set %}
-        <p><a class="advanced-search-message" href="#advanced-search">Advanced search</a> options have been applied to the courses shown.</p>
+        <p id="advanced-search-message"><a class="advanced-search-message" href="#advanced-search">Advanced search</a> options have been applied to the courses shown.</p>
       {% endif %}
     </div>
   {% endif %}

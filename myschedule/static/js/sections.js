@@ -28,6 +28,7 @@ function addItem(section)
     $.post(basePath + 'cart/add/', {section: section}, function(data){
             if (data.errors != ''){
                 alert(data.errors);
+                $('a.add-item').show();      
             }
             else{
                 // Create the sidebar button for the section.

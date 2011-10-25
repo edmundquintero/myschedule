@@ -40,7 +40,7 @@ def help(request):
     except OSError:
         files = None
     return direct_to_template(request, 'myschedule/help.html', {
-        'files': files
+        'files': files, 'screencast_url' : settings.HELP_SCREENCAST_URL
     })
 
 def show_sections(request, course_id):
