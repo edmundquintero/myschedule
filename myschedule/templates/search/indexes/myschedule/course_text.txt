@@ -67,4 +67,3 @@
 {{ object.title }}
 {{ object.description }}
 {% endifequal %}
-{{ object.correlation_slug }}
