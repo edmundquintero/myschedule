@@ -1,5 +1,13 @@
+Myschedule 1.0.17
+=================
+Application update.  Will need to run update_index script to update solr index.
+
+Myschedule 1.0.16
+=================
+Application update and added new setting: HELP_SCREENCAST_URL..
+
 Myschedule 1.0.15
-================
+=================
 Application update only.
 
 Myschedule 1.0.14
