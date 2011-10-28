@@ -107,7 +107,6 @@ med,medical
 mkt,marketing,retailing,retail
 mlt,medical,laboratory
 mus,music
-nde,non-destructive
 net,nos,networking
 nur,nursing
 ost,office
@@ -134,3 +133,4 @@ srv,surveying,survey
 tne,telecommunications,network,engineer,engineering
 trf,turfgrass
 wld,welding,weld
+nde,ndx,ultrasonic

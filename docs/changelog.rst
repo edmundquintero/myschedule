@@ -1,6 +1,6 @@
 Myschedule 1.0.17
 =================
-Application update.  Will need to run update_index script to update solr index.
+Application update.  Will need to stop and restart solr and run update_index script to update solr index.
 
 Myschedule 1.0.16
 =================
