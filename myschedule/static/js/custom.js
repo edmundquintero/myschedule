@@ -229,6 +229,7 @@ remove_section = function()
         }, 'json');
         loadCalendar();
     }, 'json');
+    $('#length-message').hide();
 }
 
 beginRegistration = function(){

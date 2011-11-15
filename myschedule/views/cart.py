@@ -47,7 +47,8 @@ def schedule_login(request):
                 # saved items that aren't already in it to the cart.
                 for item in saved_sections:
                     if item not in cart_sections:
-                        cart_sections.append(item)
+                        if len(cart_sections) < 14:
+                            cart_sections.append(item)
             # Update the cart session variable
             request.session['Cart'] = cart_sections
             save_cart(request)
@@ -96,34 +97,39 @@ def add_item(request):
         if request.session.has_key('Cart'):
             sections = request.session['Cart']
         if section not in sections:
-            sections.append(section)
-            request.session['Cart'] = sections
-        if request.user.is_authenticated():
-            save_cart(request)
-        # Need course info to return to javascript and need to save
-        # search data.
-        course = get_object_or_404(models.Section, section_code=section)
-        section_data = {'prefix': course.course.prefix,
-                        'course_number': course.course.course_number,
-                        'section_number': course.section_number,
-                        'title': course.course.title}
-        if request.session.has_key('current_query'):
-            course = course.course
-            correlation = models.Correlation()
-            correlation.criterion = request.session['current_query']
-            if request.session.has_key('previous_query'):
-                if request.session['previous_query'] not in settings.BLACKLIST:
-                    correlation.species = models.Correlation.WRONG_TERM
-                    correlation.criterion = correlation.criterion + '|' + request.session['previous_query']
-                del request.session['previous_query']
-                del request.session['current_query']
-                request.session.modified = True
+            if len(sections) >= 14:
+                # Due to the limitation imposed by the field size, limit the number of sections added to the schedule.
+                section_data = {}
+                errors = "The maximum allowed sections have been added to your schedule.  Additional sections cannot be added unless other sections are first removed."
             else:
-                correlation.species = models.Correlation.SUCCESSFUL_SEARCH
-            correlation.course = course
-            correlation.save()
-            course.add_count = course.add_count + 1
-            course.save()
+                sections.append(section)
+                request.session['Cart'] = sections
+                if request.user.is_authenticated():
+                    save_cart(request)
+                # Need course info to return to javascript and need to save
+                # search data.
+                course = get_object_or_404(models.Section, section_code=section)
+                section_data = {'prefix': course.course.prefix,
+                                'course_number': course.course.course_number,
+                                'section_number': course.section_number,
+                                'title': course.course.title}
+                if request.session.has_key('current_query'):
+                    course = course.course
+                    correlation = models.Correlation()
+                    correlation.criterion = request.session['current_query']
+                    if request.session.has_key('previous_query'):
+                        if request.session['previous_query'] not in settings.BLACKLIST:
+                            correlation.species = models.Correlation.WRONG_TERM
+                            correlation.criterion = correlation.criterion + '|' + request.session['previous_query']
+                        del request.session['previous_query']
+                        del request.session['current_query']
+                        request.session.modified = True
+                    else:
+                        correlation.species = models.Correlation.SUCCESSFUL_SEARCH
+                    correlation.course = course
+                    correlation.save()
+                    course.add_count = course.add_count + 1
+                    course.save()
     except:
         section_data = {}
         errors = "The application was unable to add this section to your schedule.  Reload the page and try again.  If the problem persists, please contact the help desk."

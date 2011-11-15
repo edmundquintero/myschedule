@@ -14,11 +14,14 @@
     <p>All classes have been removed from this schedule.</p>
   </div>
 {% else %}
-  {% if not user.is_authenticated or conflicts.conflicting_sections or downtime_message or allow_feedback == 'True' %}
+  {% if not user.is_authenticated or conflicts.conflicting_sections or downtime_message or allow_feedback == 'True' or request.session.Cart|length >= 14 %}
     <br />
     <div class="message message-warning" id="conflict-login-message">
     {% if not user.is_authenticated %}
       <p id="login-message"><a href="{% url login %}">Sign in</a> to save this schedule!</p>
+    {% endif %}
+    {% if request.session.Cart|length >= 14 %}
+      <p id="length-message">Schedule has reached maximum length allowed. You will need to remove some sections in order to add more.</p>
     {% endif %}
     {% if conflicts.conflicting_sections %}
       <p id="conflict-message">Scheduling conflicts are highlighted below.</p>
