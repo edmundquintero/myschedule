@@ -531,12 +531,12 @@ def register(request):
         message = ''
         possible_return_values = settings.S2W_RETURN_VALUES
         for return_value in possible_return_values:
-            try:
-                message = output_list[output_list.index(return_value)]
+            for item in output_list:
+                if return_value in item:
+                    message = item
+                    break
+            if message != '':
                 break
-            except ValueError:
-                # this message wasn't in the output - try the next one
-                pass
         if message == '':
             message = settings.S2W_FAILURE_MESSAGE
         if 'Success' not in message:

@@ -54,7 +54,7 @@ S2W_KEY_LOCATION = ''
 S2W_USER_AT_SERVER = 'snap2webadvisor@cis.cpcc.edu'
 S2W_KNOWNHOSTS = ''
 S2W_SEPARATOR = '}'
-S2W_RETURN_VALUES = ['Success', 'Empty Arguments' , 'already registered', 'valid student', 'Academic Level']
+S2W_RETURN_VALUES = ['Success', 'Empty Arguments' , 'already registered', 'valid person', 'Academic Level']
 S2W_DATATEL_URL = 'https://mycollege2.cpcc.edu/WebAdvisorST/WebAdvisor?CONSTITUENCY=WBST&type=P&pid=ST-WRGS'
 # When finished testing, set S2W_TEST_SECTIONS to empty string
 S2W_TEST_SECTIONS = ''
