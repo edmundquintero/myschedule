@@ -1,3 +1,7 @@
+Myschedule 1.0.18
+=================
+Application update with one setting change. For setting S2W_RETURN_VALUES, change list item 'valid student' to 'valid person'.
+
 Myschedule 1.0.17
 =================
 Application update.  Will need to stop and restart solr and run update_index script to update solr index.
