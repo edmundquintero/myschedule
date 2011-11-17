@@ -1,3 +1,7 @@
+Myschedule 1.0.19
+=================
+Application update only.
+
 Myschedule 1.0.18
 =================
 Application update with one setting change. For setting S2W_RETURN_VALUES, change list item 'valid student' to 'valid person'.
