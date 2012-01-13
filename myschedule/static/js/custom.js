@@ -212,6 +212,9 @@ remove_section = function()
         // Note: since the delete process updates the session variable, we don't want it
         // to recheck conflicts and reload the calendar until after the delete process ends.
         // Hence the reason for placing those calls in here.
+        if (message.message != 'completed' && message.message != ''){
+            alert(message.message);
+        }
         $.post(basePath + 'schedule/conflicts/', {}, function(conflicts){
             $('.section-meeting tr').removeClass('error');
             if (conflicts.conflicts.conflicting_meetings.length > 0){

@@ -90,7 +90,8 @@ def add_item(request):
     """
         Adds the selected course section to the cart session variable.
     """
-    try:
+    section_data = {}
+    if request.POST.has_key('section'):
         section = request.POST['section']
         errors = ''
         sections = []
@@ -130,8 +131,7 @@ def add_item(request):
                     correlation.save()
                     course.add_count = course.add_count + 1
                     course.save()
-    except:
-        section_data = {}
+    else:
         errors = "The application was unable to add this section to your schedule.  Reload the page and try again.  If the problem persists, please contact the help desk."
     json_data = {'section_data':section_data, 'errors':errors}
     json_data = json.dumps(json_data, indent=2)
@@ -162,15 +162,21 @@ def delete_cartitem(request):
     """
         Deletes the specified course section from the cart.
     """
-    section = request.POST['section']
-    if request.session.has_key('Cart'):
-        sections = request.session['Cart']
-        if section in sections:
-            sections.remove(section)
-        request.session['Cart'] = sections
-        if request.user.is_authenticated():
-            save_cart(request)
+    # Note the subtle difference between the two messages below ("your"/"the")
     json_data = {'message':'completed'}
+    if request.POST.has_key('section'):
+        section = request.POST['section']
+        if request.session.has_key('Cart'):
+            sections = request.session['Cart']
+            if section in sections:
+                sections.remove(section)
+            request.session['Cart'] = sections
+            if request.user.is_authenticated():
+                save_cart(request)
+        else:
+            json_data = {'message':'This section may not have been removed from your schedule. Reload the page and try removing the section again.  Contact the help desk if the problem persists.'}
+    else:
+        json_data = {'message':'This section may not have been removed from the schedule. Reload the page and try removing the section again. Contact the help desk if the problem persists.'}
     json_data = json.dumps(json_data, indent=2)
     return HttpResponse(json_data)
 
