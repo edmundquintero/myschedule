@@ -40,7 +40,9 @@
         <div class="course-content">
           <div class="course-metadata">
             <p class="course-number">{{ sections.0.course.prefix }} {{ sections.0.course.course_number }}</p>
+            {% comment %}
             <p class="course-hours">{% if sections.0.ceus %}CEUs<br/>{{ sections.0.ceus }}{% else %}{% if sections.0.credit_hours %}Credit Hours<br/>{{ sections.0.credit_hours }}{% else %}No Credit{% endif %}{% endif %}</p>
+            {% endcomment %}
           </div>
          <div class="course-description">
             <p class="course-name">{{ sections.0.course.title }}</p>
@@ -107,8 +109,8 @@
         <div class="section" id="{{ section.section_code }}">
 
           <div class="section-top">
-            <div class="section-number">Section {{ section.section_number }}</div>
-            <div class="section-heading">Meets</div>
+            <div class="section-number">{{ section.course.prefix }}{{ section.course.course_number }}-{{ section.section_number }}</div>
+            <div class="section-heading">{{ section.campus }}</div>
             {% ifnotequal section.status 'Cancelled' %}
               <a class="add-item" href="#add" ref="section_{{ section.section_code }}"><img src="{% url appstatic "img/add_button.png" %}" alt="Add" /></a>
             {% endifnotequal %}
@@ -147,7 +149,7 @@
                 {% endifnotequal %}
               </table>
             </div>
-
+            {% comment %}
             <div class="section-meeting">
               <table>
               {% for meeting in section.meeting_set.all %}
@@ -174,12 +176,32 @@
               {% endif %}
               </table>
             </div>
+            {% endcomment %}
+            <div class="section-meeting">
+              <div class="section-hours">
+                  <div class="section-credit-hours">{% if section.ceus %}<strong>CEUs:</strong> {{ section.ceus }}{% else %}{% if section.credit_hours %}<strong>Credit Hours:</strong> {{ section.credit_hours }}{% else %}<strong>No Credit</strong>{% endif %}{% endif %}</div>
+                  <div class="section-contact-hours"><strong>Contact Hours:</strong> {{ section.contact_hours }}</div>
+              </div>
+              <div class="section-meeting-dates"><strong>Meets:</strong> {{ section.start_date|date:"n/j/Y" }} - {{ section.end_date|date:"n/j/Y" }}</div>
+              <div class="section-meeting-times">
+              {% for meeting in section.meeting_set.all %}
+                <div class="section-time">{% if not meeting.is_online %}<strong>{{ meeting.days_of_week|days_of_week }} {{ meeting.start_time|time:"g:i A" }} - {{ meeting.end_time|time:"g:i A" }}</strong> in <strong>{{ meeting.building }} {{ meeting.room }}</strong>{% else %}<strong>Online</strong>{% endif %} - {{ meeting.meeting_type }}</div>
+              {% endfor %}
+              </div>
+              <div class="clear"></div>
+              <div class="section-delivery-type">{{section.delivery_type }}</div>
+              <div class="section-note"><strong>Note:</strong> {{ section.note }}</div>
+              <div class="section-instructor">{% if section.instructor_link %}<strong>Instructor: </strong><a href="{{ section.instructor_link }}">{{ section.instructor_name }}</a>{% else %}{{ section.instructor_name }}{% endif %}</div>
+   
+            </div>
             <div class="clear"></div>
           </div>
           <div class="section-bottom">
             <div class="section-synonym">Synonym {{ section.synonym }}</div>
+            {% comment %}
             <div class="section-instructor"><strong>Instructor</strong> {% if section.instructor_link %}<a href="{{ section.instructor_link }}">{{ section.instructor_name }}</a>{% else %}{{ section.instructor_name }}{% endif %}
-            </div>
+            </div>{% endcomment %}
+            <div class="section-term"><strong>Term:</strong> {{ section.term|format_term }} {{ section.year }} {% if section.session %}{{ section.session }}{% endif %}</div>
             <div class="section-books">
             {% if section.book_link %} <a href="{{ section.book_link }}" target="_blank">Book Information</a> <img src="{% url appstatic "img/book_icon.png" %}" alt="Book" />{% endif %}<br/>
             </div>

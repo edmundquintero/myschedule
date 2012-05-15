@@ -316,40 +316,59 @@ div.close-advanced-search {
     padding: 10px 15px;
     font-size: 13px;
 }
-.section .section-content .section-meeting table
-{
-    margin: 0;
-    padding: 0;
-}
-.section .section-content .section-meeting table td
-{
-    border: none;
-    vertical-align: top;
-}
 .section .section-content .section-meeting .section-campus
 {
     width: 27%;
     font-weight: bold;
 }
-.section .section-content .section-meeting .section-room
-{
-    width: 22%;
+.section .section-content .section-meeting .section-hours
+{   
+    float: right;
+    display: inline;
 }
-.section .section-content .section-meeting .section-type
+.section .section-content .section-meeting .section-hours .section-credit-hours
 {
-    width: 10%;
+    margin: 1px 0px 7px 0px;
 }
-.section .section-content .section-meeting .section-days
+.section .section-content .section-meeting .section-hours .section-contact-hours
 {
-    width: 10%;
-    font-weight: bold;
+    margin: 1px 0px 4px 0px;
 }
-.section .section-content .section-meeting .section-time
+.section .section-content .section-meeting .section-meeting-dates
 {
-    width: 31%;
-    font-weight: bold;
-    padding-right: 5px;
+    float: left;
+    display: inline;
+    margin: 1px 0px 7px 0px;
 }
+.section .section-content .section-meeting .section-meeting-times
+{
+    float: left;
+    display: inline;
+    margin: 1px 0px 7px 0px;
+    /* Set a min-width otherwise online class will display beside meeting dates. */
+    min-width: 250px;
+}
+.section .section-content .section-meeting .section-meeting-times .section-time
+{
+    margin: 1px 0px 5px 0px;
+}
+.section .section-content .section-meeting .section-meeting-times .section-online
+{
+    margin: 0px 0px 0px 0px;
+}
+.section .section-content .section-meeting .section-delivery-type
+{
+    margin: 1px 0px 7px 0px;
+}
+.section .section-content .section-meeting .section-note
+{
+    margin: 1px 0px 7px 0px;
+}
+.section .section-content .section-meeting .section-instructor
+{
+    margin: 1px 0px 0px 0px;
+}
+
 .section .section-bottom
 {
     height: 52px;
@@ -371,9 +390,9 @@ div.close-advanced-search {
     padding-top: 17px;
     text-align: center;
 }
-.section .section-bottom .section-instructor
+.section .section-bottom .section-term
 {
-    float: left;
+    float:left;
     padding: 17px 0 0 15px;
 }
 .section .section-bottom .section-books
