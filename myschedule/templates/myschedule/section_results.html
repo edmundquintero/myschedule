@@ -47,8 +47,9 @@
          <div class="course-description">
             <p class="course-name">{{ sections.0.course.title }}</p>
             <p>{{ sections.0.course.description }}</p>
+            {% comment %}
             <p class="contact-hours">Contact Hours {{ sections.0.contact_hours }}</p>
-
+            {% endcomment %}
               {% if sections.0.course.prerequisites or sections.0.course.corequisites %}
                 <table class="requisites">
                 <tbody>
@@ -109,8 +110,8 @@
         <div class="section" id="{{ section.section_code }}">
 
           <div class="section-top">
-            <div class="section-number">{{ section.course.prefix }}{{ section.course.course_number }}-{{ section.section_number }}</div>
-            <div class="section-heading">{{ section.campus }}</div>
+            <div class="section-number">{{ section.course.prefix }} {{ section.course.course_number }} - {{ section.section_number }}</div>
+            <div class="section-heading">{% if section.is_online %}Online{% else %}{{ section.campus }}{% endif %}</div>
             {% ifnotequal section.status 'Cancelled' %}
               <a class="add-item" href="#add" ref="section_{{ section.section_code }}"><img src="{% url appstatic "img/add_button.png" %}" alt="Add" /></a>
             {% endifnotequal %}
@@ -182,17 +183,18 @@
                   <div class="section-credit-hours">{% if section.ceus %}<strong>CEUs:</strong> {{ section.ceus }}{% else %}{% if section.credit_hours %}<strong>Credit Hours:</strong> {{ section.credit_hours }}{% else %}<strong>No Credit</strong>{% endif %}{% endif %}</div>
                   <div class="section-contact-hours"><strong>Contact Hours:</strong> {{ section.contact_hours }}</div>
               </div>
-              <div class="section-meeting-dates"><strong>Meets:</strong> {{ section.start_date|date:"n/j/Y" }} - {{ section.end_date|date:"n/j/Y" }}</div>
+              <div class="section-meeting-dates"><strong>Meets:</strong> <span class="section-start-date">{{ section.start_date|date:"n/j/Y" }}</span> - <span class="section-end-date">{{ section.end_date|date:"n/j/Y" }}</span></div>
               <div class="section-meeting-times">
               {% for meeting in section.meeting_set.all %}
-                <div class="section-time">{% if not meeting.is_online %}<strong>{{ meeting.days_of_week|days_of_week }} {{ meeting.start_time|time:"g:i A" }} - {{ meeting.end_time|time:"g:i A" }}</strong> in <strong>{{ meeting.building }} {{ meeting.room }}</strong>{% else %}<strong>Online</strong>{% endif %} - {{ meeting.meeting_type }}</div>
+                <div class="section-meeting-time">{% if not meeting.is_online %}<strong>{{ meeting.days_of_week|days_of_week }} {{ meeting.start_time|time:"g:i A" }} - {{ meeting.end_time|time:"g:i A" }}</strong> in <strong>{{ meeting.building }} {{ meeting.room }}</strong>{% else %}<strong>Online</strong>{% endif %} - {{ meeting.meeting_type }}</div>
               {% endfor %}
               </div>
               <div class="clear"></div>
               <div class="section-delivery-type">{{section.delivery_type }}</div>
               <div class="section-note"><strong>Note:</strong> {{ section.note }}</div>
               <div class="section-instructor">{% if section.instructor_link %}<strong>Instructor: </strong><a href="{{ section.instructor_link }}">{{ section.instructor_name }}</a>{% else %}{{ section.instructor_name }}{% endif %}</div>
-   
+              {% comment %} Campus is actually displayed in the section header area.  This campus is used for filtering sections via javascript (since we may show "Online" in the header instead of the actual campus). It doesn't work to filter on the campus in the header area because initial filtering is done via the search engine. So a search for "other off campus locations" may return courses that match based on what is in the section.campus data, but then the javascript may filter out all of the sections because we sometimes change the campus to "Online" in here. I decided it was better to have students wonder why they're seeing sections for online courses when they filtered on "off campus locations" than for them to get a list of courses back and then when they choose the course they see no sections. (I really don't like it either way).{% endcomment %}
+              <div class="section-campus hide-me">{{ section.campus }}</div> 
             </div>
             <div class="clear"></div>
           </div>

@@ -186,6 +186,19 @@ class Section(SectionAbstract):
     """
     course = models.ForeignKey(Course)
 
+    def is_online(self):
+        """
+            Returns True if all meetings soociated with this section are online.
+            Will be used in section template to display Online for the campus
+            instead of Other Off Campus Location.
+        """
+        is_online = True
+        meetings = Meeting.objects.filter(section=self.id)
+        for meeting in meetings:
+           if meeting.is_online() == False:
+              is_online = False
+        return is_online
+
 
 class SectionTemp(SectionAbstract):
     """
