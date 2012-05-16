@@ -219,7 +219,7 @@ div.close-advanced-search {
     border: none;
     vertical-align: top;
 }
-.course .course-content .course-description table.requisites td
+/*.course .course-content .course-description table.requisites td
 {
     width: 50%;
 }
@@ -232,6 +232,18 @@ div.close-advanced-search {
 {
     padding-right: 2%;
     padding-left: 0px;
+}*/
+.course .course-content .course-description .requisites
+{
+    margin: 7px 0px 0px 0px;
+}
+.course .course-content .course-description .requisites .prereq
+{
+    margin: 0px 0px 5px 0px;
+}
+.course .course-content .course-description .requisites .coreq
+{
+    margin: 0px 0px 5px 0px;
 }
 
 .course .course-bottom

@@ -51,11 +51,9 @@
             <p class="contact-hours">Contact Hours {{ sections.0.contact_hours }}</p>
             {% endcomment %}
               {% if sections.0.course.prerequisites or sections.0.course.corequisites %}
-                <table class="requisites">
-                <tbody>
-                  <tr>
-                    <td class="prereq">
+                <div class="requisites">
                     {% if sections.0.course.prerequisites %}
+                      <div class="prereq">
                       <strong>Prerequisites:  </strong>
                       {% if sections.0.course.prerequisite_courses %}
                         {% for prereq in sections.0.course.prerequisite_courses %}
@@ -69,13 +67,11 @@
                       {% else %}
                         Please check the <a href="{{ catalog_url }}" target="_blank">catalog</a> for prerequisite information.
                       {% endif %}
-                    {% else %}
-                      &nbsp;
+                      </div>
                     {% endif %}
-                    </td>
 
-                    <td class="coreq">
                     {% if sections.0.course.corequisites %}
+                      <div class="coreq">
                       <strong>Co-requisites:  </strong>
                       {% if sections.0.course.corequisite_courses %}
 
@@ -90,13 +86,9 @@
                       {% else %}
                         Please check the <a href="{{ catalog_url }}" target="_blank">catalog</a> for co-requisite information.
                       {% endif %}
-                    {% else %}
-                      &nbsp;
+                    </div>
                     {% endif %}
-                    </td>
-                  </tr>
-                </tbody>
-                </table>
+                </div>
               {% endif %}
 
             {% if sections.0.course.note %}<p class="course-note"><strong>Note</strong> {{ sections.0.course.note }}</p>{% endif %}
