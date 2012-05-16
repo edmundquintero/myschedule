@@ -1,10 +1,4 @@
 $(function() {
-   // Hide anything you don't want the user to see. Added primarily so
-   // I could include the actual section.campus field in the section
-   // details for filtering purposes only. (The campus displayed in
-   // the section header may not be the actual campus value - i.e. Online).
-   $('div.hide-me').hide();
-
     // Process add section button.
     $('a.add-item').click(function() {
         section = $(this).attr('ref').replace('section_','');
@@ -88,7 +82,7 @@ function applyFilters(){
     edf_date = new Date(end_date_filter);
     delivery_type_filter = $('#id_delivery_method :selected').val();
     $('div.section').each(function(){
-        section_campus = $(this).find('div.section-campus').html();
+        section_campus = $(this).find('span.section-campus').html();
         section_start_date = $(this).find('span.section-start-date').html();
         ssd_date = new Date(section_start_date);
         section_end_date = $(this).find('span.section-end-date').html();
