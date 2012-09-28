@@ -1,3 +1,8 @@
+Myschedule 1.0.21
+=================
+# Application update.
+# SOLR schema update (copy to appropriate solr/conf, stop and restart solr, update or rebuild index)
+
 Myschedule 1.0.20
 =================
 Application update only.
