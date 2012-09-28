@@ -26,6 +26,7 @@ def schedule_login(request):
         Saves a schedule the user was working on before they signed in and
         can check for an existing saved schedule.
     """
+    section_count = 0
     if request.user.is_authenticated():
         # First check to see if the user already has a saved schedule in the table.
         # If they have a saved schedule and have a cart, then will need to
@@ -52,7 +53,6 @@ def schedule_login(request):
             # Update the cart session variable
             request.session['Cart'] = cart_sections
             save_cart(request)
-        section_count = 0
         if request.session.has_key('Cart'):
             section_count = models.Section.objects.filter(section_code__in=request.session['Cart']).count()
     # Return the user back to the page they were on prior to signing in unless
