@@ -21,8 +21,8 @@ DATA_CREDENTIALS = ['testuser', 'testpass']
 # Change me before running update_index or rebuild_index
 HAYSTACK_SOLR_URL = 'http://te410-02.cpcc.edu:8983/solr'
 
-S2W_KEY_LOCATION = '/home/sje0388e/projects/django/myschedule/.ssh/privkey'
-S2W_KNOWNHOSTS = '/home/sje0388e/projects/django/myschedule/.ssh/knownhosts'
+S2W_KEY_LOCATION = '/home/sje2400e/projects/django/myschedule/.ssh/privkey'
+S2W_KNOWNHOSTS = '/home/sje2400e/projects/django/myschedule/.ssh/knownhosts'
 #S2W_DATATEL_URL = 'https://watest-central.cpcc.edu/WADEV/WADEV'
 S2W_DATATEL_URL = 'http://mycollege.cpcc.edu/WATESTHR/WATESTHR'
 #S2W_DATATEL_URL = 'http://mycollege.cpcc.edu'

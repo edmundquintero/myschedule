@@ -36,6 +36,7 @@ class CourseIndex(SearchIndex):
     title = CharField(model_attr='title')
     title_sort = CharField(model_attr='title')
     description = CharField(model_attr='description')
+    academic_level = CharField(model_attr='academic_level')
     campuses = MultiValueField()
     delivery_types = MultiValueField()
     start_dates = DateMultiValueField()

@@ -1,6 +1,6 @@
 from django import forms
 from haystack.forms import SearchForm
-from myschedule.models import Section
+from myschedule.models import Course, Section
 from django.conf import settings
 
 class FilterSearchForm(SearchForm):
@@ -9,12 +9,16 @@ class FilterSearchForm(SearchForm):
     """
     distinct_campuses = Section.objects.exclude(campus='').order_by('campus').values('campus').distinct()
     distinct_delivery_types = Section.objects.exclude(delivery_type='').order_by('delivery_type').values('delivery_type').distinct()
+    distinct_academic_levels = Course.objects.exclude(academic_level='').order_by('academic_level').values('academic_level').distinct()
     campuses = [('all','All campuses')]
     for campus in distinct_campuses:
         campuses.append((campus['campus'],campus['campus']))
     delivery_types = [('all','All delivery methods')]
     for delivery_type in distinct_delivery_types:
         delivery_types.append((delivery_type['delivery_type'],delivery_type['delivery_type']))
+    academic_levels = [('all','All academic levels')]
+    for academic_level in distinct_academic_levels:
+        academic_levels.append((academic_level['academic_level'],academic_level['academic_level']))
     date_formats =['%m/%d/%Y', # 10/25/2006
                    '%m-%d-%Y' # 10-25-2006
     ]
@@ -23,6 +27,7 @@ class FilterSearchForm(SearchForm):
         terms.append((term['display_term'], term['display_term']))
     campus = forms.ChoiceField(choices=campuses, required=False)
     delivery_method = forms.ChoiceField(choices=delivery_types, required=False)
+    academic_level = forms.ChoiceField(choices=academic_levels, required=False)
     term = forms.ChoiceField(choices=terms, required=False)
     start_date = forms.DateField(input_formats=date_formats, required=False)
     end_date = forms.DateField(input_formats=date_formats, required=False)
@@ -37,7 +42,12 @@ class FilterSearchForm(SearchForm):
         start_date = None
         end_date = None
         filter_count = 0
-
+        if self.cleaned_data['academic_level']:
+            if self.cleaned_data['academic_level'] != 'all':
+                academic_level = self.cleaned_data['academic_level']
+                # Don't increment filter_count here because academic level
+                # is at the course level, not the section level.
+                sqs = sqs.filter(academic_level__exact=academic_level)
         if self.cleaned_data['campus']:
             if self.cleaned_data['campus'] != 'all':
                 campus = self.cleaned_data['campus']
@@ -63,7 +73,7 @@ class FilterSearchForm(SearchForm):
         # start dates and end dates are multi-value fields in the search index (because
         # this data comes from the sections and not the course).  That accounts for the
         # additional filtering steps below.  (If more than one filter was specified, we
-        # must make sure to include the course only if it had section date that met all
+        # must make sure to include the course only if it had section data that met all
         # of the filtering criteria). In hindsight, the index probably should have
         # been at the section level (or potentially the meeting level). Maybe in version 3...
         if filter_count >= 2:

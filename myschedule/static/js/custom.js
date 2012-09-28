@@ -62,6 +62,7 @@ $(function() {
         $('#id_term option[value="all"]').attr('selected','selected');
         $('#id_campus option[value="all"]').attr('selected','selected');
         $('#id_delivery_method option[value="all"]').attr('selected','selected');
+        $('#id_academic_level option[value="all"]').attr('selected','selected');
         $('#id_start_date').val('');
         $('#id_end_date').val('');
         $('input[name="sort_order"]:checked').removeAttr('checked');

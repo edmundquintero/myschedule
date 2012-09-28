@@ -295,6 +295,7 @@ def display_cart(request, sections_url=None):
     initial_values = {
         'campus':'all',
         'delivery_method':'all',
+        'academic_level':'all',
         'start_date':current_time.date().strftime("%m/%d/%Y")}
     current_time = datetime.now()
     request.session['sort_order'] = ''
@@ -449,6 +450,7 @@ class SQSSearchView(SearchView):
                     request.session['sort_order'] = ''
                 request.session['campus_filter'] = request.GET['campus']
                 request.session['delivery_method_filter'] = request.GET['delivery_method']
+                request.session['academic_level'] = request.GET['academic_level']
                 request.session['start_date_filter'] = request.GET['start_date']
                 request.session['end_date_filter'] = request.GET['end_date']
             except:
@@ -562,6 +564,7 @@ def filter_check(request):
     try:
         if ((request.session.has_key('campus_filter') and request.session['campus_filter'] != 'all') or
             (request.session.has_key('delivery_method_filter') and request.session['delivery_method_filter'] != 'all') or
+            (request.session.has_key('academic_level') and request.session['academic_level'] != 'all') or
             (request.session.has_key('start_date_filter') and request.session['start_date_filter'] != '') or
             (request.session.has_key('end_date_filter') and request.session['end_date_filter'] != '') or
             (request.session.has_key('all_courses') and request.session['all_courses'] == 'on') or
