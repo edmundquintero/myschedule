@@ -104,9 +104,11 @@
           <div class="section-top">
             <div class="section-number">{{ section.course.prefix }} {{ section.course.course_number }} - {{ section.section_number }}</div>
             <div class="section-heading"><span class="section-campus">{{ section.campus }}</span></div>
+            {% if not section.has_ended %}
             {% ifnotequal section.status 'Cancelled' %}
               <a class="add-item" href="#add" ref="section_{{ section.section_code }}"><img src="{% url appstatic "img/add_button.png" %}" alt="Add" /></a>
             {% endifnotequal %}
+            {% endif %}
           </div>
           <div class="section-content">
             <div class="section-seats">

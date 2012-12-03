@@ -48,6 +48,9 @@ def show_sections(request, course_id):
     """
         Display section results template for specified course.
     """
+    from datetime import datetime
+    from django.utils.datastructures import SortedDict
+
     # Initialize the search form.
     initial_values = {}
     if ('campus_filter' in request.session and
@@ -94,7 +97,15 @@ def show_sections(request, course_id):
         conflicts = {}
 
     # Get the sections for the selected course
-    sections = models.Section.objects.select_related().filter(course=course_id)
+    # Sections should be ordered such that:
+    # 1. classes that have not yet started appear first
+    # 2. classes that have started but not yet ended appear second
+    # 3. classes that have already ended appear last (we might decide not to show those)
+    current_date = datetime.now().date().strftime("%Y-%m-%d")
+    sections = models.Section.objects.extra(
+        select=SortedDict([('has_started',"start_date<='%s'"%current_date),
+        ('has_ended',"end_date<'%s'"%current_date)])).select_related().filter(
+        course=course_id).order_by('has_started','has_ended','start_date','id')
 
     request.session['next_view'] = request.path
     return direct_to_template(request,

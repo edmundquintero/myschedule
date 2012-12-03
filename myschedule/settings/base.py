@@ -89,11 +89,11 @@ AVAILABLE_TERMS = [{'term':'su',
                     'display_term': 'Fall 2012',
                     'start_date': '08/09/2012',
                     'end_date': '12/11/2012'},
-                    {'term':'sp', 
-                    'year': '2012', 
-                    'display_term': 'Spring 2012',
-                    'start_date': '01/07/2012',
-                    'end_date': '05/08/2012'}
+                    {'term':'sp',
+                    'year': '2012',
+                    'display_term': 'Spring 2013',
+                    'start_date': '01/10/2013',
+                    'end_date': '05/10/2013'}
                    ]
 
 HELP_SCREENCAST_URL = "http://www.youtube.com/watch?v=IKN4l1GxI3M"
