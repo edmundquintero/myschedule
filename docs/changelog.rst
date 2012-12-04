@@ -1,3 +1,7 @@
+Myschedule 1.0.22
+=================
+# Application update only.
+
 Myschedule 1.0.21
 =================
 # Application update.
