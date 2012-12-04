@@ -105,7 +105,8 @@ def show_sections(request, course_id):
     sections = models.Section.objects.extra(
         select=SortedDict([('has_started',"start_date<='%s'"%current_date),
         ('has_ended',"end_date<'%s'"%current_date)])).select_related().filter(
-        course=course_id).order_by('has_started','has_ended','start_date','id')
+        course=course_id,end_date__gte=current_date).order_by(
+        'has_started','has_ended','start_date','id')
 
     request.session['next_view'] = request.path
     return direct_to_template(request,
