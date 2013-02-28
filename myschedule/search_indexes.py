@@ -47,13 +47,13 @@ class CourseIndex(SearchIndex):
 
 
     def prepare_campuses(self, obj):
-        return [section.campus for section in obj.section_set.filter(end_date__gte=datetime.now().date())]
+        return [section.campus for section in obj.section_set.all()]
     def prepare_delivery_types(self, obj):
-        return [section.delivery_type for section in obj.section_set.filter(end_date__gte=datetime.now().date())]
+        return [section.delivery_type for section in obj.section_set.all()]
     def prepare_start_dates(self, obj):
-        return [section.start_date for section in obj.section_set.filter(end_date__gte=datetime.now().date())]
+        return [section.start_date for section in obj.section_set.all()]
     def prepare_end_dates(self, obj):
-        return [section.end_date for section in obj.section_set.filter(end_date__gte=datetime.now().date())]
+        return [section.end_date for section in obj.section_set.all()]
     def get_queryset(self):
         return models.Course.objects.all()
 
