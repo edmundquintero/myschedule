@@ -38,7 +38,6 @@ class FilterSearchForm(SearchForm):
 
         sqs = super(FilterSearchForm, self).search()
 
-        current_date = datetime.now().date()        
         campus = ''
         delivery_method = ''
         start_date = None
@@ -102,21 +101,5 @@ class FilterSearchForm(SearchForm):
                     i = i + 1
                 if remove_item == True:
                     sqs = sqs.exclude(primary_key=item.pk)
-
-        # Remove any courses remaining in the search results for which all sections have ended.
-        for item in sqs:
-            i = 0
-            max_length = 0
-            if item.end_dates:
-                max_length = len(item.end_dates)
-            remove_item = True
-            while i <= max_length - 1:
-                if (item.end_dates and datetime.strptime(item.end_dates[i].replace('T00:00:00Z',''), '%Y-%m-%d').date() > current_date and
-                    (end_date == None or datetime.strptime(item.end_dates[i].replace('T00:00:00Z',''), '%Y-%m-%d').date() <= end_date)):
-                    remove_item = False
-                    break
-                i = i + 1
-            if remove_item == True:
-                sqs = sqs.exclude(primary_key=item.pk)
 
         return sqs

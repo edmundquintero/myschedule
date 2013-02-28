@@ -1,3 +1,4 @@
+from datetime import datetime
 from haystack.indexes import *
 from haystack import site
 from myschedule import models
@@ -28,6 +29,7 @@ class CourseIndex(SearchIndex):
         delivery_type also has to be set to string in schema.xml (otherwise)
         it mishandles the filtering for delivery type 'Online'.
     """
+
     text = CharField(document=True, use_template=True)
     primary_key = CharField(model_attr='pk')
     prefix = CharField(model_attr='prefix')
@@ -42,15 +44,16 @@ class CourseIndex(SearchIndex):
     start_dates = DateMultiValueField()
     end_dates = DateMultiValueField()
     popularity = CharField(model_attr='popularity')
-    
+
+
     def prepare_campuses(self, obj):
-        return [section.campus for section in obj.section_set.all()]
+        return [section.campus for section in obj.section_set.filter(end_date__gte=datetime.now().date())]
     def prepare_delivery_types(self, obj):
-        return [section.delivery_type for section in obj.section_set.all()]
+        return [section.delivery_type for section in obj.section_set.filter(end_date__gte=datetime.now().date())]
     def prepare_start_dates(self, obj):
-        return [section.start_date for section in obj.section_set.all()]
+        return [section.start_date for section in obj.section_set.filter(end_date__gte=datetime.now().date())]
     def prepare_end_dates(self, obj):
-        return [section.end_date for section in obj.section_set.all()]
+        return [section.end_date for section in obj.section_set.filter(end_date__gte=datetime.now().date())]
     def get_queryset(self):
         return models.Course.objects.all()
 
