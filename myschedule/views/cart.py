@@ -437,7 +437,6 @@ class SQSSearchView(SearchView):
                         searchqueryset = searchqueryset.order_by('prefix','course_number_sort')
                     elif self.request.GET['sort_order'] == 'title':
                         searchqueryset = searchqueryset.order_by('title_sort')
-            print "RESULTS:", json.dumps(list(searchqueryset.values('title', 'prefix')))
             return searchqueryset
         return []
 
