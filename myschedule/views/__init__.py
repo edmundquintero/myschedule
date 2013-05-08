@@ -121,69 +121,8 @@ def show_sections(request, course_id):
     )
 
 def sectionsAPI(request, course_id):
-    """
-        Display section results template for specified course.
-    """
-    from datetime import datetime
-    from django.utils.datastructures import SortedDict
-
-    # Initialize the search form.
-    initial_values = {}
-    if ('campus_filter' in request.session and
-        'delivery_method_filter' in request.session and
-        'start_date_filter' in request.session and
-        'end_date_filter' in request.session and
-        'all_courses' in request.session and
-        'academic_level' in request.session):
-        initial_values = {
-            'campus':request.session['campus_filter'],
-            'delivery_method':request.session['delivery_method_filter'],
-            'start_date':request.session['start_date_filter'],
-            'end_date':request.session['end_date_filter'],
-            'all_courses':request.session['all_courses'],
-            'academic_level':request.session['academic_level']}
-    search_form = forms.FilterSearchForm(initial=initial_values)
-
-    # Help make future searches smarter - save query and update course add_count.
-    if request.session.has_key('current_query'):
-        course = get_object_or_404(models.Course, id=course_id)
-        correlation = models.Correlation()
-        correlation.criterion = request.session['current_query']
-        if request.session.has_key('previous_query'):
-            if request.session['previous_query'] not in settings.BLACKLIST:
-                correlation.species = models.Correlation.WRONG_TERM
-                correlation.criterion = correlation.criterion + '|' + request.session['previous_query']
-            del request.session['previous_query']
-        else:
-            correlation.species = models.Correlation.SUCCESSFUL_SEARCH
-        del request.session['current_query']
-        request.session.modified = True
-        correlation.course = course
-        correlation.save()
-        course.add_count = course.add_count + 1
-        course.save()
-
-    # Get the sections currently in the cart (for displaying in sidebar)
-    if request.session.has_key('Cart'):
-        cart_items = models.Section.objects.filter(
-            section_code__in=request.session['Cart'])
-        conflicts = conflict_resolution(cart_items)
-    else:
-        cart_items = []
-        conflicts = {}
-
-    # Get the sections for the selected course
-    # Sections should be ordered such that:
-    # 1. classes that have not yet started appear first
-    # 2. classes that have started but not yet ended appear second
-    # 3. classes that have already ended appear last (we might decide not to show those)
-    current_date = datetime.now().date().strftime("%Y-%m-%d")
     sections = models.Section.objects.filter(course=course_id).order_by('start_date','id')
-
-    request.session['next_view'] = request.path
-
     results = json.dumps(list(sections.values('available_seats', 'credit_hours', 'synonym', 'campus', 'term', 'section_number', 'section_code')))
-
     return HttpResponse(results)
 
 def validate_credentials(request, authorized_addresses, authorized_key, key_received):
