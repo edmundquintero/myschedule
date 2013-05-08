@@ -578,9 +578,8 @@ def filter_check(request):
         pass
     return False
 
-def searchAPI(request):
+def courseAPI(request):
     results = ""
-    # sqs = SearchQuerySet().filter(content=AutoQuery(request.GET['q']))
     sqs = SearchQuerySet().auto_query(request.GET['q'])
     if sqs != []:
         if 'sort_order' in request.GET:
@@ -588,14 +587,6 @@ def searchAPI(request):
                 sqs = sqs.order_by('prefix','course_number_sort')
             elif request.GET['sort_order'] == 'title':
                 sqs = sqs.order_by('title_sort')
-       
-
-    for course in sqs:
-        course.section = course.object.section_set.select_related()
-
-    # S#     print "Section", course.section
-
-    print "YYYYYYY", dir(sqs[7]) 
 
     results = json.dumps(list(sqs.values('title', 'prefix', 'course_number', 'academic_level', 'description', 'id')))
     return HttpResponse(results)
