@@ -3,8 +3,11 @@
   <script type="text/javascript" src="{% url appstatic "js/calendar.js" %}"></script>
 {% endblock %}
 
+{% load verbatim %}
 {% load myschedule_filters %}
+
 {% block body_class %}sidebar{% endblock %}
+
 {% block sidebar %}{{ block.super }}
 
     {% block buttons %}

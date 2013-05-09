@@ -9,7 +9,6 @@ from django.core import serializers
 from haystack.views import SearchView
 
 from haystack.query import SearchQuerySet
-# from haystack.inputs import AutoQuery, Exact, Clean
 from cpsite import ods
 from cpsite.decorators import groups_required
 
