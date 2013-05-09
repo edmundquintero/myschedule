@@ -1,12 +1,19 @@
 {% extends "base.html" %}
 
 {% block scripts %}{{ block.super }}
-    <!-- <script type="text/javascript" src="{% url appstatic "js/thorax.js" %}"></script> -->
-   <script type="text/javascript">
-     var basePath = '{% url index %}';
-     var s2w_datatel_url = '{{ s2w_datatel_url|safe }}';
-     var s2w_success_message = '{{ s2w_success_message }}';
-   </script>
+    <script type="text/javascript" src="{% url appstatic "js/thorax.js" %}"></script>
+    <script type="text/javascript">
+        var basePath = '{% url index %}';
+        var s2w_datatel_url = '{{ s2w_datatel_url|safe }}';
+        var s2w_success_message = '{{ s2w_success_message }}';
+    </script>
+{% endblock %}
+
+{% block styles %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{% url appstatic "css/bootstrap.min.css" %}">
+  <link rel="stylesheet" type="text/css" href="{% url appstatic "css/bootstrap-responsive.min.css" %}">
+  
 {% endblock %}
 
 {% load myschedule_filters %}
