@@ -5,6 +5,7 @@ from django.views.generic.simple import direct_to_template
 from django.conf import settings
 from django.http import HttpResponse
 from cpsite import ods
+from django.utils import simplejson as json
 
 import string
 from datetime import datetime
@@ -118,6 +119,11 @@ def show_sections(request, course_id):
              'form':search_form,
              'filters_set':filter_check(request)}
     )
+
+def sectionsAPI(request, course_id):
+    sections = models.Section.objects.filter(course=course_id).order_by('start_date','id')
+    results = json.dumps(list(sections.values('available_seats', 'credit_hours', 'synonym', 'campus', 'term', 'section_number', 'section_code')))
+    return HttpResponse(results)
 
 def validate_credentials(request, authorized_addresses, authorized_key, key_received):
     """
