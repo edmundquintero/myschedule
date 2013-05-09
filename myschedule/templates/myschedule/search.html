@@ -1,6 +1,11 @@
-<form method="get" action="/myschedule/search/" id="search">
-    <input type="text" name="q" id="id_query" value="{{ request.session.q_value }}"/>
-    <input type="image" value="Search" name="submit" src="{% url appstatic "img/search_button.png" %}"/>
-    {% include "myschedule/search_filters.html" %}
-</form>
+{% load verbatim %}
+<div class="row-fluid">
+    <form method="get" action="/myschedule/search/" id="search" class="span12">
+        <div class="input-append offset2">
+            <input class="span8" type="text" name="q" id="id_query" value="{{ request.session.q_value }}"/>
+            <button class="btn" type="submit">Search</button>
+        </div>
+        {% include "myschedule/search_filters.html" %}
+    </form>
+</div>
 

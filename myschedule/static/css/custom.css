@@ -1,9 +1,12 @@
 /* 3G theme overrides */
+html{
+    overflow-x: hidden;
+}
 h1 { display: none; }
 div#content { padding: 13px; }
 div#body.sidebar div#content { width: 684px; }
 
-#search
+/*#search
 {
     margin: auto;
     width: 482px; 
@@ -27,7 +30,7 @@ div#body.sidebar div#content { width: 684px; }
 
 #id_query:focus {
     color: #000;
-}
+}*/
 
 div.field.radio {
     display: inline-block;

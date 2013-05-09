@@ -1,6 +1,7 @@
 {% extends "myschedule/base.html" %}
 {% block scripts %}{{ block.super }}
   <script type="text/javascript" src="{% url appstatic "js/calendar.js" %}"></script>
+  <script type="text/javascript" src="{% url appstatic "js/filtering.js" %}"></script>
 {% endblock %}
 
 {% load verbatim %}
@@ -9,45 +10,46 @@
 {% block body_class %}sidebar{% endblock %}
 
 {% block sidebar %}{{ block.super }}
+<div class="container-fluid">
+    <div class="row-fluid">
+        {% block filtering %}
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="brand">Filtering</div>
+          </div>
+        </div>
+          <form class="form-inline">
+            <legend>Campus</legend>
+            <button class="toggle-button btn">Central</button>
+            <button class="toggle-button btn">Harper</button>
+            <button class="toggle-button btn">Harris</button>
+            <button class="toggle-button btn">Cato</button>
+            <button class="toggle-button btn">Merancas</button>
+            <button class="toggle-button btn">Levine</button>
+            <legend>Academic Level</legend>
+            <button class="toggle-button btn">CCE</button>
+            <button class="toggle-button btn">Curriculum</button>
+            <button class="toggle-button btn">Basic Skills</button>
+            <legend>Delivery Method</legend>
+            <button class="toggle-button btn">Classroom</button>
+            <button class="toggle-button btn">Online</button>
+            <button class="toggle-button btn">Hybrid</button>
+          </form>
+        {% endblock %}
 
-  <button class='btn'>Things</button>
-
-
-
-    {% block buttons %}
-      <a class="open-window button" href="#email" ref="email" dialog-title="Email Schedule" title="Email this schedule to yourself or a friend">Email Schedule</a>
-      <a href="#print" title="Print this page" class="print-schedule button">Print Schedule</a>   
-      {% if user.is_authenticated %}
-        {% for group in user.groups.all %}
-          {% ifequal group|stringformat:"s" "Students" %}
-            <a class="open-window button" href="#register" ref="register" dialog-title="Begin Registration" title="Submit this schedule to preferred list in MyCollege">Begin Registration</a>
-          {% endifequal %}
-        {% endfor %}
-      {% endif %}
-    {% endblock %}
-
-    {% block schedule %}
-      <h5>Schedule</h5>
-      <ul id="cart">
-        {% if cart_items %}
-            {% for item in cart_items %}
-                <li class="remove-item"><a class="remove-link" href="#remove" ref="{{ item.section_code }}"><img src="{% url appstatic "img/remove_button.png" %}" alt="Remove"/></a>{{ item.course.prefix }} {{ item.course.course_number }} - {{ item.section_number }}<br/>{{ item.course.title|slice:"0:20" }}</li>
+        {% block buttons %}
+          <a class="open-window button" href="#email" ref="email" dialog-title="Email Schedule" title="Email this schedule to yourself or a friend">Email Schedule</a>
+          <a href="#print" title="Print this page" class="print-schedule button">Print Schedule</a>   
+          {% if user.is_authenticated %}
+            {% for group in user.groups.all %}
+              {% ifequal group|stringformat:"s" "Students" %}
+                <a class="open-window button" href="#register" ref="register" dialog-title="Begin Registration" title="Submit this schedule to preferred list in MyCollege">Begin Registration</a>
+              {% endifequal %}
             {% endfor %}
-        {% endif %}
-      </ul>
-      <div id="view-full-schedule">
-        <a href="{% url show_schedule %}"><img src="{% url appstatic "img/view_full_schedule_button.png" %}" alt="View Full Schedule"/></a>
-      </div>
-    {% endblock %}
-    {% comment %}
-    If calendar.html needs to be updated, the easiest way to do so
-    is to load up firebug and copy out the html (of an empty calendar of course).
-    I was originally generating the html via javascript, but unfortunately IE7
-    seemed to make that an acutely slow process - hence the reason for dumping
-    it to a template file.
-    {% endcomment %}
-    {% include "myschedule/calendar.html" %}
-    <div class="sidebar-message">
-      <em>This schedule has time conflicts!</em>
+          {% endif %}
+        {% endblock %}
+
+        {% block schedule %}{% endblock %}
     </div>
+</div>
 {% endblock %}

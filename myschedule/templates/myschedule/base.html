@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block scripts %}{{ block.super }}
-    <script type="text/javascript" src="{% url appstatic "js/thorax.js" %}"></script>
     <script type="text/javascript">
         var basePath = '{% url index %}';
         var s2w_datatel_url = '{{ s2w_datatel_url|safe }}';
