@@ -1,0 +1,33 @@
+syntax: glob
+.svn*
+.cvs*
+*.pyc
+*.ppt
+#*#
+*secrets*
+*.tar
+*.swf
+*.class
+*.rap*
+*sp07*
+*.tgz
+*.gz
+*~
+*.elc
+private*
+*.doc
+*.eps
+*.aux
+*.log
+*.lock
+*.cache
+.hgignore
+*.mako.py
+*.orig
+*local_settings.py
+*development.py
+*.DS_Store
+
+syntax: regexp
+(.*/)?\#[^/]*\#$
+

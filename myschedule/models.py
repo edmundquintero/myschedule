@@ -4,6 +4,24 @@ from django.conf import settings
 
 from time import strftime
 
+class UserProfile(models.Model):
+    """
+       Used for storing additional user specific data. Initial use is for
+       storing the user's student information sytem ID (i.e. colleague ID).
+       Future uses include storing "favorited" courses. May also move
+       storage of schedule in here (and obsolete schedule model).
+    """
+
+    user = models.OneToOneField(User, primary_key=True)
+    sis_id = models.CharField(max_length=10)
+
+    def __unicode__(self):
+        return self.colleague
+
+    def __str__(self):
+        return self.colleague
+
+
 class Schedule(models.Model):
     """
         Stores the user's saved schedules. Sections is a url parameter containing
