@@ -6,6 +6,31 @@ h1 { display: none; }
 div#content { padding: 13px; }
 div#body.sidebar div#content { width: 684px; }
 
+.toggle-button-holder{
+    text-align: center;
+}
+.field label select{
+    width: 100%;
+}
+/*#sidebar{
+    position: absolute;
+    right: 0px;
+}
+#sidebar-toggle{
+    height: 200px;
+    border-radius: 3px;
+    background-color: #CCC;
+}
+#sidebar-wrapper{
+    right: -190px;
+    float: right;
+    position: relative;
+    overflow: hidden;
+}
+#sidebar-wrapper div.row-fluid{
+    background-color: #EEE;
+}*/
+
 /*#search
 {
     margin: auto;

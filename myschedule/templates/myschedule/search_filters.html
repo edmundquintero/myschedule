@@ -1,54 +1,52 @@
-<a class="advanced-search" href="#advancedsearch">Show Advanced Search</a>
-<fieldset id="search-filter">
-    <span class="sort-text">Sort course results by:</span>
-    <div class="field radio">
-        <label class="radio">Prefix and course number</label><input type="radio" name="sort_order" value="prefix" {% ifequal request.session.sort_order "prefix" %}checked{% endifequal %}/>
-    </div>
-    <div class="field radio sort-title">
-        <label>Title (alphabetical)</label><input type="radio" name="sort_order" value="title" {% ifequal request.session.sort_order "title" %}checked{% endifequal %}/>
-    </div>
-    <span class="filter-text">Filter course and section results by:</span>
-    <div class="filters">
-        <div class="field">
-            <label>Academic level</label>{{ form.academic_level }}
-        </div>
-        <div class="field">
-            <label>Campus</label>{{ form.campus }}
-        </div>
-        <div class="field">
-            <label>Delivery method</label>{{ form.delivery_method }}
-        </div>
-        <div class="one-third">
-            <div class="field">
-                <label>Term</label> {{ form.term }}
-            </div>
-        </div>
-        <div class="two-third">
-            <div class="field">
-                <label>Class begins on or after</label> {% if form.start_date.errors %}<span class="error">{% endif %}{{ form.start_date }} {% if form.start_date.errors %}</span>{% endif %}
-                <div class="help-text">
-                   mm/dd/yyyy or mm-dd-yyyy 
-                </div>
-            </div>
-         </div>
-         <div class="three-third">
-            <div class="field">
-                <label>Class ends on or before</label> {% if form.end_date.errors %}<span class="error">{% endif %}{{ form.end_date }} {% if form.end_date.errors %}</span>{% endif %}
-                <div class="help-text">
-                    mm/dd/yyyy or mm-dd-yyyy
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="advanced-footer">
-        <div class="show-all">
-            <div class="field checkbox">
-                <label>Show all courses</label> {{ form.all_courses }}
-            </div>
-        </div>
-        <div class="close-advanced-search">
-            <a class="remove-filter" href="#removefilters">Remove filters / sorting</a>
-        </div>
-    </div>
-</fieldset>
 
+  <span class="sort-text">Sort course results by:</span>
+    <div class="prefix">
+        <label>Prefix</label>
+        <input type="radio" name="sort_order" value="prefix" checked/>
+    </div>
+    <div class="title">
+        <label>Title</label>
+        <input type="radio" name="sort_order" value="title" {% ifequal request.session.sort_order "title" %}checked{% endifequal %}/>
+    </div>
+    <div class="academic_level">
+      <label>{{ form.academic_level.label }}</label>
+      {{ form.academic_level }}
+    </div>
+
+    <div class="campus">
+      <label>{{ form.campus.label }}</label>
+      {{ form.campus }}
+    </div>
+
+    <div class="delivery_method">
+      <label>{{ form.delivery_method.label }}</label>
+      {{ form.delivery_method }}
+    </div>
+
+    <div class="term">
+      <label>{{ form.term.label }}</label>
+      {{ form.term }}
+    </div>
+
+    <div class="start_date">
+      <label>Class begins on or after</label> {% if form.start_date.errors %}<span class="error">{% endif %}{{ form.start_date }} {% if form.start_date.errors %}</span>{% endif %}
+      <div class="help-text">
+         mm/dd/yyyy or mm-dd-yyyy 
+      </div>
+    </div>
+
+    <div class="end_date">
+      <label>Class ends on or before</label> {% if form.end_date.errors %}<span class="error">{% endif %}{{ form.end_date }} {% if form.end_date.errors %}</span>{% endif %}
+      <div class="help-text">
+          mm/dd/yyyy or mm-dd-yyyy
+      </div>
+    </div>
+
+
+  <div class="advanced-footer">
+    <div class="show-all">
+      <div class="field checkbox">
+        <label>Show all courses</label> {{ form.all_courses }}
+      </div>
+    </div>
+  </div>

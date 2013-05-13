@@ -9,32 +9,28 @@
 
 {% block body_class %}sidebar{% endblock %}
 
-{% block sidebar %}{{ block.super }}
-<div class="container-fluid">
+{% block sidebar %}
     <div class="row-fluid">
         {% block filtering %}
+        <div class="container-fluid">
         <div class="navbar">
           <div class="navbar-inner">
             <div class="brand">Filtering</div>
+            <ul class="nav">
+              <li>
+              <a id="remove-all-filters" class="remove-filter" href="#removefilters">Remove All</a>
+            </li>
+            </ul>
           </div>
         </div>
-          <form class="form-inline">
-            <legend>Campus</legend>
-            <button class="toggle-button btn">Central</button>
-            <button class="toggle-button btn">Harper</button>
-            <button class="toggle-button btn">Harris</button>
-            <button class="toggle-button btn">Cato</button>
-            <button class="toggle-button btn">Merancas</button>
-            <button class="toggle-button btn">Levine</button>
-            <legend>Academic Level</legend>
-            <button class="toggle-button btn">CCE</button>
-            <button class="toggle-button btn">Curriculum</button>
-            <button class="toggle-button btn">Basic Skills</button>
-            <legend>Delivery Method</legend>
-            <button class="toggle-button btn">Classroom</button>
-            <button class="toggle-button btn">Online</button>
-            <button class="toggle-button btn">Hybrid</button>
-          </form>
+
+        <form id="sidebar-search">
+          <fieldset>
+          {% include "myschedule/search_filters.html" %}
+          </fieldset>
+        </form>
+
+        </div>
         {% endblock %}
 
         {% block buttons %}
@@ -51,5 +47,4 @@
 
         {% block schedule %}{% endblock %}
     </div>
-</div>
 {% endblock %}

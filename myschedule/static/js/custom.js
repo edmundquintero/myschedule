@@ -109,7 +109,7 @@ function processSubmit()
     }
 };
 
-updateTerm = function(){
+updateTerm = function(e){
     if ($(this).val() == 'all'){
         $('#id_start_date').val('');
         $('#id_end_date').val('');
