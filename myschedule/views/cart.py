@@ -5,8 +5,11 @@ from django.shortcuts import get_object_or_404, redirect
 from django.views.generic.simple import direct_to_template
 from django.conf import settings
 from django.utils import simplejson as json
+from django.core import serializers
 from haystack.views import SearchView
 
+from haystack.query import SearchQuerySet
+# from haystack.inputs import AutoQuery, Exact, Clean
 from cpsite import ods
 from cpsite.decorators import groups_required
 
@@ -574,4 +577,15 @@ def filter_check(request):
         pass
     return False
 
+def courseAPI(request):
+    results = ""
+    sqs = SearchQuerySet().auto_query(request.GET['q'])
+    if sqs != []:
+        if 'sort_order' in request.GET:
+            if request.GET['sort_order'] == 'prefix':
+                sqs = sqs.order_by('prefix','course_number_sort')
+            elif request.GET['sort_order'] == 'title':
+                sqs = sqs.order_by('title_sort')
 
+    results = json.dumps(list(sqs.values('title', 'prefix', 'course_number', 'academic_level', 'description', 'id')))
+    return HttpResponse(results)
