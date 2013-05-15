@@ -39,7 +39,7 @@
       {% for result in page.object_list %}
 	      <div class="course row-fluid">
 	        <div class="course-content span12 {% if not result.object.section_set.all %}disable-course{% else %} pointer hoverable{% endif %}" ref="{% url show_sections result.object.id %}">
-		        <div class="course-metadata span3 well well-small">
+		        <div class="course-metadata span3">
 			        <div class="course-number">{{ result.object.prefix }} {{ result.object.course_number }}</div>
 			        <div class="course-hours">{% if result.object.section_set.all %}{% if result.object.section_set.all.0.ceus %}CEUs {{ result.object.section_set.all.0.ceus }}{% else %}{% if result.object.section_set.all.0.credit_hours %}Credit Hours {{ result.object.section_set.all.0.credit_hours }}{% else %}No Credit{% endif %}{% endif %}{% endif %}</div>
 		        </div>
