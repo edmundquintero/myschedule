@@ -173,12 +173,12 @@ div.close-advanced-search {
 .disable-course{background-color: rgba(0,0,0,0.1); color: rgba(0,0,0,0.4);}
 /* -End COURSE---------------------------------------------- */
 
-.section
+/*.section
 {
     margin: 15px 0;
     width: 685px;
     color: #333;
-}
+}*/
 .section .section-top
 {
     height: 37px;
@@ -186,19 +186,7 @@ div.close-advanced-search {
     font-size: 18px;
     font-weight: bold;
 }
-.section .section-top .section-number
-{
-    float: left;
-    width: 135px;
-    padding-top: 10px;
-    text-align: center;
-}
-.section .section-top .section-heading
-{
-    float: left;
-    width: 510px;
-    padding: 10px 0 0 15px;
-}
+
 .section .section-top img
 {
     float: right;
@@ -212,9 +200,9 @@ div.close-advanced-search {
 }
 .section .section-content .section-seats
 {
-    float: left;
+ /*   float: left;
     width: 135px;
-    padding-top: 10px;
+    padding-top: 10px;*/
     text-align: center;
     font-weight: bold;
 }
@@ -236,7 +224,6 @@ div.close-advanced-search {
 .section .section-content .section-seats .section-seats-number
 {
     font-size: 25px;
-    height: 45px;
 }
 .section .section-content .section-seats .section-tuition
 {
@@ -244,9 +231,9 @@ div.close-advanced-search {
 }
 .section .section-content .section-meeting
 {
-    float: left;
+ /*   float: left;
     width: 495px;
-    padding: 10px 15px;
+    padding: 10px 15px;*/
     font-size: 13px;
 }
 /* 
