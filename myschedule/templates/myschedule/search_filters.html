@@ -8,11 +8,10 @@
         <label>Title</label>
         <input type="radio" name="sort_order" value="title" {% ifequal request.session.sort_order "title" %}checked{% endifequal %}/>
     </div>
-    <div class="academic_level">
-      <label>{{ form.academic_level.label }}</label>
-      {{ form.academic_level }}
+        <div class="academic_level">
+        <label>{{ form.academic_level.label }}</label>
+        {{ form.academic_level }}
     </div>
-
     <div class="campus">
       <label>{{ form.campus.label }}</label>
       {{ form.campus }}

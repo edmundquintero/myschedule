@@ -39,22 +39,22 @@ $(function() {
         $('#view-full-schedule').hide();
     }
 
-    // Clear out query input field when it receives focus.
-    $('#id_query').focus(function(){
-        $(this).val('').html('');
-    });
+    // Clear out query input field when it receives focus. 
+    // $('#id_query').focus(function(){
+    //     $(this).val('').html('');
+    // });
 
     // Initially hide advanced search filter options.
-    $("#search-filter").hide();
+    // $("#search-filter").hide();
 
     // Process click function on advanced search link.
-    $("a.advanced-search").click(function() {
-        $(this).hide('fast');
-        $('#search-filter').show('fast','linear');
-    });
-    $("a.advanced-search-message").click(function() {
-        $('#search-filter').show('fast','linear');
-    });
+    // $("a.advanced-search").click(function() {
+    //     $(this).hide('fast');
+    //     $('#search-filter').show('fast','linear');
+    // });
+    // $("a.advanced-search-message").click(function() {
+    //     $('#search-filter').show('fast','linear');
+    // });
     
 
     // Process click function on remove filter link.
@@ -93,7 +93,7 @@ function processSubmit()
 {
     // If user didn't specify a search query, clear out help text
     // and set it to empty string so all courses will be returned
-    if ($('#id_query').val() == 'ex. math, bus 121, mec'){
+    if ($('#id_query').val() == ''){
         $('#id_query').val('');
     }
     // Likewise, if show all courses checkbox is checked, clear

@@ -3,27 +3,35 @@ $(function(){
     setForm(); //set returned values of hidden form to visible form
 
     // if a selection is made on the visible form it instantly updates the hidden form
-    $('#sidebar-search fieldset div select').change(function(){
+    $('#sidebar-search select').change(function(){
         console.log($('#sidebar-search div select').val());
         updateHidden($(this).parent().attr('class'), $(this).val());
     });
-    $('#sidebar-search fieldset div input[type="radio"]').change(function(){
+    $('#sidebar-search input[type="radio"]').change(function(){
         updatesort($(this).parent().attr('class'));
     });
-    $('#sidebar-search fieldset div input[type="text"]').change(function(){
+    $('#sidebar-search input[type="text"]').change(function(){
         updatedates($(this).parent().attr('class'), $(this).val());
     });
     // Change event listener for the hidden form to register a click event for the search when the form changes.
-    $('#main-search fieldset div select').change(function(){
+    $('#main-search select').change(function(){
         $('button#course-search').trigger('click');
     });
-    $('#main-search fieldset div input').change(function(){
+    $('#main-search input').change(function(){
         $('button#course-search').trigger('click');
     });
     $('a#remove-all-filters').click(function(){
         $('button#course-search').trigger('click');
     });
+
+    $('button#course-search').click(function(){
+        $('#loader').show();
+        $('#loader-cover').show();
+    });
+
 });
+
+
 
 function updateHidden(divClass, value, type='select'){
     element = '#main-search fieldset .'+divClass+' '+type;
