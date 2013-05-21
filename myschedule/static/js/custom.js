@@ -1,4 +1,5 @@
 $(function() {
+    registerButtonView(false);
     // Create modal dialog windows, overriding parameters for a specific
     // dialog in the processing for the click function.
     $('#side-buttons a.open-window').each(function(){
@@ -175,6 +176,7 @@ sendEmail = function()
 // Process remove link (in sidebar or from view full schedule).
 remove_section = function()
 {
+    registerButtonView(true);
     // Remove item from sidebar and redisplay add link in section results
     // (only applies if user deleted section via sidebar).
     $(this).parent('li.remove-item').hide();
@@ -186,6 +188,7 @@ remove_section = function()
     if (sidebar_section_count == sidebar_hidden_count){
         $('#view-full-schedule').hide();
         $('#empty-cart-warning').show();
+
     }
     // Hide section from displaying in schedule (only applies if section deleted
     // on view full schedule page.
@@ -255,4 +258,14 @@ loadColleague = function(){
     // in another window.
     $('#register-status').dialog('close');
     window.open(s2w_datatel_url);
+};
+
+function registerButtonView (loaded){
+    var i = 0;
+    if (loaded){i = 1;}
+    if($('#body-inner #content .section:visible').length > i){
+        $('#register-button').show();
+    }else{
+        $('#register-button').hide();
+    }
 };

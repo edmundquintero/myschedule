@@ -1,5 +1,8 @@
 $(function() {
     loadCalendar();
+    if(document.LOGGEDIN == false){
+        $('#register-button').attr('href', document.LOGIN_URL);
+    }
 });
 
 loadCalendar = function(){

@@ -6,6 +6,7 @@ $(function() {
         $(this).hide();
         $('#view-full-schedule').show();
         $('#empty-cart-warning').hide();
+        $('#register-button').show();
         addItem(section);
     });
 

@@ -1,5 +1,16 @@
 {% extends "myschedule/base.html" %}
 {% block scripts %}{{ block.super }}
+<script>
+  document.LOGIN_URL = '{% url login %}';
+  document.LOGGEDIN = false;
+  {% if user.is_authenticated %}
+    {% for group in user.groups.all %}
+      {% ifequal group|stringformat:"s" "Students" %}
+        document.LOGGEDIN = true;
+      {% endifequal %}
+    {% endfor %}
+  {% endif %}
+</script>
   <script type="text/javascript" src="{% url appstatic "js/calendar.js" %}"></script>
   <script type="text/javascript" src="{% url appstatic "js/filtering.js" %}"></script>
 {% endblock %}
@@ -21,8 +32,8 @@
             <span id="empty-cart-warning" class="text-warning">There are no class sections in your cart!</span>
         {% endif %}
       </ul>
-      <div id="view-full-schedule">
-        <a href="{% url show_schedule %}"><img src="{% url appstatic "img/view_full_schedule_button.png" %}" alt="View Full Schedule"/></a>
+      <div id="view-full-schedule" class="span10 offset1">
+        <a href="{% url show_schedule %}" class="btn btn-block">View Full Schedule</a>
       </div>
       {% endblock %}
 
@@ -37,11 +48,14 @@
         {% if user.is_authenticated %}
           {% for group in user.groups.all %}
             {% ifequal group|stringformat:"s" "Students" %}
-              <a class="open-window btn btn-block" href="#register" ref="register" dialog-title="Begin Registration" title="Submit this schedule to preferred list in MyCollege">Registrater Now</a>
             {% else %}
               <a class="btn disabled"> Please Login as A Student</a>
             {% endifequal %}
           {% endfor %}
+        {% else %}
+        {% if cart_items %}
+            <a id="register-button" class="open-window btn btn-block" href="#register" ref="register" dialog-title="Begin Registration" title="Submit this schedule to preferred list in MyCollege">Registrater Now</a>
+         {% endif %}
         {% endif %}
       </div>
       {% endblock %}

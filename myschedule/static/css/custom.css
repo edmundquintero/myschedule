@@ -128,12 +128,7 @@ div.close-advanced-search {
     left: 22px;
 }
 
-#view-full-schedule
-{
-    margin: 25px 0;
-    text-align: center;
-}
-
+#view-full-schedule{ text-align: center;}
 
 /* -COURSE---------------------------------- */
 .course .course-content{
