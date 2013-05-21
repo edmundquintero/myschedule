@@ -8,29 +8,31 @@
 {% block title %}{% endblock %}
 
 {% block content %}
-{% if system_notification %}
-  <br />
-  <div class="message message-warning">
-      <p id "system-notification">{{ system_notification }}</p>
+<div class="container-fluid">
+  {% if system_notification %}
+    <br />
+    <div class="message message-warning">
+        <p id "system-notification">{{ system_notification }}</p>
+    </div>
+  {% endif %}
+    {% include "myschedule/search.html" %}
   </div>
-{% endif %}
-{% include "myschedule/search.html" %}
-<p id="headline">It's that simple.</p>
-<ul id="steps">
-  <li>
-    <img src="{% url appstatic "img/step_1_icon.png" %}" alt="Step 1" />
-    <h2>Search for classes</h2>
-    <p>Get started by entering course name, course sections and prefix in the search box.</p>
-  </li>
-  <li>
-    <img src="{% url appstatic "img/step_2_icon.png" %}" alt="Step 2" />
-    <h2>Save schedule</h2>
-    <p>Login to save schedule. Saving a schedule allows you to view it and make updates.</p>
-  </li>
-  <li class="last">
-    <img src="{% url appstatic "img/step_3_icon.png" %}" alt="Step 3" />
-    <h2>Register for classes</h2>
-    <p>Now you can submit your classes from Schedule Builder to MyCollege.</p>
-  </li>
-</ul>
+  <p id="headline">It's that simple.</p>
+  <ul id="steps">
+    <li>
+      <img src="{% url appstatic "img/step_1_icon.png" %}" alt="Step 1" />
+      <h2>Search for classes</h2>
+      <p>Get started by entering course name, course sections and prefix in the search box.</p>
+    </li>
+    <li>
+      <img src="{% url appstatic "img/step_2_icon.png" %}" alt="Step 2" />
+      <h2>Save schedule</h2>
+      <p>Login to save schedule. Saving a schedule allows you to view it and make updates.</p>
+    </li>
+    <li class="last">
+      <img src="{% url appstatic "img/step_3_icon.png" %}" alt="Step 3" />
+      <h2>Register for classes</h2>
+      <p>Now you can submit your classes from Schedule Builder to MyCollege.</p>
+    </li>
+  </ul>
 {% endblock %}

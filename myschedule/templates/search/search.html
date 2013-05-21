@@ -1,13 +1,23 @@
 {% extends "myschedule/base-sidebar.html" %}
 
 {% block page_title %}{{ block.super }} | Search Results{% endblock %}
-{% block buttons %} {% endblock %}
+
+{% block scripts %}{{ block.super }}
+  <script type="text/javascript" src="{% url appstatic "js/course-results.js" %}"></script>
+{% endblock %}
+
 {% block content %}
-    <form method="get" action="/myschedule/search/" id="search">
-        <input type="text" name="q" id="id_query" {% if form.q.initial %}value="{{ form.q.initial }}"{% else %}value="{{ query }}"{% endif %} />
-        <input type="image" value="Search" name="submit" src="{% url appstatic "img/search_button.png" %}" />
-        {% include "myschedule/search_filters.html" %}
-    </form>
+
+{% include "myschedule/search.html" %}
+
+{% block loader %}
+<div id="loader-cover"></div>
+<div id="loader">
+    <div id="loader-inner">
+        <img src="../static/img/loading2.gif" alt="Loading" height="128" width="128"> 
+    </div>
+</div>
+{% endblock %}
   {% if not user.is_authenticated or conflicts.conflicting_sections or filters_set or request.session.Cart and request.session.Cart|length >= 14 %}
     <br />
     <div class="message message-warning" id="conflict-login-message">
@@ -27,14 +37,13 @@
   {% endif %}
   {#{% if query %}#}
       {% for result in page.object_list %}
-	      <div class="course">
-	        <div class="course-top"></div>
-	        <div class="course-content">
-		        <div class="course-metadata">
-			        <p class="course-number">{{ result.object.prefix }} {{ result.object.course_number }}</p>
-			        <p class="course-hours">{% if result.object.section_set.all %}{% if result.object.section_set.all.0.ceus %}CEUs<br />{{ result.object.section_set.all.0.ceus }}{% else %}{% if result.object.section_set.all.0.credit_hours %}Credit Hours<br />{{ result.object.section_set.all.0.credit_hours }}{% else %}No Credit{% endif %}{% endif %}{% endif %}</p>
+	      <div class="course row-fluid">
+	        <div class="course-content span12 {% if not result.object.section_set.all %}disable-course{% else %} pointer hoverable{% endif %}" ref="{% url show_sections result.object.id %}">
+		        <div class="course-metadata span3">
+			        <div class="course-number">{{ result.object.prefix }} {{ result.object.course_number }}</div>
+			        <div class="course-hours">{% if result.object.section_set.all %}{% if result.object.section_set.all.0.ceus %}CEUs {{ result.object.section_set.all.0.ceus }}{% else %}{% if result.object.section_set.all.0.credit_hours %}Credit Hours {{ result.object.section_set.all.0.credit_hours }}{% else %}No Credit{% endif %}{% endif %}{% endif %}</div>
 		        </div>
-		        <div class="course-description">
+		        <div class="course-description span9">
 			        <p class="course-name">{% if result.object.section_set.all %}<a href="{% url show_sections result.object.id %}">{{ result.object.title }}</a>{% else %}{{ result.object.title }}{% endif %}</span>
 			        <p>{{ result.object.description|truncatewords:23 }}</p>
 
@@ -128,9 +137,9 @@
               {% endif %}
               {% if result.object.note %}<p class="course-note"><strong>Note</strong> {{ result.object.note }}</p>{% endif %}
 		        </div>
-		        <div class="clear"></div>
+
 	        </div>
-	        <div class="course-bottom"></div>
+	        <!-- <div class="course-bottom"></div> -->
 	      </div>
       {% empty %}
         {% if spelling_suggestion %}

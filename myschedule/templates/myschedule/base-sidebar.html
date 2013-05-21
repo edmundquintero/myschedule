@@ -1,46 +1,48 @@
 {% extends "myschedule/base.html" %}
 {% block scripts %}{{ block.super }}
   <script type="text/javascript" src="{% url appstatic "js/calendar.js" %}"></script>
+  <script type="text/javascript" src="{% url appstatic "js/filtering.js" %}"></script>
 {% endblock %}
-
 {% load myschedule_filters %}
+
 {% block body_class %}sidebar{% endblock %}
-{% block sidebar %}{{ block.super }}
 
-    {% block buttons %}
-      <a class="open-window button" href="#email" ref="email" dialog-title="Email Schedule" title="Email this schedule to yourself or a friend">Email Schedule</a>
-      <a href="#print" title="Print this page" class="print-schedule button">Print Schedule</a>   
-      {% if user.is_authenticated %}
-        {% for group in user.groups.all %}
-          {% ifequal group|stringformat:"s" "Students" %}
-            <a class="open-window button" href="#register" ref="register" dialog-title="Begin Registration" title="Submit this schedule to preferred list in MyCollege">Begin Registration</a>
-          {% endifequal %}
-        {% endfor %}
-      {% endif %}
-    {% endblock %}
-
-    {% block schedule %}
-      <h5>Schedule</h5>
-      <ul id="cart">
-        {% if cart_items %}
-            {% for item in cart_items %}
-                <li class="remove-item"><a class="remove-link" href="#remove" ref="{{ item.section_code }}"><img src="{% url appstatic "img/remove_button.png" %}" alt="Remove"/></a>{{ item.course.prefix }} {{ item.course.course_number }} - {{ item.section_number }}<br/>{{ item.course.title|slice:"0:20" }}</li>
-            {% endfor %}
+{% block sidebar %}
+    <div class="row-fluid">
+      {% block buttons %}
+      <div class="span10 offset1">
+        <a class="open-window btn btn-block" href="#email" ref="email" dialog-title="Email Schedule" title="Email this schedule to yourself or a friend">Email Schedule</a>
+        <a href="#print" title="Print this page" class="print-schedule btn btn-block">Print Schedule</a>   
+        {% if user.is_authenticated %}
+          {% for group in user.groups.all %}
+            {% ifequal group|stringformat:"s" "Students" %}
+              <a class="open-window btn btn-block" href="#register" ref="register" dialog-title="Begin Registration" title="Submit this schedule to preferred list in MyCollege">Begin Registration</a>
+            {% else %}
+              <a class="btn disabled"> Please Login as A Student</a>
+            {% endifequal %}
+          {% endfor %}
+        {% else %}
+          <a class="open-window btn btn-block" href="{% url login %}" title="Sign in to submit this schedule to preferred list in MyCollege">Sign In To Register</a>
         {% endif %}
-      </ul>
-      <div id="view-full-schedule">
-        <a href="{% url show_schedule %}"><img src="{% url appstatic "img/view_full_schedule_button.png" %}" alt="View Full Schedule"/></a>
       </div>
-    {% endblock %}
-    {% comment %}
-    If calendar.html needs to be updated, the easiest way to do so
-    is to load up firebug and copy out the html (of an empty calendar of course).
-    I was originally generating the html via javascript, but unfortunately IE7
-    seemed to make that an acutely slow process - hence the reason for dumping
-    it to a template file.
-    {% endcomment %}
-    {% include "myschedule/calendar.html" %}
-    <div class="sidebar-message">
-      <em>This schedule has time conflicts!</em>
+      {% endblock %}
+
+      {% block schedule %}{% endblock %}
+    </div>
+    <div class="row-fluid"><div class="span12"></div></div>
+    <div class="row-fluid">
+        {% block filtering %}
+          <div class="navbar navbar-static-top">
+            <div class="navbar-inner">
+              <div class="brand">Filtering</div>
+            </div>
+            <a id="remove-all-filters" class="remove-filter btn" href="#removefilters">Remove All</a>
+          </div>      
+          <form id="sidebar-search">
+            <fieldset>
+            {% include "myschedule/search_filters.html" %}
+            </fieldset>
+          </form>
+        {% endblock %}
     </div>
 {% endblock %}

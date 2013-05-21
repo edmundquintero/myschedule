@@ -35,9 +35,9 @@
 
   {% if sections %}
     <form action="" method="POST" id="section-form">
-      <div class="course">
-        <div class="course-top"></div>
-        <div class="course-content">
+      <div class="row-fluid">
+        <div class="course span12">
+          <div class="course-content">
           <div class="course-metadata">
             <p class="course-number">{{ sections.0.course.prefix }} {{ sections.0.course.course_number }}</p>
             {% comment %}
@@ -93,23 +93,30 @@
 
             {% if sections.0.course.note %}<p class="course-note"><strong>Note</strong> {{ sections.0.course.note }}</p>{% endif %}
           </div>
-          <div class="clear"></div>
-        </div>
-        <div class="course-bottom"></div>
-      </div>
-
-      {% for section in sections %}
-        <div class="section" id="{{ section.section_code }}">
-
-          <div class="section-top">
-            <div class="section-number">{{ section.course.prefix }} {{ section.course.course_number }} - {{ section.section_number }}</div>
-            <div class="section-heading"><span class="section-campus">{{ section.campus }}</span></div>
-            {% ifnotequal section.status 'Cancelled' %}
-              <a class="add-item" href="#add" ref="section_{{ section.section_code }}"><img src="{% url appstatic "img/add_button.png" %}" alt="Add" /></a>
-            {% endifnotequal %}
           </div>
-          <div class="section-content">
-            <div class="section-seats">
+        </div>
+      </div>
+      {% for section in sections %}
+
+
+        <div class="section" id="{{ section.section_code }}">
+          <div class="row-fluid">
+            <div class="section-top span12">
+              <div class="row-fluid">
+                <div class="section-number span3">{{ section.course.prefix }} {{ section.course.course_number }} - {{ section.section_number }}</div>
+                <div class="section-heading span7"><span class="section-campus">{{ section.campus }}</span></div>
+                {% ifnotequal section.status 'Cancelled' %}
+                  <div class="offset1 span1 pull-right">
+                    <a class="add-item" href="#add" ref="section_{{ section.section_code }}"><img src="{% url appstatic "img/add_button.png" %}" alt="Add" /></a>
+                  </div>
+                {% endifnotequal %}
+              </div>
+            </div>
+          </div>
+
+          <div class="section-content row-fluid">
+
+            <div class="section-seats span3 well well-small">
               <table>
                 {% ifnotequal section.status 'Active' %}
                   <tr>
@@ -142,35 +149,9 @@
                 {% endifnotequal %}
               </table>
             </div>
-            {% comment %}
-            <div class="section-meeting">
-              <table>
-              {% for meeting in section.meeting_set.all %}
-                <tr>
-                  <td class="section-campus">{{ section.campus }}</td>
-                  <td class="section-room">Rm {{ meeting.building }} {{ meeting.room }}</td>
-                  <td class="section-type">{{ meeting.meeting_type }}</td>
-                  <td class="section-days">{{ meeting.days_of_week|days_of_week }}</td>
-                  
-                  <td class="section-time">{% if not meeting.is_online %}{{ meeting.start_time|time:"g:i A" }} - {{ meeting.end_time|time:"g:i A" }}{% endif %}</td>
-                </tr>
-              {% endfor %}
-              <tr>
-                <td colspan="2"><strong>From</strong> <span class="section-start-date">{{ section.start_date|date:"n/j/Y" }}</span> <strong>to</strong> <span class="section-end-date">{{ section.end_date|date:"n/j/Y" }}</span></td>
-                <td colspan="3"><strong>Term</strong> {{ section.term|format_term }} {{ section.year }} {% if section.session %}{{ section.session }}{% endif %}</td>
-              </tr>
-              <tr>
-                <td class="section-delivery-type" colspan="5">{{section.delivery_type }}</td>
-              </tr>
-              {% if section.note %}
-                <tr>
-                  <td colspan="5"><strong>Note</strong> {{ section.note }}</td>
-                </tr>
-              {% endif %}
-              </table>
-            </div>
-            {% endcomment %}
-            <div class="section-meeting">
+
+
+            <div class="section-meeting span9">
               <div class="section-hours">
                   <div class="section-credit-hours">{% if section.ceus %}<strong>CEUs:</strong> {{ section.ceus }}{% else %}{% if section.credit_hours %}<strong>Credit Hours:</strong> {{ section.credit_hours }}{% else %}<strong>No Credit</strong>{% endif %}{% endif %}</div>
                   <div class="section-contact-hours"><strong>Contact Hours:</strong> {{ section.contact_hours }}</div>
@@ -186,8 +167,12 @@
               {% if section.note %}<div class="section-note"><strong>Note:</strong> {{ section.note }}</div>{% endif %}
               {% if section.instructor_name %}<div class="section-instructor"><strong>Instructor: </strong>{% if section.instructor_link %}<a href="{{ section.instructor_link }}">{{ section.instructor_name }}</a>{% else %}{{ section.instructor_name }}{% endif %}</div>{% endif %}
             </div>
-            <div class="clear"></div>
           </div>
+
+
+
+
+
           <div class="section-bottom">
             <div class="section-synonym">Synonym {{ section.synonym }}</div>
             {% comment %}
