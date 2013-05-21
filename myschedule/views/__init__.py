@@ -108,11 +108,12 @@ def show_sections(request, course_id):
         ('has_ended',"end_date<'%s'"%current_date)])).select_related().filter(
         course=course_id).order_by(
         'has_started','has_ended','start_date','id')
-
+    course = get_object_or_404(models.Course, id=course_id)
     request.session['next_view'] = request.path
     return direct_to_template(request,
             'myschedule/section_results.html',
             {'sections':sections,
+             'course':course,
              'cart_items':cart_items,
              'conflicts':conflicts,
              'catalog_url':settings.CATALOG_URL,

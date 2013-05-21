@@ -30,30 +30,28 @@
     </div>
   {% endif %}
 
-  {% if sections %}
-    <form action="" method="POST" id="section-form">
-      <div class="row-fluid">
+     <div class="row-fluid">
         <div class="course span12">
           <div class="course-content">
           <div class="course-metadata">
-            <p class="course-number">{{ sections.0.course.prefix }} {{ sections.0.course.course_number }}</p>
+            <p class="course-number">{{ course.prefix }} {{ course.course_number }}</p>
             {% comment %}
-            <p class="course-hours">{% if sections.0.ceus %}CEUs<br/>{{ sections.0.ceus }}{% else %}{% if sections.0.credit_hours %}Credit Hours<br/>{{ sections.0.credit_hours }}{% else %}No Credit{% endif %}{% endif %}</p>
+            <p class="course-hours">{% if ceus %}CEUs<br/>{{ ceus }}{% else %}{% if credit_hours %}Credit Hours<br/>{{ credit_hours }}{% else %}No Credit{% endif %}{% endif %}</p>
             {% endcomment %}
           </div>
          <div class="course-description">
-            <p class="course-name">{{ sections.0.course.title }}</p>
-            <p>{{ sections.0.course.description }}</p>
+            <p class="course-name">{{ course.title }}</p>
+            <p>{{ course.description }}</p>
             {% comment %}
-            <p class="contact-hours">Contact Hours {{ sections.0.contact_hours }}</p>
+            <p class="contact-hours">Contact Hours {{ contact_hours }}</p>
             {% endcomment %}
-              {% if sections.0.course.prerequisites or sections.0.course.corequisites %}
+              {% if course.prerequisites or course.corequisites %}
                 <div class="requisites">
-                    {% if sections.0.course.prerequisites %}
+                    {% if course.prerequisites %}
                       <div class="prereq">
                       <strong>Prerequisites:  </strong>
-                      {% if sections.0.course.prerequisite_courses %}
-                        {% for prereq in sections.0.course.prerequisite_courses %}
+                      {% if course.prerequisite_courses %}
+                        {% for prereq in course.prerequisite_courses %}
                           {% if not forloop.first %}, {% endif %}
                           {% if prereq.prereq_course.section_set.all %}
                             <a href="{% url show_sections prereq.prereq_course.id %}">{{ prereq.prereq_course.prefix }} {{ prereq.prereq_course.course_number }}</a>
@@ -67,12 +65,12 @@
                       </div>
                     {% endif %}
 
-                    {% if sections.0.course.corequisites %}
+                    {% if course.corequisites %}
                       <div class="coreq">
                       <strong>Co-requisites:  </strong>
-                      {% if sections.0.course.corequisite_courses %}
+                      {% if course.corequisite_courses %}
 
-                        {% for coreq in sections.0.course.corequisite_courses %}
+                        {% for coreq in course.corequisite_courses %}
                           {% if not forloop.first %}, {% endif %}
                             {% if coreq.coreq_course.section_set.all %}
                               <a href="{% url show_sections coreq.coreq_course.id %}">{{ coreq.coreq_course.prefix }} {{ coreq.coreq_course.course_number }}</a>
@@ -88,12 +86,14 @@
                 </div>
               {% endif %}
 
-            {% if sections.0.course.note %}<p class="course-note"><strong>Note</strong> {{ sections.0.course.note }}</p>{% endif %}
+            {% if course.note %}<p class="course-note"><strong>Note</strong> {{ course.note }}</p>{% endif %}
           </div>
           </div>
         </div>
       </div>
 
+{% if sections %}
+  <form action="" method="POST" id="section-form">
       {% for section in sections %}
         <div class="section" id="{{ section.section_code }}">
           <div class="row-fluid">
