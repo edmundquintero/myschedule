@@ -181,19 +181,19 @@ div.close-advanced-search {
 }*/
 .section .section-top
 {
-    height: 37px;
-    background: url('../img/section_top_background.png') no-repeat;
+    /*height: 37px;
+    background: url('../img/section_top_background.png') no-repeat;*/
     font-size: 18px;
     font-weight: bold;
 }
 
-.section .section-top img
+/*.section .section-top img
 {
     float: right;
     position: relative;
     bottom: 7px;
     left: 7px;
-}
+}*/
 .section .section-content
 {
     background: url('../img/section_content_background.png') repeat-y;

@@ -5,6 +5,7 @@ $(function() {
         // hide the add link so user will know they've already added the section.
         $(this).hide();
         $('#view-full-schedule').show();
+        $('#empty-cart-warning').hide();
         addItem(section);
     });
 

@@ -93,9 +93,8 @@
           </div>
         </div>
       </div>
+
       {% for section in sections %}
-
-
         <div class="section" id="{{ section.section_code }}">
           <div class="row-fluid">
             <div class="section-top span12">
@@ -165,11 +164,6 @@
               {% if section.instructor_name %}<div class="section-instructor"><strong>Instructor: </strong>{% if section.instructor_link %}<a href="{{ section.instructor_link }}">{{ section.instructor_name }}</a>{% else %}{{ section.instructor_name }}{% endif %}</div>{% endif %}
             </div>
           </div>
-
-
-
-
-
           <div class="section-bottom">
             <div class="section-synonym">Synonym {{ section.synonym }}</div>
             {% comment %}

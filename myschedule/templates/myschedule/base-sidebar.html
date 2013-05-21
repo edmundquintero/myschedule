@@ -9,25 +9,42 @@
 
 {% block sidebar %}
     <div class="row-fluid">
+
+      {% block schedule %}
+      <h5>Schedule</h5>
+      <ul id="cart">
+        {% if cart_items %}
+            {% for item in cart_items %}
+                <li class="remove-item"><a class="remove-link" href="#remove" ref="{{ item.section_code }}"><img src="{% url appstatic "img/remove_button.png" %}" alt="Remove"/></a>{{ item.course.prefix }} {{ item.course.course_number }} - {{ item.section_number }}<br/>{{ item.course.title|slice:"0:20" }}</li>
+            {% endfor %}
+        {% else %}
+            <span id="empty-cart-warning" class="text-warning">There are no class sections in your cart!</span>
+        {% endif %}
+      </ul>
+      <div id="view-full-schedule">
+        <a href="{% url show_schedule %}"><img src="{% url appstatic "img/view_full_schedule_button.png" %}" alt="View Full Schedule"/></a>
+      </div>
+      {% endblock %}
+
       {% block buttons %}
-      <div class="span10 offset1">
+      <div class="span10 offset1" id="side-buttons">
+        <a class="open-window btn btn-block" href="#email" ref="email" dialog-title="Email 
+        Schedule" title="map">MAP Bro</a>
+        {% if cart_items %}
         <a class="open-window btn btn-block" href="#email" ref="email" dialog-title="Email Schedule" title="Email this schedule to yourself or a friend">Email Schedule</a>
-        <a href="#print" title="Print this page" class="print-schedule btn btn-block">Print Schedule</a>   
+        {% endif %}
+        <a href="#print" title="Print this page" class="print-schedule btn btn-block">Print This Page</a>   
         {% if user.is_authenticated %}
           {% for group in user.groups.all %}
             {% ifequal group|stringformat:"s" "Students" %}
-              <a class="open-window btn btn-block" href="#register" ref="register" dialog-title="Begin Registration" title="Submit this schedule to preferred list in MyCollege">Begin Registration</a>
+              <a class="open-window btn btn-block" href="#register" ref="register" dialog-title="Begin Registration" title="Submit this schedule to preferred list in MyCollege">Registrater Now</a>
             {% else %}
               <a class="btn disabled"> Please Login as A Student</a>
             {% endifequal %}
           {% endfor %}
-        {% else %}
-          <a class="open-window btn btn-block" href="{% url login %}" title="Sign in to submit this schedule to preferred list in MyCollege">Sign In To Register</a>
         {% endif %}
       </div>
       {% endblock %}
-
-      {% block schedule %}{% endblock %}
     </div>
     <div class="row-fluid"><div class="span12"></div></div>
     <div class="row-fluid">

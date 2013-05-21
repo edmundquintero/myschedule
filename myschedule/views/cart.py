@@ -472,6 +472,7 @@ class SQSSearchView(SearchView):
         request.session['next_view'] = request.get_full_path()
         return super(SQSSearchView, self).__call__(request)
 
+@login_required
 def register(request):
     """
         Called from javascript to submit the student's schedule to datatel.

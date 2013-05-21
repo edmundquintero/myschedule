@@ -1,7 +1,7 @@
 $(function() {
     // Create modal dialog windows, overriding parameters for a specific
     // dialog in the processing for the click function.
-    $('a.open-window').each(function(){
+    $('#side-buttons a.open-window').each(function(){
         createModalWindow($(this).attr('ref'), $(this).attr('dialog-title'),
             closeDialog, closeDialog);
     });
@@ -185,6 +185,7 @@ remove_section = function()
     sidebar_hidden_count = $('li.remove-item:hidden').length;
     if (sidebar_section_count == sidebar_hidden_count){
         $('#view-full-schedule').hide();
+        $('#empty-cart-warning').show();
     }
     // Hide section from displaying in schedule (only applies if section deleted
     // on view full schedule page.
