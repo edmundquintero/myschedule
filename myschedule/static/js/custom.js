@@ -39,24 +39,6 @@ $(function() {
         $('#view-full-schedule').hide();
     }
 
-    // Clear out query input field when it receives focus. 
-    // $('#id_query').focus(function(){
-    //     $(this).val('').html('');
-    // });
-
-    // Initially hide advanced search filter options.
-    // $("#search-filter").hide();
-
-    // Process click function on advanced search link.
-    // $("a.advanced-search").click(function() {
-    //     $(this).hide('fast');
-    //     $('#search-filter').show('fast','linear');
-    // });
-    // $("a.advanced-search-message").click(function() {
-    //     $('#search-filter').show('fast','linear');
-    // });
-    
-
     // Process click function on remove filter link.
     $("a.remove-filter").click(function() {
         $('#id_term option[value="all"]').attr('selected','selected');

@@ -1,6 +1,5 @@
 $(function() {
     loadCalendar();
-
 });
 
 loadCalendar = function(){

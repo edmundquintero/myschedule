@@ -31,8 +31,6 @@ $(function(){
 
 });
 
-
-
 function updateHidden(divClass, value, type='select'){
     element = '#main-search fieldset .'+divClass+' '+type;
     console.log(element);

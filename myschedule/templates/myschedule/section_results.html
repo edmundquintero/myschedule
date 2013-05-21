@@ -15,21 +15,18 @@
 {% block buttons %} {% endblock %}
 {% block content %}{{ block.super }}
   {% include "myschedule/search.html" %}
-  {% if not user.is_authenticated or conflicts.conflicting_sections or filters_set or request.session.Cart and request.session.Cart|length >= 14 %}
-    <br />
-    <div class="message message-warning" id="conflict-login-message">
-    {% if not user.is_authenticated %}
-      <p id="login-message"><a href="{% url login %}">Sign in</a> to save this schedule!</p>
-    {% endif %}
+{% if not user.is_authenticated or conflicts.conflicting_sections or filters_set or request.session.Cart and request.session.Cart|length >= 14 %}
+    <div class="alert alert-warning" id="conflict-login-message">
+      {% if not user.is_authenticated %}
+        <p id="login-message" class="text-warning"><i class="icon-warning-sign"></i><b> You are not signed in.</b><br>
+        <span class="help-block">Signing in allows you to save this schedule and register for the classes you select.</span></p>
+      {% endif %}
     {% if request.session.Cart and request.session.Cart|length >= 14 %}
-      <p id="length-message">Schedule has reached maximum length allowed. You will need to remove some sections in order to add more.</p>
+      <p id="length-message" class="text-error"><i class="icon-warning-sign"></i>Schedule has reached maximum length allowed. You will need to remove some sections in order to add more.</p>
     {% endif %}
-    {% if conflicts.conflicting_sections %}
-      <p id="conflict-message">This schedule contains scheduling conflicts.</p>
-    {% endif %}
-    {% if filters_set %}
-      <p><a class="advanced-search-message" href="#advanced-search">Advanced search</a> options have been applied to the courses shown.</p>
-    {% endif %}
+      {% if conflicts.conflicting_sections %}
+        <p id="conflict-message" class="text-warning"><i class="icon-warning-sign"></i>This schedule contains scheduling conflicts.</p>
+      {% endif %}
     </div>
   {% endif %}
 

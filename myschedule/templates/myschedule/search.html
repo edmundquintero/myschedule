@@ -2,7 +2,7 @@
 <div class="row-fluid">
     <form method="get" action="/myschedule/search/" id="main-search" class="span12" name="ed">
         <div class="input-append offset2">
-            <input class="span8" type="text" name="q" id="id_query" value="{{ request.session.q_value }}"/>
+            <input class="span8" type="text" name="q" id="id_query" placeholder="ex. math, bus 121, mec" value="{{ request.session.q_value }}"/>
             <button id="course-search" class="btn" type="submit">Search</button>
         </div>
         <fieldset id="main-filtering" class="hidden">
