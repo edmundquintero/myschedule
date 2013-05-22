@@ -6,19 +6,19 @@ from django.template import defaultfilters
 
 class DateMultiValueField(MultiValueField):
     """
-       Supposedly this is subclassing a MultiValueField to create a
-       multivaluefield for dates.  The important thing to know here
-       is that if you use build_solr_schema, it will not set the
-       type to 'date' for these fields - you have to manually edit
-       schema.xml and change them to type 'date'.  This shouldn't
-       be a problem since, as noted below, we already had to manually
-       set other fields.
+        Supposedly this is subclassing a MultiValueField to create a
+        multivaluefield for dates.  The important thing to know here
+        is that if you use build_solr_schema, it will not set the
+        type to 'date' for these fields - you have to manually edit
+        schema.xml and change them to type 'date'.  This shouldn't
+        be a problem since, as noted below, we already had to manually
+        set other fields.
     """
     field_type = 'date'
 
 class CourseIndex(SearchIndex):
     """
-	Sort fields need to be defined as type string in solr schema.xml.
+        Sort fields need to be defined as type string in solr schema.xml.
         Hence the reason for duplicating the course_number and title fields.
         If build_solr_schema is used to re-generate the schema.xml file,
         make sure to manually change the type for course_number_sort and

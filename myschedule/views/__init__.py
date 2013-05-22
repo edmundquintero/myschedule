@@ -496,3 +496,25 @@ def update_popularity():
     for course in courses:
         course.update_popularity()
 
+def show_map(request):
+    
+    """
+        Do some stuff here to get the students map and return the courses in it.
+        For now im returning sample stuff to make a template.
+
+    """
+        
+    courses = []
+
+    course = get_object_or_404(models.Course, id=2318)
+    courses.append(course)
+
+    course = get_object_or_404(models.Course, id=922)
+    courses.append(course)
+
+    course = get_object_or_404(models.Course, id=1147)
+    courses.append(course)
+
+    return direct_to_template(request,
+            'myschedule/map.html',
+            {'courses':courses})

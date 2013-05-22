@@ -7,7 +7,7 @@ from time import strftime
 class UserProfile(models.Model):
     """
        Used for storing additional user specific data. Initial use is for
-       storing the user's student information sytem ID (i.e. colleague ID).
+       storing the user's student information system ID (i.e. colleague ID).
        Future uses include storing "favorited" courses. May also move
        storage of schedule in here (and obsolete schedule model).
     """

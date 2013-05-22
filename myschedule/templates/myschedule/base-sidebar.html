@@ -39,8 +39,7 @@
 
       {% block buttons %}
       <div class="span10 offset1" id="side-buttons">
-        <a class="open-window btn btn-block" href="#email" ref="email" dialog-title="Email 
-        Schedule" title="map">MAP Bro</a>
+        <a id="map-button" class="btn btn-block" href="{% url show_map %}" ref="map" dialog-title="Student Map" title="map">MAP Bro</a>
         {% if cart_items %}
         <a class="open-window btn btn-block" href="#email" ref="email" dialog-title="Email Schedule" title="Email this schedule to yourself or a friend">Email Schedule</a>
         {% endif %}

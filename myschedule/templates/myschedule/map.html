@@ -1,0 +1,99 @@
+{% extends "myschedule/index.html" %}
+
+{% block page_title %}{{ block.super }} | Map{% endblock %}
+
+{% block scripts %}{{ block.super }}
+  <script type="text/javascript" src="{% url appstatic "js/course-results.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+
+{% include "myschedule/search.html" %}
+
+{% block loader %}
+<div id="loader-cover"></div>
+<div id="loader">
+    <div id="loader-inner">
+        <img src="../static/img/loading2.gif" alt="Loading" height="128" width="128"> 
+    </div>
+</div>
+{% endblock %}
+{% block sidebar%}{% endblock %}
+
+  {% if not user.is_authenticated or conflicts.conflicting_sections or filters_set or request.session.Cart and request.session.Cart|length >= 14 %}
+    <div class="alert alert-warning" id="conflict-login-message">
+      {% if not user.is_authenticated %}
+        <p id="login-message" class="text-warning"><i class="icon-warning-sign"></i><b> You are not signed in.</b><br>
+        <span class="help-block">Signing in allows you to save this schedule and register for the classes you select.</span></p>
+      {% endif %}
+    {% if request.session.Cart and request.session.Cart|length >= 14 %}
+      <p id="length-message" class="text-error"><i class="icon-warning-sign"></i>Schedule has reached maximum length allowed. You will need to remove some sections in order to add more.</p>
+    {% endif %}
+      {% if conflicts.conflicting_sections %}
+        <p id="conflict-message" class="text-warning"><i class="icon-warning-sign"></i>This schedule contains scheduling conflicts.</p>
+      {% endif %}
+    </div>
+  {% endif %}
+
+{% for course in courses %}
+    <div class="course row-fluid">
+      <div class="course-content span12 pointer hoverable" ref="{% url show_sections course.id %}">
+          <div class="course-metadata span3">
+              <div class="course-number">{{ course.prefix }} {{ course.course_number }}</div>
+        {% if not course.section_set.all %}
+          <div class="course-hours"><b>No Sections Available</b></div>
+        {% else %}
+          <div class="course-hours">{% if course.section_set.all %}{% if course.section_set.all.0.ceus %}CEUs {{ course.section_set.all.0.ceus }}{% else %}{% if course.section_set.all.0.credit_hours %}Credit Hours {{ course.section_set.all.0.credit_hours }}{% else %}No Credit{% endif %}{% endif %}{% endif %}</div>
+        {% endif %}
+          </div>
+          <div class="course-description span9">
+              <p class="course-name"><a href="{% url show_sections course.id %}">{{ course.title }}</a></p>
+              <p>{{ course.description|truncatewords:23 }}</p>
+
+        {% if course.prerequisites or course.corequisites %}
+          <div class="requisites">
+              {% if course.prerequisites %}
+                <div class="prereq">
+                <strong>Prerequisites:  </strong>
+                {% if course.prerequisite_courses %}
+                  {% for prereq in course.prerequisite_courses %}
+                    {% if not forloop.first %}, {% endif %}
+                    {% if prereq.prereq_course.section_set.all %}
+                      <a href="{% url show_sections prereq.prereq_course.id %}">{{ prereq.prereq_course.prefix }} {{ prereq.prereq_course.course_number }}</a>
+                    {% else %}
+                      {{ prereq.prereq_course.prefix }} {{ prereq.prereq_course.course_number }}
+                    {% endif %}
+                  {% endfor %}
+                {% else %}
+                  Please check the <a href="{{ catalog_url }}" target="_blank">catalog</a> for prerequisite information.
+                {% endif %}
+                </div>
+              {% endif %}
+
+              {% if course.corequisites %}
+                <div class="coreq">
+                <strong>Co-requisites:  </strong>
+                {% if course.corequisite_courses %}
+
+                  {% for coreq in course.corequisite_courses %}
+                    {% if not forloop.first %}, {% endif %}
+                      {% if coreq.coreq_course.section_set.all %}
+                        <a href="{% url show_sections coreq.coreq_course.id %}">{{ coreq.coreq_course.prefix }} {{ coreq.coreq_course.course_number }}</a>
+                      {% else %}
+                        {{ coreq.coreq_course.prefix }} {{ coreq.coreq_course.course_number }}
+                      {% endif %}
+                  {% endfor %}
+                {% else %}
+                  Please check the <a href="{{ catalog_url }}" target="_blank">catalog</a> for co-requisite information.
+                {% endif %}
+                </div>
+              {% endif %}
+          </div>
+        {% endif %}
+        {% if course.note %}<p class="course-note"><strong>Note</strong> {{ course.note }}</p>{% endif %}
+        </div>
+      </div>
+    </div>
+{% endfor %}
+
+{% endblock %}

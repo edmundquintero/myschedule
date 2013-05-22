@@ -32,7 +32,6 @@
       {% endif %}
     </div>
   {% endif %}
-  {#{% if query %}#}
       {% for result in page.object_list %}
 	      <div class="course row-fluid">
 	        <div class="course-content span12 pointer hoverable" ref="{% url show_sections result.object.id %}">
