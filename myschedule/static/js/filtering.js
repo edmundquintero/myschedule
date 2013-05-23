@@ -48,8 +48,13 @@ function updatedates(divClass, value){
 };
 //function to sync the visible form to the hidden form on load.
 function setForm(){
-    $('#sidebar-search .academic_level select').val($('#main-search .academic_level select').val());
-    $('#sidebar-search .academic_level input[type="text"]').val($('#main-search .academic_level input[type="text"]').val());
-    $('#sidebar-search .academic_level input[type="radio"]').attr('checked', $('#main-search .academic_level input[type="radio"]').attr('checked'));
+    $('#sidebar-search fieldset .prefix input').attr('checked',$('#main-search fieldset .prefix input').attr('checked'));
+    $('#sidebar-search fieldset .title input').attr('checked',$('#main-search fieldset .title input').attr('checked'));
+    $('#sidebar-search fieldset .academic_level select').val($('#main-search fieldset .academic_level select').val());
+    $('#sidebar-search fieldset .campus select').val($('#main-search fieldset .campus select').val());
+    $('#sidebar-search fieldset .delivery_method select').val($('#main-search fieldset .delivery_method select').val());
+    $('#sidebar-search fieldset .term select').val($('#main-search fieldset .term select').val());
+    $('#sidebar-search fieldset .start_date input').val($('#main-search fieldset .start_date input').val());
+    $('#sidebar-search fieldset .end_date input').val($('#main-search fieldset .end_date input').val());
 };
 
