@@ -43,7 +43,11 @@ function addItem(section)
                     }
                 });
                 if (exists == 0){
-                    item_html = '<li class="remove-item"><a class="remove-link" href="#remove" ref="' + section + '" ><img src="' + buttonPath + '" alt="Remove"/></a>' + section_data.prefix + ' ' + section_data.course_number + ' - ' + section_data.section_number + '<br/>' + section_data.title.slice(0,19) +'</li>';
+                    extra_class = '';
+                    if(section_data.in_map){
+                        extra_class = ' in_map';
+                    }
+                    item_html = '<li class="remove-item'+extra_class+'"><a class="remove-link" href="#remove" ref="' + section + '" ><img src="' + buttonPath + '" alt="Remove"/></a>' + section_data.prefix + ' ' + section_data.course_number + ' - ' + section_data.section_number + '<br/>' + section_data.title.slice(0,19) +'</li>';
                     $('#cart').append(item_html);
                     // Instantiate click event otherwise the delete won't work for item added to the sidebar.
                     // Make sure to specify the section! Bad things (processes remove-section multiple times)

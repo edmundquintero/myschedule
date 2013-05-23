@@ -36,7 +36,7 @@
   {% endif %}
 
   {% for item in cart_items %}
-    <div class="section">
+    <div class="section{% if item.in_map %} in_map{% endif %}">
       <div class="section-top">
         <div class="section-number">{{ item.course.prefix }} {{ item.course.course_number }} - {{ item.section_number }} </div>
         <div class="section-heading">{{ item.course.title }}</div>

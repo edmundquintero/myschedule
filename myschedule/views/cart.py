@@ -116,6 +116,7 @@ def add_item(request):
                                 'course_number': course.course.course_number,
                                 'section_number': course.section_number,
                                 'title': course.course.title}
+
                 if request.session.has_key('current_query'):
                     course = course.course
                     correlation = models.Correlation()
@@ -280,6 +281,33 @@ def display_cart(request, sections_url=None):
         cart_items = models.Section.objects.filter(
                 section_code__in=sections).order_by('end_date','section_code')
         conflicts = conflict_resolution(cart_items)
+
+        """
+
+        Detect if a course is part of a map.
+        Course map is Fake !!
+
+        """
+        map_courses = []
+
+        map_course = get_object_or_404(models.Course, id=2318)
+        map_courses.append(map_course)
+
+        map_course = get_object_or_404(models.Course, id=922)
+        map_courses.append(map_course)
+
+        map_course = get_object_or_404(models.Course, id=1147)
+        map_courses.append(map_course)
+        # This function tags an extra boolean field for detection in the template
+        #   It doesn't really matter the value the template only checks for its existance.
+        for item in cart_items:
+            if item.course in map_courses:
+                item.in_map = True
+
+        """
+        END MAP TREST FUNCTION
+        """
+
 
     downtime_message = ''
     if (settings.S2W_UNAVAILABLE_BEGIN != '' and settings.S2W_UNAVAILABLE_END != ''):
